@@ -17,7 +17,7 @@
 use ink_lang as ink;
 
 #[ink::contract]
-mod main {
+mod erc20_delegator_test {
     #[cfg(not(feature = "ink-as-dependency"))]
     use ink_storage::{
         traits::{
@@ -28,7 +28,8 @@ mod main {
         // Vec as StorageVec,
     };
     // use ink_prelude::string::String;
-    use dao_manager::DAOManager;
+    use erc20::Erc20;
+    use erc20_test::Erc20Test;
 
     /// Indicates whether a transaction is already confirmed or needs further confirmations.
     #[derive(scale::Encode, scale::Decode, Clone, Copy, SpreadLayout, PackedLayout)]
@@ -39,7 +40,7 @@ mod main {
     pub struct DAOTemplate {
         owner: AccountId,
         erc20_code_hash: Hash,
-        dao_manager_code_hash: Hash,
+        erc20_test_code_hash: Hash,
     }
 
     /// Indicates whether a transaction is already confirmed or needs further confirmations.
@@ -50,11 +51,12 @@ mod main {
     )]
     pub struct DAOInstance {
         owner: AccountId,
-        dao_manager: DAOManager,
+        erc20: Erc20,
+        erc20_test: Erc20Test,
     }
 
     #[ink(storage)]
-    pub struct Main {
+    pub struct Erc20DelegatorTest {
         owner: AccountId,
         template_index: u64,
         template_map: StorageHashMap<u64, DAOTemplate>,
@@ -62,25 +64,7 @@ mod main {
         instance_map: StorageHashMap<u64, DAOInstance>,
     }
 
-    #[ink(event)]
-    pub struct AddTemplate {
-        #[ink(topic)]
-        index: u64,
-        #[ink(topic)]
-        owner: Option<AccountId>,
-    }
-
-    #[ink(event)]
-    pub struct InstanceDAO {
-        #[ink(topic)]
-        index: u64,
-        #[ink(topic)]
-        owner: Option<AccountId>,
-        #[ink(topic)]
-        dao_addr: Option<AccountId>,
-    }
-
-    impl Main {
+    impl Erc20DelegatorTest {
         #[ink(constructor)]
         pub fn new(controller: AccountId) -> Self {
             let instance = Self {
@@ -94,57 +78,70 @@ mod main {
         }
 
         #[ink(message)]
-        pub fn add_template(&mut self, erc20_code_hash: Hash, dao_manager_code_hash: Hash) -> bool {
+        pub fn add_template(&mut self, erc20_code_hash: Hash, erc20_test_code_hash: Hash) -> bool {
             assert_eq!(self.template_index + 1 > self.template_index, true);
             let from = self.env().caller();
+            // TODO add template event, declare index, owner
             self.template_map.insert(self.template_index, DAOTemplate {
                 owner: from,
                 erc20_code_hash,
-                dao_manager_code_hash,
-            });
-            self.env().emit_event(AddTemplate {
-                index: self.template_index,
-                owner: Some(from),
+                erc20_test_code_hash,
             });
             self.template_index += 1;
             true
         }
 
         #[ink(message)]
-        pub fn query_template_by_index(&self, index: u64) -> DAOTemplate {
+        pub fn query_all_template(&self, index: u64) -> DAOTemplate {
             return *self.template_map.get(&index).unwrap()
         }
 
         #[ink(message)]
-        pub fn instance_by_template(&mut self, index: u64, controller: AccountId, erc20_initial_supply: u64, erc20_decimals: u8) -> bool {
+        pub fn instance_by_template(&mut self, index: u64, initial_supply: u64, decimals: u8, controller: AccountId) -> bool {
             assert_eq!(self.instance_index + 1 > self.instance_index, true);
             let total_balance = Self::env().balance();
-            // assert_eq!(total_balance >= 20, true);
+            assert_eq!(total_balance >= 20, true);
 
             // query template info
             let template = self.template_map.get(&index).unwrap();
 
-            // instance dao_manager test
-            let mut dao_manager_instance = DAOManager::new(controller)
+            // instance erc20
+            // TODO add instance event
+            let erc_instance = Erc20::new(initial_supply, decimals, controller)
                 .endowment(total_balance / 4)
-                .code_hash(template.dao_manager_code_hash)
+                .code_hash(template.erc20_code_hash)
                 .instantiate()
                 .expect("failed at instantiating the `Erc20` contract");
-            self.env().emit_event(InstanceDAO {
-                index: self.template_index,
-                owner: Some(controller),
-                dao_addr: None,
-            });
 
-            // init instance
-            dao_manager_instance.init_erc20(template.erc20_code_hash, erc20_initial_supply, erc20_decimals);
+            // instance erc20 test
+            // TODO add instance event, declare index, type, instance/accountId
+            let erc_test_instance = Erc20Test::new(erc_instance.clone())
+                .endowment(total_balance / 4)
+                .code_hash(template.erc20_test_code_hash)
+                .instantiate()
+                .expect("failed at instantiating the `Erc20` contract");
 
+            // put instance
             self.instance_map.insert(self.instance_index, DAOInstance {
                 owner: controller,
-                dao_manager: dao_manager_instance,
+                erc20: erc_instance,
+                erc20_test: erc_test_instance,
             });
             self.instance_index += 1;
             true
         }
+
+        #[ink(message)]
+        pub fn transfer(&mut self, index: u64, to: AccountId, value: u64) -> bool {
+            let instance = self.instance_map.get_mut(&index).unwrap();
+            instance.erc20.transfer(to, value)
+        }
+
+        #[ink(message)]
+        pub fn transfer_by_erc20_test_in_erc20(&mut self, index: u64, to: AccountId, value: u64) -> bool {
+            let instance = self.instance_map.get_mut(&index).unwrap();
+            instance.erc20_test.transfer_in_erc20(to, value)
+        }
+
     }
 }
