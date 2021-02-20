@@ -19,8 +19,10 @@ scale-info = { version = "0.4.1", default-features = false, features = ["derive"
 name = "org"
 path = "lib.rs"
 crate-type = [
-	# Used for normal contract Wasm blobs.
-	"cdylib",
+    # Used for normal contract Wasm blobs.
+    "cdylib",
+    # Used for ABI generation.
+    "rlib",
 ]
 
 [features]

@@ -17,6 +17,7 @@
 extern crate alloc;
 use ink_lang as ink;
 use alloc::vec::Vec;
+pub use self::org::OrgManager;
 
 #[ink::contract]
 mod org {

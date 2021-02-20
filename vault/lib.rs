@@ -17,12 +17,12 @@
 extern crate alloc;
 use ink_lang as ink;
 use alloc::vec::Vec;
+pub use self::vault::VaultManager;
 
 #[ink::contract]
 mod vault {
     use alloc::string::String;
 
-    #[cfg(not(feature = "ink-as-dependency"))]
     use ink_storage::{
         collections::HashMap as StorageHashMap,
         traits::{PackedLayout, SpreadLayout},
@@ -47,7 +47,7 @@ mod vault {
 
 
     #[ink(storage)]
-    pub struct vaultManager {
+    pub struct VaultManager {
 
         tokens: StorageHashMap<AccountId, String>,
         token_balances: StorageHashMap<AccountId, Balance>,
@@ -126,7 +126,7 @@ mod vault {
 
 
 
-    impl vaultManager {
+    impl VaultManager {
 
         #[ink(constructor)]
         pub fn new(_orgId:u64) -> Self {
@@ -350,7 +350,7 @@ mod vault {
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
             // Create a new contract instance.
-            let mut vault_manager = vaultManager::new(1);
+            let mut vault_manager = VaultManager::new(1);
             assert_eq!(vault_manager.orgId, 1);
         }
 
@@ -360,7 +360,7 @@ mod vault {
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
             // Create a new contract instance.
-            let mut vault_manager = vaultManager::new(1);
+            let mut vault_manager = VaultManager::new(1);
             let eth_name = String::from("eth");
             vault_manager.add_vault_token(eth_name,accounts.bob);
             assert_eq!(vault_manager.tokens.len(), 1);
@@ -373,7 +373,7 @@ mod vault {
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
             // Create a new contract instance.
-            let mut vault_manager = vaultManager::new(1);
+            let mut vault_manager = VaultManager::new(1);
             let eth_name = String::from("eth");
             vault_manager.add_vault_token(eth_name,accounts.bob);
             vault_manager.remove_vault_token(accounts.bob);
@@ -388,7 +388,7 @@ mod vault {
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
             // Create a new contract instance.
-            let mut vault_manager = vaultManager::new(1);
+            let mut vault_manager = VaultManager::new(1);
             let eth_name = String::from("eth");
             vault_manager.add_vault_token(eth_name,accounts.bob);
             let dot_name = String::from("dot");
@@ -403,7 +403,7 @@ mod vault {
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
             // Create a new contract instance.
-            let mut vault_manager = vaultManager::new(1);
+            let mut vault_manager = VaultManager::new(1);
             let eth_name = String::from("eth");
             vault_manager.add_vault_token(eth_name,accounts.bob);
             assert_eq!(vault_manager.get_balance_of(accounts.bob), 0);
@@ -417,7 +417,7 @@ mod vault {
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
             // Create a new contract instance.
-            let mut vault_manager = vaultManager::new(1);
+            let mut vault_manager = VaultManager::new(1);
             let eth_name = String::from("eth");
             vault_manager.add_vault_token(eth_name,accounts.bob);
             vault_manager.deposit(accounts.bob,accounts.alice,100);
@@ -432,7 +432,7 @@ mod vault {
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
             // Create a new contract instance.
-            let mut vault_manager = vaultManager::new(1);
+            let mut vault_manager = VaultManager::new(1);
             let eth_name = String::from("eth");
             vault_manager.add_vault_token(eth_name,accounts.bob);
             vault_manager.deposit(accounts.bob,accounts.eve,1000);
@@ -448,7 +448,7 @@ mod vault {
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
             // Create a new contract instance.
-            let mut vault_manager = vaultManager::new(1);
+            let mut vault_manager = VaultManager::new(1);
             let eth_name = String::from("eth");
             vault_manager.add_vault_token(eth_name,accounts.bob);
             vault_manager.deposit(accounts.bob,accounts.eve,1000);

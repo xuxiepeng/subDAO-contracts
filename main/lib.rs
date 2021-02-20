@@ -40,6 +40,9 @@ mod main {
         owner: AccountId,
         erc20_code_hash: Hash,
         dao_manager_code_hash: Hash,
+        org_code_hash: Hash,
+        vault_code_hash: Hash,
+        vote_code_hash: Hash,
     }
 
     /// Indicates whether a transaction is already confirmed or needs further confirmations.
@@ -94,13 +97,17 @@ mod main {
         }
 
         #[ink(message)]
-        pub fn add_template(&mut self, erc20_code_hash: Hash, dao_manager_code_hash: Hash) -> bool {
+        pub fn add_template(&mut self, erc20_code_hash: Hash, dao_manager_code_hash: Hash,
+                            org_code_hash: Hash, vault_code_hash: Hash, vote_code_hash: Hash) -> bool {
             assert_eq!(self.template_index + 1 > self.template_index, true);
             let from = self.env().caller();
             self.template_map.insert(self.template_index, DAOTemplate {
                 owner: from,
                 erc20_code_hash,
                 dao_manager_code_hash,
+                org_code_hash,
+                vault_code_hash,
+                vote_code_hash,
             });
             self.env().emit_event(AddTemplate {
                 index: self.template_index,
@@ -125,7 +132,7 @@ mod main {
             let template = self.template_map.get(&index).unwrap();
 
             // instance dao_manager test
-            let mut dao_manager_instance = DAOManager::new(controller)
+            let mut dao_manager_instance = DAOManager::new(controller, self.instance_index)
                 .endowment(total_balance / 4)
                 .code_hash(template.dao_manager_code_hash)
                 .instantiate()
@@ -138,12 +145,16 @@ mod main {
 
             // init instance
             dao_manager_instance.init_erc20(template.erc20_code_hash, erc20_initial_supply, erc20_decimals);
+            dao_manager_instance.init_org(template.org_code_hash);
+            dao_manager_instance.init_vault(template.vault_code_hash);
+            // dao_manager_instance.init_vote_manager(template.vote_code_hash);
 
             self.instance_map.insert(self.instance_index, DAOInstance {
                 owner: controller,
                 dao_manager: dao_manager_instance,
             });
             self.instance_index += 1;
+
             true
         }
     }
