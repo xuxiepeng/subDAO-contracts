@@ -1,11 +1,11 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use ink_lang as ink;
-pub use self::vote_manager::VoteManager;
 
 #[ink::contract]
 mod vote_manager {
 
+    #[cfg(not(feature = "ink-as-dependency"))]
     use ink_storage::{
         collections::{
             HashMap as StorageHashMap,
@@ -118,24 +118,25 @@ mod vote_manager {
 
         #[ink(message)]
         pub fn vote(&mut self, vote_id: VoteId,  support: bool, voter: AccountId) {
-            if let Some(vote) = self.votes.get_mut(&vote_id) {
+            assert!(self.vote_exists(vote_id));
+            if let Some(_vote) = self.votes.get_mut(&vote_id) {
                 if let Some(vote_state) = self.voters.get(&(vote_id, voter)) {
                     match vote_state {
                         VoterState::Yea => {
-                            vote.yea -= 1;
+                            _vote.yea -= 1;
                         },
                         VoterState::Nay => {
-                            vote.nay -= 1;
+                            _vote.nay -= 1;
                         },
                         VoterState::Absent => (),
                     }
                 }
                 if support {
-                    vote.yea += 1;
-                    self.voters[&(vote_id, voter)] = VoterState::Yea;
+                    _vote.yea += 1;
+                    self.voters.insert((vote_id, voter), VoterState::Yea);
                 } else {
-                    vote.nay += 1;
-                    self.voters[&(vote_id, voter)] = VoterState::Nay;
+                    _vote.nay += 1;
+                    self.voters.insert((vote_id, voter), VoterState::Nay);
                 }
                 self.env().emit_event(CastVote{
                     vote_id,
