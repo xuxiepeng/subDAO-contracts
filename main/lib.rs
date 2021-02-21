@@ -54,8 +54,8 @@ mod main {
     )]
     pub struct DAOInstance {
         owner: AccountId,
-        // TODO 记录dao的地址
         dao_manager: DAOManager,
+        dao_manager_addr: AccountId,
     }
 
     #[ink(storage)]
@@ -82,7 +82,7 @@ mod main {
         #[ink(topic)]
         owner: Option<AccountId>,
         #[ink(topic)]
-        dao_addr: Option<AccountId>,
+        dao_addr: AccountId,
     }
 
     impl Main {
@@ -136,20 +136,23 @@ mod main {
             // query template info
             let template = self.template_map.get(&index).unwrap();
 
-            // instance dao_manager test
-            let mut dao_manager_instance = DAOManager::new(controller, self.instance_index)
+            // instance dao_manager
+            let dao_instance_params = DAOManager::new(controller, self.instance_index)
                 .endowment(total_balance / 4)
                 .code_hash(template.dao_manager_code_hash)
-                .instantiate()
-                .expect("failed at instantiating the `Erc20` contract");
+                .params();
+            let dao_init_result = ink_env::instantiate_contract(&dao_instance_params);
+            let dao_addr = dao_init_result.expect("failed at instantiating the `DAO Instance` contract");
+            let mut dao_instance: DAOManager = ink_env::call::FromAccountId::from_account_id(dao_addr);
+
             self.env().emit_event(InstanceDAO {
                 index: self.template_index,
                 owner: Some(controller),
-                dao_addr: None,
+                dao_addr: dao_addr,
             });
 
             // init instance
-            dao_manager_instance.init(template.erc20_code_hash, erc20_initial_supply, erc20_decimals,
+            dao_instance.init(template.erc20_code_hash, erc20_initial_supply, erc20_decimals,
                                       template.org_code_hash,
                                       template.vault_code_hash,
                                       template.vote_code_hash, vote_time, vote_support_require_pct, vote_min_require_num,
@@ -157,7 +160,8 @@ mod main {
 
             self.instance_map.insert(self.instance_index, DAOInstance {
                 owner: controller,
-                dao_manager: dao_manager_instance,
+                dao_manager: dao_instance,
+                dao_manager_addr: dao_addr,
             });
             self.instance_index += 1;
 

@@ -1,11 +1,11 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use ink_lang as ink;
+pub use self::vote_manager::VoteManager;
 
 #[ink::contract]
 mod vote_manager {
 
-    #[cfg(not(feature = "ink-as-dependency"))]
     use ink_storage::{
         collections::{
             HashMap as StorageHashMap,
