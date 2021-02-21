@@ -43,6 +43,7 @@ mod main {
         org_code_hash: Hash,
         vault_code_hash: Hash,
         vote_code_hash: Hash,
+        github_code_hash: Hash,
     }
 
     /// Indicates whether a transaction is already confirmed or needs further confirmations.
@@ -99,7 +100,7 @@ mod main {
 
         #[ink(message)]
         pub fn add_template(&mut self, erc20_code_hash: Hash, dao_manager_code_hash: Hash,
-                            org_code_hash: Hash, vault_code_hash: Hash, vote_code_hash: Hash) -> bool {
+                            org_code_hash: Hash, vault_code_hash: Hash, vote_code_hash: Hash, github_code_hash: Hash) -> bool {
             assert_eq!(self.template_index + 1 > self.template_index, true);
             let from = self.env().caller();
             self.template_map.insert(self.template_index, DAOTemplate {
@@ -109,6 +110,7 @@ mod main {
                 org_code_hash,
                 vault_code_hash,
                 vote_code_hash,
+                github_code_hash,
             });
             self.env().emit_event(AddTemplate {
                 index: self.template_index,
@@ -124,7 +126,9 @@ mod main {
         }
 
         #[ink(message)]
-        pub fn instance_by_template(&mut self, index: u64, controller: AccountId, erc20_initial_supply: u64, erc20_decimals: u8) -> bool {
+        pub fn instance_by_template(&mut self, index: u64, controller: AccountId,
+                                    erc20_initial_supply: u64, erc20_decimals: u8,
+                                    vote_time: u64, vote_support_require_pct: u64, vote_min_require_num: u64) -> bool {
             assert_eq!(self.instance_index + 1 > self.instance_index, true);
             let total_balance = Self::env().balance();
             // assert_eq!(total_balance >= 20, true);
@@ -145,10 +149,11 @@ mod main {
             });
 
             // init instance
-            dao_manager_instance.init_erc20(template.erc20_code_hash, erc20_initial_supply, erc20_decimals);
-            dao_manager_instance.init_org(template.org_code_hash);
-            dao_manager_instance.init_vault(template.vault_code_hash);
-            // dao_manager_instance.init_vote_manager(template.vote_code_hash);
+            dao_manager_instance.init(template.erc20_code_hash, erc20_initial_supply, erc20_decimals,
+                                      template.org_code_hash,
+                                      template.vault_code_hash,
+                                      template.vote_code_hash, vote_time, vote_support_require_pct, vote_min_require_num,
+                                      template.github_code_hash);
 
             self.instance_map.insert(self.instance_index, DAOInstance {
                 owner: controller,

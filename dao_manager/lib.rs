@@ -1,11 +1,13 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+extern crate alloc;
 use ink_lang as ink;
 pub use self::dao_manager::DAOManager;
 
 #[ink::contract]
 mod dao_manager {
 
+    use alloc::string::String;
     use ink_storage::{
         collections::HashMap as StorageHashMap,
         traits::{PackedLayout, SpreadLayout},
@@ -15,19 +17,48 @@ mod dao_manager {
     use org::OrgManager;
     use vault::VaultManager;
     use vote_manager::VoteManager;
+    use github::Github;
+
+    /// DAO component instances
+    #[derive(scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout)]
+    #[cfg_attr(
+    feature = "std",
+    derive(scale_info::TypeInfo, ink_storage::traits::StorageLayout)
+    )]
+    pub struct DAOComponents {
+        erc20: Option<Erc20>,
+        org: Option<OrgManager>,
+        vault: Option<VaultManager>,
+        vote: Option<VoteManager>,
+        github: Option<Github>,
+    }
+
+    /// DAO component instance addresses
+    #[derive(
+    Debug, Copy, Clone, PartialEq, Eq, scale::Encode, scale::Decode, SpreadLayout, PackedLayout, Default
+    )]
+    #[cfg_attr(
+    feature = "std",
+    derive(::scale_info::TypeInfo, ::ink_storage::traits::StorageLayout)
+    )]
+    pub struct DAOComponentAddrs {
+        erc20_addr: Option<AccountId>,
+        org_addr: Option<AccountId>,
+        vault_addr: Option<AccountId>,
+        vote_addr: Option<AccountId>,
+        github_addr: Option<AccountId>,
+    }
 
     /// Defines the storage of your contract.
     /// Add new fields to the below struct in order
     /// to add new static storage fields to your contract.
     #[ink(storage)]
     pub struct DAOManager {
+        init: bool,
         controller: AccountId,
         org_id: u64,
-        erc20: Option<Erc20>,
-        // TODO 保存每个子合约地址，用于查询
-        org_manager: Option<OrgManager>,
-        vault_manager: Option<VaultManager>,
-        vote_manager: Option<VoteManager>,
+        components: DAOComponents,
+        component_addrs: DAOComponentAddrs,
     }
 
     #[derive(
@@ -42,6 +73,7 @@ mod dao_manager {
         Org,
         Vault,
         VoteManager,
+        Github,
     }
 
     #[ink(event)]
@@ -59,34 +91,106 @@ mod dao_manager {
         #[ink(constructor)]
         pub fn new(controller: AccountId, org_id: u64) -> Self {
             Self {
+                init: false,
                 controller,
                 org_id,
-                erc20: None,
-                org_manager: None,
-                vault_manager: None,
-                vote_manager: None,
+                components: DAOComponents {
+                    erc20: None,
+                    org: None,
+                    vault: None,
+                    vote: None,
+                    github: None,
+                },
+                component_addrs: DAOComponentAddrs {
+                    erc20_addr: None,
+                    org_addr: None,
+                    vault_addr: None,
+                    vote_addr: None,
+                    github_addr: None,
+                },
             }
         }
 
         #[ink(message)]
-        pub fn init_erc20(&mut self, erc20: Hash, initial_supply: u64, decimals: u8) -> bool {
+        pub fn init(&mut self, erc20_code_hash: Hash, erc20_initial_supply: u64, erc20_decimals: u8,
+                    org_code_hash: Hash,
+                    vault_code_hash: Hash,
+                    vote_code_hash: Hash, vote_time: u64, vote_support_require_pct: u64, vote_min_require_num: u64,
+                    github_code_hash: Hash) -> bool {
+            assert_eq!(self.init, false);
+
+            // init components
+            self._init_erc20(erc20_code_hash, erc20_initial_supply, erc20_decimals);
+            self._init_org(org_code_hash);
+            self._init_vault(vault_code_hash);
+            self._init_vote(vote_code_hash, vote_time, vote_support_require_pct, vote_min_require_num);
+            self._init_github(github_code_hash);
+
+            self.init = true;
+            true
+        }
+
+        #[ink(message)]
+        pub fn query_component_addrs(&self) -> DAOComponentAddrs {
+            self.component_addrs
+        }
+
+        #[ink(message)]
+        pub fn transfer(&mut self, to: AccountId, value: u64) -> bool {
+            let controller = self.env().caller();
+            assert_eq!(controller == self.controller, true);
+            let erc20 = self.components.erc20.as_mut().unwrap();
+            erc20.transfer(to, value)
+        }
+
+
+        #[ink(message)]
+        pub fn mint_token_by_owner(&mut self, to: AccountId, value: u64, ) -> bool {
+            let controller = self.env().caller();
+            assert_eq!(controller == self.controller, true);
+            let erc20 = self.components.erc20.as_mut().unwrap();
+            erc20.mint_token_by_owner(to, value)
+        }
+
+        #[ink(message)]
+        pub fn destroy_token_by_owner(&mut self, from: AccountId, value: u64) -> bool {
+            let controller = self.env().caller();
+            assert_eq!(controller == self.controller, true);
+            let erc20 = self.components.erc20.as_mut().unwrap();
+            erc20.destroy_token_by_owner(from, value)
+        }
+
+        #[ink(message)]
+        pub fn add_dao_moderator(&mut self, name: String, moderator: AccountId) -> bool {
+            let controller = self.env().caller();
+            assert_eq!(controller == self.controller, true);
+            let org = self.components.org.as_mut().unwrap();
+            org.add_dao_moderator(name, moderator)
+        }
+
+        #[ink(message)]
+        pub fn remove_dao_moderator(&mut self, member: AccountId) -> bool {
+            let controller = self.env().caller();
+            assert_eq!(controller == self.controller, true);
+            let org = self.components.org.as_mut().unwrap();
+            org.remove_dao_moderator(member)
+        }
+
+        /// init erc20
+        fn _init_erc20(&mut self, erc20_code_hash: Hash, initial_supply: u64, decimals: u8) -> bool {
             let total_balance = Self::env().balance();
             // instance erc20
             let erc20_instance_params = Erc20::new(initial_supply, decimals, Self::env().account_id())
                 .endowment(total_balance / 4)
-                .code_hash(erc20)
+                .code_hash(erc20_code_hash)
                 .params();
             let erc20_init_result = ink_env::instantiate_contract(&erc20_instance_params);
             let erc20_addr = erc20_init_result.expect("failed at instantiating the `Erc20` contract");
             let erc20_instance = ink_env::call::FromAccountId::from_account_id(erc20_addr);
-            // let mut erc20_instance = Erc20::new(initial_supply, decimals, Self::env().account_id())
-            //     .endowment(total_balance / 4)
-            //     .code_hash(erc20)
-            //     .instantiate()
-            //     .expect("failed at instantiating the `Erc20` contract");
 
             // TODO 增加脚本，修改metadata的名称，在编译完成后，根据wasm的名字修改
-            self.erc20 = Some(erc20_instance);
+            self.components.erc20 = Some(erc20_instance);
+            self.component_addrs.erc20_addr = Some(erc20_addr);
             self.env().emit_event(InstanceComponent {
                 dao_addr: Self::env().account_id(),
                 component_type: ComponentType::Erc20,
@@ -95,8 +199,8 @@ mod dao_manager {
             true
         }
 
-        #[ink(message)]
-        pub fn init_org(&mut self, org_code_hash: Hash) -> bool {
+        /// init org
+        fn _init_org(&mut self, org_code_hash: Hash) -> bool {
             let total_balance = Self::env().balance();
             // instance org
             let org_instance_params = OrgManager::new(Self::env().account_id(), self.org_id)
@@ -106,7 +210,8 @@ mod dao_manager {
             let org_init_result = ink_env::instantiate_contract(&org_instance_params);
             let org_addr = org_init_result.expect("failed at instantiating the `Org` contract");
             let org_instance = ink_env::call::FromAccountId::from_account_id(org_addr);
-            self.org_manager = Some(org_instance);
+            self.components.org = Some(org_instance);
+            self.component_addrs.org_addr = Some(org_addr);
             self.env().emit_event(InstanceComponent {
                 dao_addr: Self::env().account_id(),
                 component_type: ComponentType::Org,
@@ -116,8 +221,8 @@ mod dao_manager {
         }
 
         // TODO 合并其他简单的之合约实例化
-        #[ink(message)]
-        pub fn init_vault(&mut self, vault_code_hash: Hash) -> bool {
+        /// init vault
+        fn _init_vault(&mut self, vault_code_hash: Hash) -> bool {
             let total_balance = Self::env().balance();
             // instance org
             let vault_instance_params = VaultManager::new(self.org_id)
@@ -127,7 +232,8 @@ mod dao_manager {
             let vault_init_result = ink_env::instantiate_contract(&vault_instance_params);
             let vault_addr = vault_init_result.expect("failed at instantiating the `Org` contract");
             let vault_instance = ink_env::call::FromAccountId::from_account_id(vault_addr);
-            self.org_manager = Some(vault_instance);
+            self.components.vault = Some(vault_instance);
+            self.component_addrs.vault_addr = Some(vault_addr);
             self.env().emit_event(InstanceComponent {
                 dao_addr: Self::env().account_id(),
                 component_type: ComponentType::Vault,
@@ -136,55 +242,46 @@ mod dao_manager {
             true
         }
 
-        // TODO how to use vote
-        // #[ink(message)]
-        // pub fn init_vote_manager(&mut self, vote_code_hash: Hash) -> bool {
-        //     let total_balance = Self::env().balance();
-        //     // instance org
-        //     let vault_instance_params = VaultManager::new(self.org_id)
-        //         .endowment(total_balance / 4)
-        //         .code_hash(vote_code_hash)
-        //         .params();
-        //     let vault_init_result = ink_env::instantiate_contract(&vault_instance_params);
-        //     let vault_addr = vault_init_result.expect("failed at instantiating the `Org` contract");
-        //     let vault_instance = ink_env::call::FromAccountId::from_account_id(vault_addr);
-        //     self.org_manager = Some(vault_instance);
-        //     self.env().emit_event(InstanceComponent {
-        //         dao_addr: Self::env().account_id(),
-        //         component_type: ComponentType::VoteManager,
-        //         component_addr: vault_addr,
-        //     });
-        //     true
-        // }
-
-        #[ink(message)]
-        pub fn transfer(&mut self, to: AccountId, value: u64) -> bool {
-            let controller = self.env().caller();
-            assert_eq!(controller == self.controller, true);
-            let erc20 = self.erc20.as_mut().unwrap();
-            erc20.transfer(to, value)
+        /// init vote
+        fn _init_vote(&mut self, vote_code_hash: Hash, vote_time: u64, support_require_pct: u64, min_require_num: u64) -> bool {
+            let total_balance = Self::env().balance();
+            // instance org
+            let vote_instance_params = VoteManager::new(vote_time, support_require_pct, min_require_num)
+                .endowment(total_balance / 4)
+                .code_hash(vote_code_hash)
+                .params();
+            let vote_init_result = ink_env::instantiate_contract(&vote_instance_params);
+            let vote_addr = vote_init_result.expect("failed at instantiating the `Vote` contract");
+            let vote_instance = ink_env::call::FromAccountId::from_account_id(vote_addr);
+            self.components.vote = Some(vote_instance);
+            self.component_addrs.vote_addr = Some(vote_addr);
+            self.env().emit_event(InstanceComponent {
+                dao_addr: Self::env().account_id(),
+                component_type: ComponentType::VoteManager,
+                component_addr: vote_addr,
+            });
+            true
         }
 
-
-        #[ink(message)]
-        pub fn mint_token_by_owner(&mut self, to: AccountId, value: u64, ) -> bool {
-            let controller = self.env().caller();
-            assert_eq!(controller == self.controller, true);
-            let erc20 = self.erc20.as_mut().unwrap();
-            erc20.mint_token_by_owner(to, value)
+        /// init github
+        fn _init_github(&mut self, github_code_hash: Hash) -> bool {
+            let total_balance = Self::env().balance();
+            // instance org
+            let github_instance_params = Github::new()
+                .endowment(total_balance / 4)
+                .code_hash(github_code_hash)
+                .params();
+            let github_init_result = ink_env::instantiate_contract(&github_instance_params);
+            let github_addr = github_init_result.expect("failed at instantiating the `Github` contract");
+            let github_instance = ink_env::call::FromAccountId::from_account_id(github_addr);
+            self.components.github = Some(github_instance);
+            self.component_addrs.github_addr = Some(github_addr);
+            self.env().emit_event(InstanceComponent {
+                dao_addr: Self::env().account_id(),
+                component_type: ComponentType::Github,
+                component_addr: github_addr,
+            });
+            true
         }
-
-        #[ink(message)]
-        pub fn destroy_token_by_owner(&mut self, from: AccountId, value: u64) -> bool {
-            let controller = self.env().caller();
-            assert_eq!(controller == self.controller, true);
-            let erc20 = self.erc20.as_mut().unwrap();
-            erc20.destroy_token_by_owner(from, value)
-        }
-
-        // TODO 增加org的addDaoModerator和removeDaoModerator 委托调用
-        // TODO 事件优化，可以看清楚初始化的组件和dao
-        // TODO 实例化github，直接调用new()即可
-        // TODO 实例化vote，参数让实例化dao的用户填入
     }
 }

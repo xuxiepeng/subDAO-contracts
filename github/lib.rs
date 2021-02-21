@@ -1,14 +1,13 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use ink_lang as ink;
-
+pub use self::github::Github;
 
 #[ink::contract]
 mod github {
 
     // use ink_prelude::vec::Vec; 
     // use ink_prelude::string::String;
-    #[cfg(not(feature = "ink-as-dependency"))]
     use ink_storage::{
         collections::{
             HashMap as StorageHashMap,

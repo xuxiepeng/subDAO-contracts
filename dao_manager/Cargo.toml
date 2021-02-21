@@ -18,6 +18,7 @@ erc20 = { version = "0.1.0", path = "../erc20", default-features = false, featur
 org = { version = "0.1.0", path = "../org", default-features = false, features = ["ink-as-dependency"] }
 vault = { version = "0.1.0", path = "../vault", default-features = false, features = ["ink-as-dependency"] }
 vote_manager = { version = "0.1.0", path = "../vote", default-features = false, features = ["ink-as-dependency"] }
+github = { version = "0.1.0", path = "../github", default-features = false, features = ["ink-as-dependency"] }
 
 [lib]
 name = "dao_manager"
@@ -42,5 +43,6 @@ std = [
     "org/std",
     "vault/std",
     "vote_manager/std",
+    "github/std",
 ]
 ink-as-dependency = []
