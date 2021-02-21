@@ -24,6 +24,7 @@ mod dao_manager {
         controller: AccountId,
         org_id: u64,
         erc20: Option<Erc20>,
+        // TODO 保存每个子合约地址，用于查询
         org_manager: Option<OrgManager>,
         vault_manager: Option<VaultManager>,
         vote_manager: Option<VoteManager>,
@@ -86,7 +87,7 @@ mod dao_manager {
 
             // TODO 增加脚本，修改metadata的名称，在编译完成后，根据wasm的名字修改
             self.erc20 = Some(erc20_instance);
-            Self::env().emit_event(InstanceComponent {
+            self.env().emit_event(InstanceComponent {
                 dao_addr: Self::env().account_id(),
                 component_type: ComponentType::Erc20,
                 component_addr: erc20_addr,
@@ -106,7 +107,7 @@ mod dao_manager {
             let org_addr = org_init_result.expect("failed at instantiating the `Org` contract");
             let org_instance = ink_env::call::FromAccountId::from_account_id(org_addr);
             self.org_manager = Some(org_instance);
-            Self::env().emit_event(InstanceComponent {
+            self.env().emit_event(InstanceComponent {
                 dao_addr: Self::env().account_id(),
                 component_type: ComponentType::Org,
                 component_addr: org_addr,
@@ -114,6 +115,7 @@ mod dao_manager {
             true
         }
 
+        // TODO 合并其他简单的之合约实例化
         #[ink(message)]
         pub fn init_vault(&mut self, vault_code_hash: Hash) -> bool {
             let total_balance = Self::env().balance();
@@ -126,7 +128,7 @@ mod dao_manager {
             let vault_addr = vault_init_result.expect("failed at instantiating the `Org` contract");
             let vault_instance = ink_env::call::FromAccountId::from_account_id(vault_addr);
             self.org_manager = Some(vault_instance);
-            Self::env().emit_event(InstanceComponent {
+            self.env().emit_event(InstanceComponent {
                 dao_addr: Self::env().account_id(),
                 component_type: ComponentType::Vault,
                 component_addr: vault_addr,
@@ -147,7 +149,7 @@ mod dao_manager {
         //     let vault_addr = vault_init_result.expect("failed at instantiating the `Org` contract");
         //     let vault_instance = ink_env::call::FromAccountId::from_account_id(vault_addr);
         //     self.org_manager = Some(vault_instance);
-        //     Self::env().emit_event(InstanceComponent {
+        //     self.env().emit_event(InstanceComponent {
         //         dao_addr: Self::env().account_id(),
         //         component_type: ComponentType::VoteManager,
         //         component_addr: vault_addr,
@@ -179,5 +181,10 @@ mod dao_manager {
             let erc20 = self.erc20.as_mut().unwrap();
             erc20.destroy_token_by_owner(from, value)
         }
+
+        // TODO 增加org的addDaoModerator和removeDaoModerator 委托调用
+        // TODO 事件优化，可以看清楚初始化的组件和dao
+        // TODO 实例化github，直接调用new()即可
+        // TODO 实例化vote，参数让实例化dao的用户填入
     }
 }

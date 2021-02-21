@@ -53,6 +53,7 @@ mod main {
     )]
     pub struct DAOInstance {
         owner: AccountId,
+        // TODO 记录dao的地址
         dao_manager: DAOManager,
     }
 
