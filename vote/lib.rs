@@ -49,6 +49,7 @@ mod vote_manager {
     #[ink(storage)]
     pub struct VoteManager {
         support_require_pct: u64,
+        min_require_num: u64,
         votes_length: u64,
         vote_time: u64,
         votes: StorageHashMap<VoteId, Vote>,
@@ -84,9 +85,10 @@ mod vote_manager {
     impl VoteManager {
 
         #[ink(constructor)]
-        pub fn new(_vote_time: u64, _support_require_pct: u64) -> Self {
+        pub fn new(_vote_time: u64, support_require_pct: u64, min_require_num: u64) -> Self {
             Self { 
-                support_require_pct: _support_require_pct,
+                support_require_pct,
+                min_require_num,
                 votes_length: 0,
                 vote_time: _vote_time,
                 votes: StorageHashMap::default(),
@@ -141,6 +143,19 @@ mod vote_manager {
                     support,
                 });
             }
+        }
+
+        #[ink(message)]
+        pub fn next_index(&self) -> u64 {
+            self.votes_length
+        }
+
+        fn vote_exists(&self, vote_id: u64) -> bool {
+            return vote_id < self.votes_length;
+        }
+
+        fn is_vote_open(&self, vote: Vote) -> bool {
+            return self.env().block_timestamp() < vote.start_date + self.vote_time && !vote.executed;
         }
     }
 }
