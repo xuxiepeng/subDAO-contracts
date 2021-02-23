@@ -56,7 +56,7 @@ mod base {
 
         #[ink(message)]
         pub fn get_logo(&self) -> String {
-            self.logo
+            self.logo.clone()
         }
 
         #[ink(message)]
@@ -66,7 +66,7 @@ mod base {
 
         #[ink(message)]
         pub fn get_desc(&self) -> String {
-            self.desc
+            self.desc.clone()
         }
 
         #[ink(message)]
