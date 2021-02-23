@@ -50,6 +50,13 @@ mod vault {
         transfer_time:u64,
     }
 
+    #[derive(
+    Debug, Clone, PartialEq, Eq, scale::Encode, scale::Decode, SpreadLayout, PackedLayout,Default
+    )]
+    #[cfg_attr(
+    feature = "std",
+    derive(::scale_info::TypeInfo, ::ink_storage::traits::StorageLayout)
+    )]
     pub struct Erc20_token {
         token_name: String,
         erc_20: Erc20,
@@ -224,8 +231,7 @@ mod vault {
         pub fn remove_vault_token(&mut self,token_address: AccountId) -> bool  {
 
             // 国库权限控制: 只有管理员或者creator 可以移除 token
-
-
+            let caller = self.env().caller();
             let can_operate = self.check_authority(caller);
 
             if can_operate == false {
@@ -337,7 +343,7 @@ mod vault {
 
 
                 // 国库权限控制: 只有管理员或者creator ,可以转出资金
-
+                let caller = self.env().caller();
                 let can_operate = self.check_authority(caller);
 
                 if can_operate == false {

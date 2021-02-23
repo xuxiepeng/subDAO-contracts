@@ -1,17 +1,3 @@
-// Copyright 2018-2020 Parity Technologies (UK) Ltd.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use ink_lang as ink;
@@ -36,6 +22,7 @@ mod main {
     feature = "std",
     derive(scale_info::TypeInfo, ink_storage::traits::StorageLayout)
     )]
+    // TODO temp可以为空 增加合约名
     pub struct DAOTemplate {
         owner: AccountId,
         erc20_code_hash: Hash,
@@ -45,6 +32,8 @@ mod main {
         vote_code_hash: Hash,
         github_code_hash: Hash,
     }
+
+    // TODO 增加templist接口
 
     /// Indicates whether a transaction is already confirmed or needs further confirmations.
     #[derive(scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout)]
