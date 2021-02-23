@@ -8,9 +8,6 @@ mod base {
 
     use std::string::String;
 
-    /// Defines the storage of your contract.
-    /// Add new fields to the below struct in order
-    /// to add new static storage fields to your contract.
     #[ink(storage)]
     pub struct Base {
         owner: AccountId,
@@ -20,23 +17,31 @@ mod base {
     }
 
     impl Base {
-        /// Constructor that initializes the `bool` value to the given `init_value`.
+
         #[ink(constructor)]
         pub fn new() -> Self {
             Self {
                 name: String::default(),
                 logo: String::default(),
                 desc: String::default(),
-                owner: Self::env().caller(),
+                owner: Default::default(),
             }
         }
 
-        /// Constructor that initializes the `bool` value to `false`.
-        ///
-        /// Constructors can delegate to other constructors.
         #[ink(constructor)]
         pub fn default() -> Self {
             Self::new()
+        }
+
+        #[ink(message)]
+        pub fn init_base(&mut self, name: String, logo: String, desc: String) {
+            self.set_name(name);
+            self.set_logo(logo);
+            self.set_desc(desc);
+            // self.set_owner(owner);
+
+            let caller = self.env().caller();
+            self.set_owner(caller);
         }
 
         #[ink(message)]
@@ -70,7 +75,17 @@ mod base {
         }
 
         #[ink(message)]
-        pub fn get_creator(&self) -> AccountId {
+        pub fn set_owner(&mut self, owner: AccountId) {
+
+            let caller = self.env().caller();
+
+            if self.owner == AccountId::default() || caller == self.owner {
+                self.owner = owner;
+            }
+        }
+
+        #[ink(message)]
+        pub fn get_owner(&self) -> AccountId {
             self.owner
         }
     }
@@ -81,27 +96,97 @@ mod base {
     #[cfg(test)]
     mod tests {
         use super::*;
+        use ink_lang as ink;
 
-        #[test]
-        fn test1() {
+        #[ink::test]
+        fn test_name() {
             let mut base = Base::default();
-            base.set_name("hello".to_string());
-            assert_eq!(base.get_name(), "hello");
-            // assert_eq!("hello".to_string().cmp(&base.name), std::cmp::Ordering::Equal);
+
+            base.set_name("SubDAO".to_string());
+
+            let dbg_msg = format!("name is {}", base.get_name());
+            ink_env::debug_println( &dbg_msg );
+
+            assert_eq!(base.get_name(), "SubDAO");
         }
 
-        #[test]
-        fn test2() {
+        #[ink::test]
+        fn test_logo() {
+            let mut base = Base::default();
+
+            base.set_logo("https://example.com/logo.jpg".to_string());
+
+            let dbg_msg = format!("logo is {}", base.get_logo());
+            ink_env::debug_println( &dbg_msg );
+
+            assert_eq!(base.get_logo(), "https://example.com/logo.jpg");
+        }
+
+        #[ink::test]
+        fn test_desc() {
+            let mut base = Base::default();
+
+            base.set_desc("This is the one to rule all!".to_string());
+
+            let dbg_msg = format!("name is {}", base.get_desc());
+            ink_env::debug_println( &dbg_msg );
+
+            assert_eq!(base.get_desc(), "This is the one to rule all!");
+        }
+
+        #[ink::test]
+        fn test_owner() {
+
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+
+            let mut base = Base::default();
+
+            base.set_owner(accounts.alice);
+
+            assert_eq!(base.get_owner(), accounts.alice);
+        }
+
+        #[ink::test]
+        fn test_change_owner() {
+
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+
+            let mut base = Base::default();
+
+            base.set_owner(accounts.alice);
+
+            assert_eq!(base.get_owner(), accounts.alice);
+
+            base.set_owner(accounts.bob);
+
+            assert_eq!(base.get_owner(), accounts.bob);
+        }
+
+
+        #[ink::test]
+        fn test_all() {
+
+            let mut base = Base::default();
+
+            base.init_base("SubDAO".to_string(), "http://example.com/logo.jpg".to_string(), "This is the one to rule all!".to_string());
+
+            let dbg_msg = format!("name is {}", base.get_name());
+            ink_env::debug_println( &dbg_msg );
+
+            assert_eq!(base.get_name(), "SubDAO");
+            assert_eq!(base.get_logo(), "http://example.com/logo.jpg");
+            assert_eq!(base.get_desc(), "This is the one to rule all!");
+            // assert_eq!(base.get_owner(), accounts.alice);
+        }
+
+
+        #[ink::test]
+        fn test_meanless() {
+            let dbg_msg = format!("name is eth");
+            ink_env::debug_println( &dbg_msg );
+
             let eth_name = String::from("eth");
             assert_eq!(eth_name.clone(), "eth");
         }
-
-        // #[test]
-        // fn it_works() {
-        //     let mut base = Base::new(false);
-        //     assert_eq!(base.get(), false);
-        //     base.flip();
-        //     assert_eq!(base.get(), true);
-        // }
     }
 }
