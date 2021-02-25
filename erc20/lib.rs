@@ -1,17 +1,20 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use ink_lang as ink;
+extern crate alloc;
 pub use self::erc20::Erc20;
 
 #[ink::contract]
 mod erc20 {
-    #[cfg(not(feature = "ink-as-dependency"))]
-    use std::string::String;
+    use alloc::string::String;
     use ink_storage::{
         collections::HashMap as StorageHashMap,
     };
 
     /// Indicates whether a transaction is already confirmed or needs further confirmations.
+    #[derive(
+        Default
+    )]
     #[ink(storage)]
     pub struct Erc20 {
         name: String,
@@ -43,7 +46,6 @@ mod erc20 {
         value: u64,
     }
 
-    // TODO 增加name和symbol 用string
     impl Erc20 {
         #[ink(constructor)]
         pub fn new(name: String, symbol: String, initial_supply: u64, decimals: u8, controller: AccountId) -> Self {

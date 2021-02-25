@@ -1,12 +1,12 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-// extern crate alloc;
+extern crate alloc;
 use ink_lang as ink;
 
 #[ink::contract]
 mod base {
 
-    use std::string::String;
+    use alloc::string::String;
 
     #[ink(storage)]
     pub struct Base {
@@ -46,7 +46,7 @@ mod base {
 
         #[ink(message)]
         pub fn set_name(&mut self, name: String) {
-            self.name = name.to_string();
+            self.name = name;
         }
 
         #[ink(message)]
