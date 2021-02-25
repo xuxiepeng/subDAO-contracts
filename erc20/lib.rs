@@ -12,9 +12,6 @@ mod erc20 {
     };
 
     /// Indicates whether a transaction is already confirmed or needs further confirmations.
-    #[derive(
-    Eq, Default
-    )]
     #[ink(storage)]
     pub struct Erc20 {
         name: String,
