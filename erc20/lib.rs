@@ -1,12 +1,13 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+extern crate alloc;
 use ink_lang as ink;
 pub use self::erc20::Erc20;
 
 #[ink::contract]
 mod erc20 {
     #[cfg(not(feature = "ink-as-dependency"))]
-    use std::string::String;
+    use alloc::string::String;
     use ink_storage::{
         collections::HashMap as StorageHashMap,
     };
