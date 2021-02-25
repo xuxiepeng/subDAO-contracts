@@ -6,6 +6,7 @@ pub use self::erc20::Erc20;
 #[ink::contract]
 mod erc20 {
     #[cfg(not(feature = "ink-as-dependency"))]
+    use std::string::String;
     use ink_storage::{
         collections::HashMap as StorageHashMap,
     };
@@ -13,6 +14,8 @@ mod erc20 {
     /// Indicates whether a transaction is already confirmed or needs further confirmations.
     #[ink(storage)]
     pub struct Erc20 {
+        name: String,
+        symbol: String,
         total_supply: u64,
         decimals: u8,
         balances: StorageHashMap<AccountId, u64>,
@@ -43,10 +46,12 @@ mod erc20 {
     // TODO 增加name和symbol 用string
     impl Erc20 {
         #[ink(constructor)]
-        pub fn new(initial_supply: u64, decimals: u8, controller: AccountId) -> Self {
+        pub fn new(name: String, symbol: String, initial_supply: u64, decimals: u8, controller: AccountId) -> Self {
             let mut balances = StorageHashMap::new();
             balances.insert(controller, initial_supply);
             let instance = Self {
+                name: name,
+                symbol: symbol,
                 total_supply: initial_supply,
                 decimals,
                 balances,
@@ -59,6 +64,16 @@ mod erc20 {
                 value: initial_supply,
             });
             instance
+        }
+
+        #[ink(message)]
+        pub fn name(&self) -> String {
+            self.name.clone()
+        }
+
+        #[ink(message)]
+        pub fn symbol(&self) -> String {
+            self.symbol.clone()
         }
 
         #[ink(message)]
@@ -202,6 +217,32 @@ mod erc20 {
             });
             true
         }
+    }
 
+     #[cfg(test)]
+    mod tests {
+        use super::*;
+        use ink_lang as ink;
+
+        #[ink::test]
+        fn default_works() {
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+
+            let token = Erc20::new(
+                "SubDAO Token".to_string()
+                , "SDT".to_string()
+                , 100000000
+                , 4
+                , accounts.alice
+                );
+
+            ink_env::debug_println(&token.name());
+            ink_env::debug_println(&token.symbol());
+            ink_env::debug_println(&format!("name is {}", token.total_supply()));
+
+            assert_eq!(token.name(), "SubDAO Token");
+            assert_eq!(token.symbol(), "SDT");
+            assert_eq!(token.total_supply(), 100000000);
+        }
     }
 }
