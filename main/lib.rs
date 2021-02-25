@@ -25,6 +25,7 @@ mod main {
     // TODO temp可以为空 增加合约名
     pub struct DAOTemplate {
         owner: AccountId,
+        base_code_hash: Hash,
         erc20_code_hash: Hash,
         dao_manager_code_hash: Hash,
         org_code_hash: Hash,
@@ -88,12 +89,13 @@ mod main {
         }
 
         #[ink(message)]
-        pub fn add_template(&mut self, erc20_code_hash: Hash, dao_manager_code_hash: Hash,
+        pub fn add_template(&mut self, base_code_hash: Hash, erc20_code_hash: Hash, dao_manager_code_hash: Hash,
                             org_code_hash: Hash, vault_code_hash: Hash, vote_code_hash: Hash, github_code_hash: Hash) -> bool {
             assert_eq!(self.template_index + 1 > self.template_index, true);
             let from = self.env().caller();
             self.template_map.insert(self.template_index, DAOTemplate {
                 owner: from,
+                base_code_hash,
                 erc20_code_hash,
                 dao_manager_code_hash,
                 org_code_hash,
@@ -141,11 +143,13 @@ mod main {
             });
 
             // init instance
-            dao_instance.init(template.erc20_code_hash, erc20_name, erc20_symbol, erc20_initial_supply, erc20_decimals,
-                                      template.org_code_hash,
-                                      template.vault_code_hash,
-                                      template.vote_code_hash, vote_time, vote_support_require_pct, vote_min_require_num,
-                                      template.github_code_hash);
+            dao_instance.init(
+                template.base_code_hash
+                template.erc20_code_hash, erc20_name, erc20_symbol, erc20_initial_supply, erc20_decimals,
+                template.org_code_hash,
+                template.vault_code_hash,
+                template.vote_code_hash, vote_time, vote_support_require_pct, vote_min_require_num,
+                template.github_code_hash);
 
             self.instance_map.insert(self.instance_index, DAOInstance {
                 owner: controller,

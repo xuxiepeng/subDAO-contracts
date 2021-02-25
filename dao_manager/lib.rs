@@ -13,6 +13,7 @@ mod dao_manager {
         traits::{PackedLayout, SpreadLayout},
 
     };
+    use base::Base;
     use erc20::Erc20;
     use org::OrgManager;
     use vault::VaultManager;
@@ -26,6 +27,7 @@ mod dao_manager {
     derive(scale_info::TypeInfo, ink_storage::traits::StorageLayout)
     )]
     pub struct DAOComponents {
+        base: Option<Base>,
         erc20: Option<Erc20>,
         org: Option<OrgManager>,
         vault: Option<VaultManager>,
@@ -42,6 +44,7 @@ mod dao_manager {
     derive(::scale_info::TypeInfo, ::ink_storage::traits::StorageLayout)
     )]
     pub struct DAOComponentAddrs {
+        base_addr: Option<AccountId>,
         erc20_addr: Option<AccountId>,
         org_addr: Option<AccountId>,
         vault_addr: Option<AccountId>,
@@ -69,6 +72,7 @@ mod dao_manager {
     derive(::scale_info::TypeInfo, ::ink_storage::traits::StorageLayout)
     )]
     pub enum ComponentType {
+        Base,
         Erc20,
         Org,
         Vault,
@@ -95,6 +99,7 @@ mod dao_manager {
                 controller,
                 org_id,
                 components: DAOComponents {
+                    base: None,
                     erc20: None,
                     org: None,
                     vault: None,
@@ -102,6 +107,7 @@ mod dao_manager {
                     github: None,
                 },
                 component_addrs: DAOComponentAddrs {
+                    base_addr: None,
                     erc20_addr: None,
                     org_addr: None,
                     vault_addr: None,
@@ -113,6 +119,7 @@ mod dao_manager {
 
         #[ink(message)]
         pub fn init(&mut self, 
+                    base_code_hash: Hash,
                     erc20_code_hash: Hash, erc20_name: String, erc20_symbol: String, erc20_initial_supply: u64, erc20_decimals: u8,
                     org_code_hash: Hash,
                     vault_code_hash: Hash,
@@ -121,6 +128,8 @@ mod dao_manager {
             assert_eq!(self.init, false);
 
             // init components
+
+            self._init_base(base_code_hash);
             self._init_erc20(erc20_code_hash, erc20_name, erc20_symbol, erc20_initial_supply, erc20_decimals);
             self._init_org(org_code_hash);
             self._init_vault(vault_code_hash);
@@ -175,6 +184,29 @@ mod dao_manager {
             assert_eq!(controller == self.controller, true);
             let org = self.components.org.as_mut().unwrap();
             org.remove_dao_moderator(member)
+        }
+
+        /// init base
+        fn _init_base(&mut self, base_code_hash: Hash) -> bool {
+            let total_balance = Self::env().balance();
+            // instance base
+            let instance_params = Base::new()
+                .endowment(total_balance / 4)
+                .code_hash(base_code_hash)
+                .params();
+            let init_result = ink_env::instantiate_contract(&instance_params);
+            let contract_addr = init_result.expect("failed at instantiating the `Base` contract");
+            let contract_instance = ink_env::call::FromAccountId::from_account_id(erc20_addr);
+
+            self.components.base = Some(contract_instance);
+            self.component_addrs.base_addr = Some(contract_addr);
+            self.env().emit_event(InstanceComponent {
+                dao_addr: Self::env().account_id(),
+                component_type: ComponentType::Base,
+                component_addr: contract_addr,
+            });
+
+            true
         }
 
         /// init erc20
