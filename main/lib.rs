@@ -116,7 +116,7 @@ mod main {
 
         #[ink(message)]
         pub fn instance_by_template(&mut self, index: u64, controller: AccountId,
-                                    erc20_initial_supply: u64, erc20_decimals: u8,
+                                    erc20_name: String, erc20_symbol: String, erc20_initial_supply: u64, erc20_decimals: u8,
                                     vote_time: u64, vote_support_require_pct: u64, vote_min_require_num: u64) -> bool {
             assert_eq!(self.instance_index + 1 > self.instance_index, true);
             let total_balance = Self::env().balance();
@@ -141,7 +141,7 @@ mod main {
             });
 
             // init instance
-            dao_instance.init(template.erc20_code_hash, erc20_initial_supply, erc20_decimals,
+            dao_instance.init(template.erc20_code_hash, erc20_name, erc20_symbol, erc20_initial_supply, erc20_decimals,
                                       template.org_code_hash,
                                       template.vault_code_hash,
                                       template.vote_code_hash, vote_time, vote_support_require_pct, vote_min_require_num,

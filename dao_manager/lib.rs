@@ -112,7 +112,8 @@ mod dao_manager {
         }
 
         #[ink(message)]
-        pub fn init(&mut self, erc20_code_hash: Hash, erc20_initial_supply: u64, erc20_decimals: u8,
+        pub fn init(&mut self, 
+                    erc20_code_hash: Hash, erc20_name: String, erc20_symbol: String, erc20_initial_supply: u64, erc20_decimals: u8,
                     org_code_hash: Hash,
                     vault_code_hash: Hash,
                     vote_code_hash: Hash, vote_time: u64, vote_support_require_pct: u64, vote_min_require_num: u64,
@@ -120,7 +121,7 @@ mod dao_manager {
             assert_eq!(self.init, false);
 
             // init components
-            self._init_erc20(erc20_code_hash, erc20_initial_supply, erc20_decimals);
+            self._init_erc20(erc20_code_hash, erc20_name, erc20_symbol, erc20_initial_supply, erc20_decimals);
             self._init_org(org_code_hash);
             self._init_vault(vault_code_hash);
             self._init_vote(vote_code_hash, vote_time, vote_support_require_pct, vote_min_require_num);
@@ -177,10 +178,10 @@ mod dao_manager {
         }
 
         /// init erc20
-        fn _init_erc20(&mut self, erc20_code_hash: Hash, initial_supply: u64, decimals: u8) -> bool {
+        fn _init_erc20(&mut self, erc20_code_hash: Hash, name: String, symbol: String, initial_supply: u64, decimals: u8) -> bool {
             let total_balance = Self::env().balance();
             // instance erc20
-            let erc20_instance_params = Erc20::new(initial_supply, decimals, Self::env().account_id())
+            let erc20_instance_params = Erc20::new(name, symbol, initial_supply, decimals, Self::env().account_id())
                 .endowment(total_balance / 4)
                 .code_hash(erc20_code_hash)
                 .params();
