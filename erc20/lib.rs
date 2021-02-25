@@ -1,7 +1,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use ink_lang as ink;
 extern crate alloc;
+use ink_lang as ink;
 pub use self::erc20::Erc20;
 
 #[ink::contract]
@@ -13,7 +13,7 @@ mod erc20 {
 
     /// Indicates whether a transaction is already confirmed or needs further confirmations.
     #[derive(
-        Default
+    Eq, Default
     )]
     #[ink(storage)]
     pub struct Erc20 {

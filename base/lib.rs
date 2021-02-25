@@ -46,7 +46,7 @@ mod base {
 
         #[ink(message)]
         pub fn set_name(&mut self, name: String) {
-            self.name = name;
+            self.name = String::from(name);
         }
 
         #[ink(message)]
