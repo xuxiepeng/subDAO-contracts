@@ -17,7 +17,7 @@ scale-info = { version = "0.4.1", default-features = false, features = ["derive"
 erc20 = { version = "0.1.0", path = "../erc20", default-features = false, features = ["ink-as-dependency"] }
 org = { version = "0.1.0", path = "../org", default-features = false, features = ["ink-as-dependency"] }
 vault = { version = "0.1.0", path = "../vault", default-features = false, features = ["ink-as-dependency"] }
-vote_manager = { version = "0.1.0", path = "../vote", default-features = false, features = ["ink-as-dependency"] }
+vote_manager = { version = "0.1.0", path = "../vote_manager", default-features = false, features = ["ink-as-dependency"] }
 github = { version = "0.1.0", path = "../github", default-features = false, features = ["ink-as-dependency"] }
 base = { version = "0.1.0", path = "../base", default-features = false, features = ["ink-as-dependency"] }
 

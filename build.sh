@@ -9,7 +9,7 @@ GITHUB_MODULE=github
 MAIN_MODULE=main
 ORG_MODULE=org
 VAULT_MODULE=vault
-VOTE_MODULE=vote
+VOTE_MODULE=vote_manager
 
 function build_module() {
     m_name=$1
