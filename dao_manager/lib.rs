@@ -196,7 +196,7 @@ mod dao_manager {
                 .params();
             let init_result = ink_env::instantiate_contract(&instance_params);
             let contract_addr = init_result.expect("failed at instantiating the `Base` contract");
-            let contract_instance = ink_env::call::FromAccountId::from_account_id(erc20_addr);
+            let contract_instance = ink_env::call::FromAccountId::from_account_id(contract_addr);
 
             self.components.base = Some(contract_instance);
             self.component_addrs.base_addr = Some(contract_addr);
@@ -253,12 +253,13 @@ mod dao_manager {
             true
         }
 
-        // TODO 合并其他简单的之合约实例化
         /// init vault
         fn _init_vault(&mut self, vault_code_hash: Hash) -> bool {
             let total_balance = Self::env().balance();
             // instance org
-            let vault_instance_params = VaultManager::new(self.org_id)
+            let org_addr = self.component_addrs.org_addr.unwrap();
+            let org_instance: OrgManager = ink_env::call::FromAccountId::from_account_id(org_addr);
+            let vault_instance_params = VaultManager::new(self.org_id, org_instance)
                 .endowment(total_balance / 4)
                 .code_hash(vault_code_hash)
                 .params();

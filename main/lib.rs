@@ -1,10 +1,12 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+extern crate alloc;
 use ink_lang as ink;
 
 #[ink::contract]
 mod main {
     #[cfg(not(feature = "ink-as-dependency"))]
+    use alloc::string::String;
     use ink_storage::{
         traits::{
             PackedLayout,
@@ -144,7 +146,7 @@ mod main {
 
             // init instance
             dao_instance.init(
-                template.base_code_hash
+                template.base_code_hash,
                 template.erc20_code_hash, erc20_name, erc20_symbol, erc20_initial_supply, erc20_decimals,
                 template.org_code_hash,
                 template.vault_code_hash,
