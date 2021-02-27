@@ -7,34 +7,34 @@
 
 ## 2.接口描述
 
-### 2.1 new()
+### 2.1 new(_creator: AccountId,_orgId:u64):self
 + 用组织id,创建者账号，创建一个新的组织。
 
-### 2.2 get_dao_creator()
+### 2.2 get_dao_creator():AccountId
 + 返回组织的创建者
 
-### 2.3 get_orgid()
+### 2.3 get_orgid(): u64 
 + 返回组织的id
 
-### 2.4 get_dao_moderator_list()
+### 2.4 get_dao_moderator_list():Vec<AccountId>
 + 返回当前的管理员列表
 
-### 2.5 get_dao_members_list()
+### 2.5 get_dao_members_list():Vec<AccountId>
 + 返回当前的普通成员的列表
 
-### 2.6 add_dao_moderator()
+### 2.6 add_dao_moderator(name:String,moderator: AccountId):bool
 + 添加一个管理员
 
-### 2.7 add_dao_member()
+### 2.7 add_dao_member(name:String,member: AccountId):bool
 + 添加一个普通成员
 
-### 2.8 remove_dao_moderator()
+### 2.8 remove_dao_moderator(name:String,moderator: AccountId):bool
 + 移除一个管理员
 
-### 2.9 remove_dao_member()
+### 2.9 remove_dao_member(name:String,member: AccountId):bool
 + 移除一个普通成员
 
-### 2.10 resign()
+### 2.10 resign(member: AccountId) -> bool
 + 管理员或普通成员自我退出
 
 ### TODO 增加角色transfer
