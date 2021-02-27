@@ -10,6 +10,7 @@ MAIN_MODULE=main
 ORG_MODULE=org
 VAULT_MODULE=vault
 VOTE_MODULE=vote_manager
+TEMPLATE_MODULE=template_manager
 
 function build_module() {
     m_name=$1
@@ -33,10 +34,11 @@ rm -rf ${WORK_DIR}/target
 mkdir -p ${WORK_DIR}/target
 
 build_module ${BASE_MODULE}
-build_module ${DAO_MODULE}
+build_module ${TEMPLATE_MODULE}
 build_module ${ERC20_MODULE}
 build_module ${GITHUB_MODULE}
-build_module ${MAIN_MODULE}
 build_module ${ORG_MODULE}
 build_module ${VAULT_MODULE}
 build_module ${VOTE_MODULE}
+build_module ${DAO_MODULE}
+build_module ${MAIN_MODULE}

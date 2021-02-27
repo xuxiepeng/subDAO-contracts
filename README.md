@@ -13,7 +13,13 @@ cargo +nightly contract build
 visit [polkadot.js apps](https://polkadot.js.org/apps/), and connect subDAO node.
 then `Develpoer`->`Contract`->`upload WASM`.
 
-## build a new contract
+## generate a new contract
 ```bash
 cargo contract new test
 ```
+
+## build all contracts
+```bash
+./build.sh
+```
+the ABI and wasm copied in `./traget` dir.
