@@ -316,7 +316,7 @@ mod dao_manager {
             let vote_code_hash = vote_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
             // instance org
-            let vote_instance_params = VoteManager::new(vote_time, support_require_pct, min_require_num)
+            let vote_instance_params = VoteManager::new()
                 .endowment(total_balance / 4)
                 .code_hash(vote_code_hash)
                 .params();
