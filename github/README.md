@@ -4,11 +4,11 @@
 
 ## Interface
 
-### new_pull_request_auditor(& mut self, repo_name: Hash, pr_number: u64, github_id: u64, account_id: AccountId, auditor_id: AccountId)
+### new_pull_request_auditor(& mut self, repo_url: String, pr_number: u64, github_id: u64, account_id: AccountId, auditor_id: AccountId)
 
 Init a new github pull request module.
 
-repo_name: The name of the github repository where the PR is located. 
+repo_url: The url of the github repository where the PR is located. 
 pr_number: The number of the PR. 
 github_id: The github user id of the PR owner.
 account_id: The account id of the PR owner. 
