@@ -19,6 +19,7 @@ mod dao_manager {
     use vault::VaultManager;
     use vote_manager::VoteManager;
     use github::Github;
+    use template_manager::DAOTemplate;
 
     /// DAO component instances
     #[derive(scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout)]
@@ -44,11 +45,17 @@ mod dao_manager {
     derive(::scale_info::TypeInfo, ::ink_storage::traits::StorageLayout)
     )]
     pub struct DAOComponentAddrs {
+        // base module contract's address
         base_addr: Option<AccountId>,
+        // erc20 module contract's address
         erc20_addr: Option<AccountId>,
+        // org module contract's address
         org_addr: Option<AccountId>,
+        // vault module contract's address
         vault_addr: Option<AccountId>,
+        // vote module contract's address
         vote_addr: Option<AccountId>,
+        // github module contract's address
         github_addr: Option<AccountId>,
     }
 
@@ -60,6 +67,7 @@ mod dao_manager {
         init: bool,
         controller: AccountId,
         org_id: u64,
+        template: DAOTemplate,
         components: DAOComponents,
         component_addrs: DAOComponentAddrs,
     }
@@ -93,11 +101,12 @@ mod dao_manager {
     impl DAOManager {
         /// Constructor that initializes the `bool` value to the given `init_value`.
         #[ink(constructor)]
-        pub fn new(controller: AccountId, org_id: u64) -> Self {
+        pub fn new(controller: AccountId, org_id: u64, template: DAOTemplate) -> Self {
             Self {
                 init: false,
                 controller,
                 org_id,
+                template,
                 components: DAOComponents {
                     base: None,
                     erc20: None,
@@ -118,17 +127,20 @@ mod dao_manager {
         }
 
         #[ink(message)]
-        pub fn init(&mut self, 
-                    base_code_hash: Hash,
-                    erc20_code_hash: Hash, erc20_name: String, erc20_symbol: String, erc20_initial_supply: u64, erc20_decimals: u8,
-                    org_code_hash: Hash,
-                    vault_code_hash: Hash,
-                    vote_code_hash: Hash, vote_time: u64, vote_support_require_pct: u64, vote_min_require_num: u64,
-                    github_code_hash: Hash) -> bool {
+        pub fn init(&mut self, erc20_name: String, erc20_symbol: String, erc20_initial_supply: u64, erc20_decimals: u8,
+                    vote_time: u64, vote_support_require_pct: u64, vote_min_require_num: u64) -> bool {
             assert_eq!(self.init, false);
+            let controller = self.env().caller();
+            assert_eq!(controller == self.controller, true);
 
             // init components
-
+            let components_hash_map = self.template.components.clone();
+            let base_code_hash = components_hash_map.get("BASE");
+            let erc20_code_hash = components_hash_map.get("ERC20");
+            let org_code_hash = components_hash_map.get("ORG");
+            let vault_code_hash = components_hash_map.get("VAULT");
+            let vote_code_hash = components_hash_map.get("VOTE");
+            let github_code_hash = components_hash_map.get("GITHUB");
             self._init_base(base_code_hash);
             self._init_erc20(erc20_code_hash, erc20_name, erc20_symbol, erc20_initial_supply, erc20_decimals);
             self._init_org(org_code_hash);
@@ -148,6 +160,7 @@ mod dao_manager {
         #[ink(message)]
         pub fn transfer(&mut self, to: AccountId, value: u64) -> bool {
             let controller = self.env().caller();
+            assert_eq!(self.components.erc20.is_some(), true);
             assert_eq!(controller == self.controller, true);
             let erc20 = self.components.erc20.as_mut().unwrap();
             erc20.transfer(to, value)
@@ -157,6 +170,7 @@ mod dao_manager {
         #[ink(message)]
         pub fn mint_token_by_owner(&mut self, to: AccountId, value: u64, ) -> bool {
             let controller = self.env().caller();
+            assert_eq!(self.components.erc20.is_some(), true);
             assert_eq!(controller == self.controller, true);
             let erc20 = self.components.erc20.as_mut().unwrap();
             erc20.mint_token_by_owner(to, value)
@@ -165,6 +179,7 @@ mod dao_manager {
         #[ink(message)]
         pub fn destroy_token_by_owner(&mut self, from: AccountId, value: u64) -> bool {
             let controller = self.env().caller();
+            assert_eq!(self.components.erc20.is_some(), true);
             assert_eq!(controller == self.controller, true);
             let erc20 = self.components.erc20.as_mut().unwrap();
             erc20.destroy_token_by_owner(from, value)
@@ -173,6 +188,7 @@ mod dao_manager {
         #[ink(message)]
         pub fn add_dao_moderator(&mut self, name: String, moderator: AccountId) -> bool {
             let controller = self.env().caller();
+            assert_eq!(self.components.org.is_some(), true);
             assert_eq!(controller == self.controller, true);
             let org = self.components.org.as_mut().unwrap();
             org.add_dao_moderator(name, moderator)
@@ -181,13 +197,18 @@ mod dao_manager {
         #[ink(message)]
         pub fn remove_dao_moderator(&mut self, member: AccountId) -> bool {
             let controller = self.env().caller();
+            assert_eq!(self.components.org.is_some(), true);
             assert_eq!(controller == self.controller, true);
             let org = self.components.org.as_mut().unwrap();
             org.remove_dao_moderator(member)
         }
 
         /// init base
-        fn _init_base(&mut self, base_code_hash: Hash) -> bool {
+        fn _init_base(&mut self, base_code_hash: Option<&Hash>) -> bool {
+            if base_code_hash.is_none() {
+                return true;
+            }
+            let base_code_hash = base_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
             // instance base
             let instance_params = Base::new()
@@ -196,7 +217,7 @@ mod dao_manager {
                 .params();
             let init_result = ink_env::instantiate_contract(&instance_params);
             let contract_addr = init_result.expect("failed at instantiating the `Base` contract");
-            let contract_instance = ink_env::call::FromAccountId::from_account_id(erc20_addr);
+            let contract_instance = ink_env::call::FromAccountId::from_account_id(contract_addr);
 
             self.components.base = Some(contract_instance);
             self.component_addrs.base_addr = Some(contract_addr);
@@ -210,7 +231,11 @@ mod dao_manager {
         }
 
         /// init erc20
-        fn _init_erc20(&mut self, erc20_code_hash: Hash, name: String, symbol: String, initial_supply: u64, decimals: u8) -> bool {
+        fn _init_erc20(&mut self, erc20_code_hash: Option<&Hash>, name: String, symbol: String, initial_supply: u64, decimals: u8) -> bool {
+            if erc20_code_hash.is_none() {
+                return true;
+            }
+            let erc20_code_hash = erc20_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
             // instance erc20
             let erc20_instance_params = Erc20::new(name, symbol, initial_supply, decimals, Self::env().account_id())
@@ -221,7 +246,6 @@ mod dao_manager {
             let erc20_addr = erc20_init_result.expect("failed at instantiating the `Erc20` contract");
             let erc20_instance = ink_env::call::FromAccountId::from_account_id(erc20_addr);
 
-            // TODO 增加脚本，修改metadata的名称，在编译完成后，根据wasm的名字修改
             self.components.erc20 = Some(erc20_instance);
             self.component_addrs.erc20_addr = Some(erc20_addr);
             self.env().emit_event(InstanceComponent {
@@ -233,7 +257,11 @@ mod dao_manager {
         }
 
         /// init org
-        fn _init_org(&mut self, org_code_hash: Hash) -> bool {
+        fn _init_org(&mut self, org_code_hash: Option<&Hash>) -> bool {
+            if org_code_hash.is_none() {
+                return true;
+            }
+            let org_code_hash = org_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
             // instance org
             let org_instance_params = OrgManager::new(Self::env().account_id(), self.org_id)
@@ -253,12 +281,17 @@ mod dao_manager {
             true
         }
 
-        // TODO 合并其他简单的之合约实例化
         /// init vault
-        fn _init_vault(&mut self, vault_code_hash: Hash) -> bool {
+        fn _init_vault(&mut self, vault_code_hash: Option<&Hash>) -> bool {
+            if vault_code_hash.is_none() {
+                return true;
+            }
+            let vault_code_hash = vault_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
             // instance org
-            let vault_instance_params = VaultManager::new(self.org_id)
+            let org_addr = self.component_addrs.org_addr.unwrap();
+            let org_instance: OrgManager = ink_env::call::FromAccountId::from_account_id(org_addr);
+            let vault_instance_params = VaultManager::new(self.org_id, org_instance)
                 .endowment(total_balance / 4)
                 .code_hash(vault_code_hash)
                 .params();
@@ -276,7 +309,11 @@ mod dao_manager {
         }
 
         /// init vote
-        fn _init_vote(&mut self, vote_code_hash: Hash, vote_time: u64, support_require_pct: u64, min_require_num: u64) -> bool {
+        fn _init_vote(&mut self, vote_code_hash: Option<&Hash>, vote_time: u64, support_require_pct: u64, min_require_num: u64) -> bool {
+            if vote_code_hash.is_none() {
+                return true;
+            }
+            let vote_code_hash = vote_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
             // instance org
             let vote_instance_params = VoteManager::new(vote_time, support_require_pct, min_require_num)
@@ -297,7 +334,11 @@ mod dao_manager {
         }
 
         /// init github
-        fn _init_github(&mut self, github_code_hash: Hash) -> bool {
+        fn _init_github(&mut self, github_code_hash: Option<&Hash>) -> bool {
+            if github_code_hash.is_none() {
+                return true;
+            }
+            let github_code_hash = github_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
             // instance org
             let github_instance_params = Github::new()

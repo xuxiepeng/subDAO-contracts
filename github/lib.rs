@@ -8,6 +8,7 @@ mod github {
 
     // use ink_prelude::vec::Vec; 
     // use ink_prelude::string::String;
+    
     use ink_storage::{
         collections::{
             HashMap as StorageHashMap,
@@ -20,7 +21,7 @@ mod github {
 
     // use ink_prelude::string;
 
-    type GitHubId = u64;
+    type Index = u64;
 
     #[derive(scale::Encode,scale::Decode, SpreadLayout, PackedLayout)]
     #[cfg_attr(
@@ -43,8 +44,8 @@ mod github {
     #[ink(storage)]
     pub struct Github {
         length: u64,
-        pullrequests: StorageHashMap<GitHubId, PullRequest>,
-        auditorresults: StorageHashMap<(GitHubId, AccountId), bool>,
+        pullrequests: StorageHashMap<Index, PullRequest>,
+        auditorresults: StorageHashMap<(Index, AccountId), bool>,
     }
 
     impl Github {
@@ -71,18 +72,14 @@ mod github {
             };
             self.pullrequests.insert(index, pr);
             self.auditorresults.insert((index,auditor_id),false);
-            // self.env().emit_event(StartVote{
-            //     vote_id,
-            //     creator: self.env().caller(),
-            // });
         }
 
         #[ink(message)]
-        pub fn query_pull_request_auditor_status(&self, github_id: GitHubId ) -> bool{
+        pub fn query_pull_request_audit_status(&self, index: Index ) -> bool{
             let mut res = false;
-           for ((index, account_id),auditor_result) in &self.auditorresults {
-               if index == &github_id {
-                 res =  *auditor_result;
+           for ((_index, _account_id),_auditor_result) in &self.auditorresults {
+               if _index == &index {
+                 res =  *_auditor_result;
                  break;
                }
            }
@@ -90,10 +87,10 @@ mod github {
         }
 
         #[ink(message)]
-        pub fn audit_pull_request(& mut self, github_id: GitHubId, audit_result: bool ) {
+        pub fn audit_pull_request(& mut self, index: Index, audit_result: bool ) {
             let caller = self.env().caller();
-            if self.auditorresults.contains_key (&(github_id,caller)) {
-                self.auditorresults.insert((github_id,caller),audit_result);
+            if self.auditorresults.contains_key (&(index,caller)) {
+                self.auditorresults.insert((index,caller),audit_result);
             }
             
         }

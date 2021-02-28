@@ -34,7 +34,7 @@ mod vault {
     use org::OrgManager;
 
     #[derive(
-    Debug, Clone, PartialEq, Eq, scale::Encode, scale::Decode, SpreadLayout, PackedLayout,Default
+    Debug, Clone, PartialEq, Eq, scale::Encode, scale::Decode, SpreadLayout, PackedLayout,Default,Copy
     )]
     #[cfg_attr(
     feature = "std",
@@ -43,33 +43,23 @@ mod vault {
     pub struct Transfer {
         transfer_id:u64,
         transfer_direction:u64,// 1: 国库转出，2:国库转入
-        token_name: String,
+        // token_name: String,
         from_address:AccountId,
         to_address:AccountId,
-        value: Balance,
+        value: u64,
         transfer_time:u64,
     }
 
-    #[derive(
-    Debug, Clone, PartialEq, Eq, scale::Encode, scale::Decode, SpreadLayout, PackedLayout,Default
-    )]
-    #[cfg_attr(
-    feature = "std",
-    derive(::scale_info::TypeInfo, ::ink_storage::traits::StorageLayout)
-    )]
-    pub struct Erc20_token {
-        token_name: String,
-        erc_20: Erc20,
-    }
+
 
 
 
     #[ink(storage)]
     pub struct VaultManager {
 
-        tokens: StorageHashMap<AccountId, Erc20_token>,
-        token_balances: StorageHashMap<AccountId, Balance>,
-        visible_tokens: StorageHashMap<AccountId, Erc20_token>,
+        tokens: StorageHashMap<AccountId, AccountId>,
+        token_balances: StorageHashMap<AccountId, u64>,
+        visible_tokens: StorageHashMap<AccountId, AccountId>,
         transfer_history:StorageHashMap<u64,Transfer>,
         orgId:u64,
         org:OrgManager,
@@ -111,7 +101,7 @@ mod vault {
         #[ink(topic)]
         orgId:u64,
         #[ink(topic)]
-        balance:Balance,
+        balance:u64,
     }
 
     #[ink(event)]
@@ -123,10 +113,10 @@ mod vault {
         tokenAddress:AccountId,
         #[ink(topic)]
         fromAddress:AccountId,
-        #[ink(topic)]
+
         orgId:u64,
         #[ink(topic)]
-        balance:Balance,
+        balance:u64,
     }
 
 
@@ -138,10 +128,10 @@ mod vault {
         tokenAddress:AccountId,
         #[ink(topic)]
         toAddress:AccountId,
-        #[ink(topic)]
+
         orgId:u64,
         #[ink(topic)]
-        balance:Balance,
+        balance:u64,
     }
 
 
@@ -164,18 +154,28 @@ mod vault {
             }
         }
 
+        // 由合约地址获取erc20 实例
+        fn get_erc20_by_address(&self, address:AccountId) -> Erc20 {
+            let  erc20_instance: Erc20 = ink_env::call::FromAccountId::from_account_id(address);
+            erc20_instance
+
+        }
+
         // 国库操作的权限检查
         fn check_authority(&self, caller:AccountId) -> bool {
-            let org = self.org;
+            let org = &self.org;
+
             let creator = org.get_dao_creator();
             let moderator_list = org.get_dao_moderator_list();
+
+
 
             if caller == creator {
                 return true;
             }
 
-            for key in moderator_list.keys() {
-                let moderator = *key;
+            for key in moderator_list {
+                let moderator = key;
                 if caller == moderator {
                     return true;
                 }
@@ -185,8 +185,9 @@ mod vault {
         }
 
 
+
         #[ink(message)]
-        pub fn add_vault_token(&mut self,token_name:String,erc_20:Erc20,token_address: AccountId) -> bool  {
+        pub fn add_vault_token(&mut self,erc_20_address:AccountId,token_address: AccountId) -> bool  {
             let caller = self.env().caller();
 
             // 国库权限控制: 只有管理员或者creator 可以增加 token
@@ -197,23 +198,17 @@ mod vault {
                 return false;
             }
 
+            let erc_20 = self.get_erc20_by_address(erc_20_address);
 
-            let clone_token_name = token_name.clone();
             match self.tokens.insert(token_address,
-                                     Erc20_token {
-                                         token_name:clone_token_name ,
-                                         erc_20: erc_20,
-                                     }
+                                     erc_20_address
             ) {
 
                 // 该token 已经存在，加入报错
                 Some(_) => { false},
                 None => {
                     self.visible_tokens.insert(token_address,
-                                               Erc20_token {
-                                                   token_name:clone_token_name,
-                                                   erc_20: erc_20,
-                                               });
+                                               erc_20_address);
                     self.token_balances.insert(token_address,0);
 
                     let orgId = self.orgId;
@@ -265,7 +260,7 @@ mod vault {
 
 
         #[ink(message)]
-        pub fn get_balance_of(&self,token_address: AccountId) -> Balance {
+        pub fn get_balance_of(&self,token_address: AccountId) -> u64 {
             if self.token_balances.contains_key(&token_address) {
                 let balanceof =  self.token_balances.get(&token_address).copied().unwrap_or(0);
                 let orgId = self.orgId;
@@ -284,22 +279,19 @@ mod vault {
 
         #[ink(message)]
         // 把资金存入国库
-        pub fn deposit(&mut self,token_address: AccountId,from_address:AccountId,value:Balance) -> bool {
+        pub fn deposit(&mut self,token_address: AccountId,from_address:AccountId,value:u64) -> bool {
             if self.token_balances.contains_key(&token_address) {
 
                 let mut balanceof =  self.token_balances.get(&token_address).copied().unwrap_or(0);
                 balanceof = balanceof + value;
                 self.token_balances.insert(token_address,balanceof);
 
-                // 集成erc20 合约,进行实际的转账
-                let temp = Erc20_token {
-                    token_name: None,
-                    erc_20: None,
-                };
-                let erc20_token = self.visible_tokens.get(&token_address).copied().unwrap_or(temp);
-                let erc20 = erc20_token.erc_20;
-                let token_name = erc20_token.token_name;
-                erc20.transfer_from(from_address,token_address, value);
+
+                let erc_20_address = self.visible_tokens.get(&token_address);
+                let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
+
+                let  token_name = erc_20.name();
+                erc_20.transfer_from(from_address,token_address, value);
 
                 // 记录转账历史
 
@@ -312,7 +304,7 @@ mod vault {
                                              Transfer{
 
                                                  transfer_direction:2,// 1: 国库转出，2:国库转入
-                                                 token_name: token_name,
+                                                 //    token_name: token_name,
                                                  transfer_id:transfer_id,
                                                  from_address:from_address,
                                                  to_address:token_address,
@@ -338,7 +330,7 @@ mod vault {
 
         #[ink(message)]
         // 把资金转出国库
-        pub fn withdraw(&mut self,token_address: AccountId,to_address:AccountId,value:Balance) -> bool {
+        pub fn withdraw(&mut self,token_address: AccountId,to_address:AccountId,value:u64) -> bool {
             if self.token_balances.contains_key(&token_address) {
 
 
@@ -355,15 +347,13 @@ mod vault {
                 self.token_balances.insert(token_address,balanceof);
 
 
-                // 集成erc20 合约,进行实际的转账
-                let temp = Erc20_token {
-                    token_name: None,
-                    erc_20: None,
-                };
-                let erc20_token = self.visible_tokens.get(&token_address).copied().unwrap_or(temp);
-                let erc20 = erc20_token.erc_20;
-                let token_name = erc20_token.token_name;
-                erc20.transfer_from(token_address,to_address, value);
+                let erc_20_address = self.visible_tokens.get(&token_address);
+
+                let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
+
+                let token_name = erc_20.name();
+
+                erc_20.transfer_from(token_address,to_address, value);
 
                 // 记录转账历史
                 let transfer_id:u64 = (self.transfer_history.len()+1).into();
@@ -373,7 +363,7 @@ mod vault {
                 self.transfer_history.insert(transfer_id,
                                              Transfer{
                                                  transfer_direction:1,// 1: 国库转出，2:国库转入
-                                                 token_name: token_name,
+                                                 //   token_name: token_name,
                                                  transfer_id:transfer_id,
                                                  from_address:token_address,
                                                  to_address:to_address,
@@ -412,15 +402,16 @@ mod vault {
 
                 let temp = Transfer {
                     transfer_direction:0,// 1: 国库转出，2:国库转入
-                    token_name: None,
+                    //    token_name: String::from(""),
                     transfer_id:0,
                     from_address: caller,
                     to_address:caller,
                     value:0,
                     transfer_time:0,
                 };
-                let transfer = self.transfer_history.get(&key).copied().unwrap_or(temp);
-                v.push(transfer);
+
+                let  transfer = self.transfer_history.get(&key).unwrap_or(&temp);
+                v.push(*transfer);
 
             }
             v
