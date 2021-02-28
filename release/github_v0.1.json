@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xaa8960c52853e160bc64d807c0420d87d5cd8194532da595a26631b6d81d3c9b",
+    "hash": "0x8b8311d979fa1abc735162d48e7d00647135b8050499adc3794c2fbb75d80703",
     "language": "ink! 3.0.0-rc2",
     "compiler": "rustc 1.50.0-nightly"
   },
@@ -723,6 +723,10 @@
             {
               "discriminant": 0,
               "name": "CallerIsNotAuditor"
+            },
+            {
+              "discriminant": 1,
+              "name": "PRIsNotRegisted"
             }
           ]
         }
