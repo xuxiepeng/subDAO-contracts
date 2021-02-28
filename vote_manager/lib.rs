@@ -4,7 +4,7 @@ extern crate alloc;
 use ink_lang as ink;
 pub use self::vote_manager::VoteManager;
 
-#[ink::contract(dynamic_storage_allocator = true)]
+#[ink::contract]
 mod vote_manager {
 
     use alloc::format;
@@ -159,7 +159,7 @@ mod vote_manager {
                 title,
                 desc,
                 start_date: start_date,
-                vote_time,
+                vote_time: vote_time * 1000,
                 support_require_pct,
                 min_require_num,
                 support_num: 0,
