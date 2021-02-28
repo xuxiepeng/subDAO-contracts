@@ -1,14 +1,21 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+extern crate alloc;
 use ink_lang as ink;
 pub use self::vote_manager::VoteManager;
 
-#[ink::contract]
+#[ink::contract(dynamic_storage_allocator = true)]
 mod vote_manager {
+
+    use alloc::format;
+    use alloc::vec;
+    use alloc::vec::Vec;
+    use alloc::string::String;
 
     use ink_storage::{
         collections::{
             HashMap as StorageHashMap,
+            Vec as StorageVec,
         },
         traits::{
             PackedLayout,
@@ -17,6 +24,7 @@ mod vote_manager {
     };
 
     type VoteId = u64;
+    type ChoiceId = u32;
 
     #[derive(Debug, PartialEq, Eq, scale::Encode, scale::Decode, PackedLayout, SpreadLayout)]
     #[cfg_attr(feature = "std", derive(scale_info::TypeInfo, ink_storage::traits::StorageLayout))]
@@ -32,6 +40,24 @@ mod vote_manager {
         derive(
             Debug,
             PartialEq,
+            Clone,
+            Eq,
+            scale_info::TypeInfo,
+            ink_storage::traits::StorageLayout
+        )
+    )]
+    pub struct Choice {
+        choice_id: ChoiceId,
+        content: String,
+        yea: u64,
+    }
+
+    #[derive(scale::Encode, scale::Decode, SpreadLayout, PackedLayout)]
+    #[cfg_attr(
+        feature = "std",
+        derive(
+            Debug,
+            PartialEq,
             Eq,
             scale_info::TypeInfo,
             ink_storage::traits::StorageLayout
@@ -39,21 +65,48 @@ mod vote_manager {
     )]
     pub struct Vote {
         executed: bool,
+        title: String,
+        desc: String,
         start_date: u64,
         vote_time: u64,
         support_require_pct: u64,
-        yea: u64,
-        nay: u64,
+        min_require_num: u64,
+        support_num: u64,
+        choice_index_lo: u32,
+        choice_index_ho: u32,
     }
+
+    #[derive(scale::Encode, scale::Decode, SpreadLayout, PackedLayout)]
+    #[cfg_attr(
+        feature = "std",
+        derive(
+            Debug,
+            PartialEq,
+            Eq,
+            scale_info::TypeInfo,
+            ink_storage::traits::StorageLayout
+        )
+    )]
+    pub struct DisplayVote {
+        executed: bool,
+        title: String,
+        desc: String,
+        start_date: u64,
+        vote_time: u64,
+        support_require_pct: u64,
+        min_require_num: u64,
+        support_num: u64,
+        choices: String,
+    }
+
 
     #[ink(storage)]
     pub struct VoteManager {
-        support_require_pct: u64,
-        min_require_num: u64,
         votes_length: u64,
-        vote_time: u64,
         votes: StorageHashMap<VoteId, Vote>,
-        voters: StorageHashMap<(VoteId, AccountId), VoterState>,
+        voters: StorageHashMap<(VoteId, AccountId), ChoiceId>,
+        choices: StorageVec<Choice>,
+        choices_num: u32,
     }
 
     #[ink(event)]
@@ -73,7 +126,7 @@ mod vote_manager {
         #[ink(topic)]
         voter: AccountId,
 
-        support: bool,
+        support_choice: ChoiceId,
     }
 
     #[ink(event)]
@@ -85,78 +138,224 @@ mod vote_manager {
     impl VoteManager {
 
         #[ink(constructor)]
-        pub fn new(_vote_time: u64, support_require_pct: u64, min_require_num: u64) -> Self {
+        pub fn new() -> Self {
             Self { 
-                support_require_pct,
-                min_require_num,
                 votes_length: 0,
-                vote_time: _vote_time,
                 votes: StorageHashMap::default(),
                 voters: StorageHashMap::default(),
+                choices: StorageVec::default(),
+                choices_num: 0,
             }
         }
 
         #[ink(message)]
-        pub fn new_vote(&mut self) {
+        pub fn new_vote(&mut self, title: String, desc: String, vote_time: u64, support_require_pct: u64, min_require_num: u64, choices: String) -> u64 {
             let vote_id = self.votes_length.clone();
             self.votes_length += 1;
             let start_date: u64 = self.env().block_timestamp();
+            let vec: Vec<&str> = choices.split(",").collect();
             let vote = Vote{
                 executed: false,
+                title,
+                desc,
                 start_date: start_date,
-                vote_time: self.vote_time.clone(),
-                support_require_pct: self.support_require_pct.clone(),
-                yea: 0,
-                nay: 0,
+                vote_time,
+                support_require_pct,
+                min_require_num,
+                support_num: 0,
+                choice_index_lo: self.choices_num,
+                choice_index_ho: self.choices_num + vec.len() as u32,
             };
+            self.choices_num += vec.len() as u32;
+            let mut index = 0;
+            for choice_content in vec.iter() {
+                self.choices.push(Choice{
+                    choice_id: index,
+                    content: String::from(*choice_content),
+                    yea: 0,
+                });
+                index += 1;
+            }
             self.votes.insert(vote_id, vote);
             self.env().emit_event(StartVote{
                 vote_id,
                 creator: self.env().caller(),
             });
+            vote_id
         }
 
+        // #[ink(message)]
+        // pub fn execute(&mut self, vote_id: VoteId) -> bool {
+        //     if !self.vote_exists(vote_id) {
+        //         return false;
+        //     }
+        //     true 
+        // }
+
         #[ink(message)]
-        pub fn vote(&mut self, vote_id: VoteId,  support: bool, voter: AccountId) {
-            assert!(self.vote_exists(vote_id));
-            if let Some(_vote) = self.votes.get_mut(&vote_id) {
-                if let Some(vote_state) = self.voters.get(&(vote_id, voter)) {
-                    match vote_state {
-                        VoterState::Yea => {
-                            _vote.yea -= 1;
-                        },
-                        VoterState::Nay => {
-                            _vote.nay -= 1;
-                        },
-                        VoterState::Absent => (),
+        pub fn vote(&mut self, vote_id: VoteId, support_choice: u32, voter: AccountId) -> bool {
+            if !self.vote_exists(vote_id) {
+                return false;
+            }
+            if let Some(vote) = self.votes.get_mut(&vote_id) {
+                if support_choice > vote.choice_index_ho - vote.choice_index_lo {
+                    return false;
+                }
+                // has voted
+                if let Some(choice_id) = self.voters.get(&(vote_id, voter)) {
+                    if *choice_id != support_choice {
+                        let choice_vec_index = vote.choice_index_lo + *choice_id;
+                        let choices = &mut self.choices;
+                        choices.get_mut(choice_vec_index).unwrap().yea -= 1;
+                        vote.support_num -= 1;
                     }
-                }
-                if support {
-                    _vote.yea += 1;
-                    self.voters.insert((vote_id, voter), VoterState::Yea);
-                } else {
-                    _vote.nay += 1;
-                    self.voters.insert((vote_id, voter), VoterState::Nay);
-                }
+                } 
+                let choices = &mut self.choices;
+                let choice_vec_index = vote.choice_index_lo + support_choice;
+                let voter_choice = choices.get_mut(choice_vec_index).unwrap();
+                voter_choice.yea += 1;
+                // record voter choice id
+                self.voters.insert((vote_id, voter), support_choice);    
+                vote.support_num += 1;
                 self.env().emit_event(CastVote{
                     vote_id,
                     voter: self.env().caller(), 
-                    support,
+                    support_choice,
                 });
+                true
+            } else {
+                false
             }
         }
 
         #[ink(message)]
-        pub fn next_index(&self) -> u64 {
-            self.votes_length
+        pub fn query_one_vote(&self, vote_id: VoteId) -> DisplayVote {
+            assert!(self.vote_exists(vote_id));
+            let vote = self.votes.get(&vote_id).unwrap(); 
+            let display_vote = self.convert_vote_to_displayvote(&vote); 
+            display_vote
+        }
+
+        #[ink(message)]
+        pub fn query_all_vote(&self) -> alloc::vec::Vec<DisplayVote> {
+            let mut v: alloc::vec::Vec<DisplayVote> = alloc::vec::Vec::new();
+            for (_, vote) in &self.votes {
+                let vote = self.convert_vote_to_displayvote(&vote);
+                v.push(vote);
+            }
+            return v;
+        }
+
+        #[ink(message)]
+        pub fn query_executed_vote(&self) -> alloc::vec::Vec<DisplayVote> {
+            let mut v: alloc::vec::Vec<DisplayVote> = alloc::vec::Vec::new();
+            for (_, val) in &self.votes {
+                if self.is_vote_executed(&val) {
+                    let vote = self.convert_vote_to_displayvote(&val);
+                    v.push(vote);
+                }
+            }
+            return v;
+        }
+
+        #[ink(message)]
+        pub fn query_open_vote(&self) -> alloc::vec::Vec<DisplayVote> {
+            let mut v: alloc::vec::Vec<DisplayVote> = alloc::vec::Vec::new();
+            for (_, val) in &self.votes {
+                if self.is_vote_open(&val) {
+                    let vote = self.convert_vote_to_displayvote(&val);
+                    v.push(vote);
+                }
+            }
+            return v;
+        }
+
+        #[ink(message)]
+        pub fn query_wait_vote(&self) -> alloc::vec::Vec<DisplayVote> {
+            let mut v: alloc::vec::Vec<DisplayVote> = alloc::vec::Vec::new();
+            for (_, val) in &self.votes {
+                if self.is_vote_wait(&val) {
+                    let vote = self.convert_vote_to_displayvote(&val);
+                    v.push(vote);
+                }
+            }
+            return v;
+        }
+ 
+        fn convert_vote_to_displayvote(&self, vote: &Vote) -> DisplayVote {
+            let mut choices = Vec::new();
+            let mut index = 0;
+            let source_choices = &self.choices;
+            for choice in source_choices.iter() {
+                if index >= vote.choice_index_lo && index < vote.choice_index_ho {
+                    let s = format!("{0}:{1}", choice.content.clone(), choice.yea);
+                    choices.push(s);
+                }
+                index += 1;
+            }
+            let choices_content = choices.join(","); 
+            let vote = DisplayVote{
+                executed: vote.executed,
+                title: vote.title.clone(),
+                desc: vote.desc.clone(),
+                start_date: vote.start_date,
+                vote_time: vote.vote_time,
+                support_require_pct: vote.support_require_pct,
+                min_require_num: vote.min_require_num,
+                support_num: vote.support_num,
+                choices: choices_content,
+            };
+            vote
         }
 
         fn vote_exists(&self, vote_id: u64) -> bool {
             return vote_id < self.votes_length;
         }
 
-        fn is_vote_open(&self, vote: Vote) -> bool {
-            return self.env().block_timestamp() < vote.start_date + self.vote_time && !vote.executed;
+        fn is_vote_open(&self, vote: &Vote) -> bool {
+            return self.env().block_timestamp() < vote.start_date + vote.vote_time && !vote.executed;
+        }
+
+        fn is_vote_wait(&self, vote: &Vote) -> bool {
+            return self.env().block_timestamp() > vote.start_date + vote.vote_time && !vote.executed;
+        }
+
+        fn is_vote_executed(&self, vote: &Vote) -> bool {
+            return !vote.executed;
+        }
+
+        fn is_vote_finished(&self, vote: &Vote) -> bool {
+            return self.env().block_timestamp() < vote.start_date + vote.vote_time;
         }
     }
+
+    #[cfg(test)]
+    mod tests {
+        // use super::*;
+        use ink_lang as ink;
+
+        #[ink::test]
+        fn test_split() {
+
+            let choices = "A,B,C".to_string();
+            let split = choices.split(",");
+            ink_env::debug_println("hello");
+            for s in split {
+                ink_env::debug_println(&s);
+            }
+        }
+
+        #[ink::test]
+        fn test_split_with_vec() {
+            let choices = "A,B,C".to_string();
+            let vec: Vec<&str> = choices.split(",").collect();
+            let i:u32 = 1;
+            let length = i + vec.len() as u32;
+            assert!(length == 4);
+            for s in vec{
+                ink_env::debug_println(&s);
+            }
+        }
+    }
+   
 }
