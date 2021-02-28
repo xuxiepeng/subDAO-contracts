@@ -58,6 +58,7 @@ mod github {
     pub enum Error {
         /// Returned if caller is not auditor.
         CallerIsNotAuditor,
+        PRIsNotRegisted,
     }
 
     /// Type alias for the contract's result type.
@@ -105,7 +106,7 @@ mod github {
 
         #[ink(message)]
         pub fn new_pull_request_auditor(& mut self, repo_url: String, pr_number: u64, github_id: u64, account_id: AccountId, auditor_id: AccountId) -> Result<()> {
-            let index = self.length.clone();
+            let index = self.length.clone() + 1;
             self.length += 1;
             
             let pr = PullRequest{
@@ -140,9 +141,14 @@ mod github {
         #[ink(message)]
         pub fn audit_pull_request(& mut self, index: Index, audit_result: bool ) -> Result<()> {
             let caller = self.env().caller();
-            // if !self.auditorresults.contains_key (&(index,caller)) {
-            //     return Err(Error::CallerIsNotAuditor)
-            // }
+
+            if !self.pullrequests.contains_key(&index) {
+                return Err(Error::PRIsNotRegisted)
+            }
+
+            if !self.auditorresults.contains_key (&(index,caller)) {
+                return Err(Error::CallerIsNotAuditor)
+            }
 
             self.auditorresults.insert((index,caller),audit_result);
             self.env().emit_event(AuditPR{
@@ -214,7 +220,32 @@ mod github {
             // assert_eq!(ink_env::caller(),accounts.bob);
             assert_eq!(github.audit_pull_request(github.get_current_index(), true),Ok(()));
             assert_eq!(github.query_pull_request_audit_status(github.get_current_index()), true);
-            
+        }
+
+        #[test]
+        fn caller_is_not_auditor() {
+            let accounts =
+                ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
+                    .expect("Cannot get accounts");
+
+            let mut github = Github::new();
+            github.new_pull_request_auditor("https://github.com/paritytech/ink".to_string(), 702, 123456, accounts.alice, accounts.bob);
+            set_next_caller(accounts.charlie);
+            // assert_eq!(ink_env::caller(),accounts.bob);
+            assert_eq!(github.audit_pull_request(github.get_current_index(), true),Err(Error::CallerIsNotAuditor));
+            assert_eq!(github.query_pull_request_audit_status(github.get_current_index()), false);
+        }
+
+        #[test]
+        fn pr_is_not_new() {
+            let accounts =
+                ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
+                    .expect("Cannot get accounts");
+
+            let mut github = Github::new();
+            github.new_pull_request_auditor("https://github.com/paritytech/ink".to_string(), 702, 123456, accounts.alice, accounts.bob);
+            set_next_caller(accounts.charlie);
+            assert_eq!(github.audit_pull_request(github.get_current_index()+10, true),  Err(Error::PRIsNotRegisted));
         }
     }
 }
