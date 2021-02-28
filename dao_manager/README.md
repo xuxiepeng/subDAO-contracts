@@ -52,8 +52,7 @@ definition: pub fn new(controller: AccountId, org_id: u64, template: DAOTemplate
 init module with erc20 params and vote params.
 ```bash
 type: tx
-definition: pub fn init(&mut self, erc20_name: String, erc20_symbol: String, erc20_initial_supply: u64, erc20_decimals: u8,
-                    vote_time: u64, vote_support_require_pct: u64, vote_min_require_num: u64) -> bool;
+definition: pub fn init(&mut self, erc20_name: String, erc20_symbol: String, erc20_initial_supply: u64, erc20_decimals: u8) -> bool;
 ```
 
 ### query component addresses

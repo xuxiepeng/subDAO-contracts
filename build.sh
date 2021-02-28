@@ -22,16 +22,16 @@ function build_module() {
       echo "build module failed"
       exit 1
     fi
-    echo "copy to ../target"
-    cp ${m_dir}/target/${m_name}.wasm ../target/${m_name}_v$VERSION.wasm
-    cp ${m_dir}/target/${m_name}.contract ../target/${m_name}_v$VERSION.contract
-    cp ${m_dir}/target/metadata.json ../target/${m_name}_v$VERSION.json
+    echo "copy to ../release"
+    cp ${m_dir}/target/${m_name}.wasm ../release/${m_name}_v$VERSION.wasm
+    cp ${m_dir}/target/${m_name}.contract ../release/${m_name}_v$VERSION.contract
+    cp ${m_dir}/target/metadata.json ../release/${m_name}_v$VERSION.json
     cd -
 }
 
-echo "clean target"
-rm -rf ${WORK_DIR}/target
-mkdir -p ${WORK_DIR}/target
+echo "clean release"
+rm -rf ${WORK_DIR}/release
+mkdir -p ${WORK_DIR}/release
 
 build_module ${BASE_MODULE}
 build_module ${TEMPLATE_MODULE}
