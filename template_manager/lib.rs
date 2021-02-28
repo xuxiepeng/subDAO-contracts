@@ -25,10 +25,16 @@ mod template_manager {
     derive(scale_info::TypeInfo, ink_storage::traits::StorageLayout)
     )]
     pub struct DAOTemplate {
+        // template's id
         pub id: u64,
+        // template's owner
         pub owner: AccountId,
+        // template's name
         pub name: String,
+        // template's dao manager
         pub dao_manager_code_hash: Hash,
+        // components code hash
+        // like { "ERC20": 0xqw...122, "ORG": 0xqw...123 }
         pub components: BTreeMap<String, Hash>,
     }
 

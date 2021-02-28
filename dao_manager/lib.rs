@@ -45,11 +45,17 @@ mod dao_manager {
     derive(::scale_info::TypeInfo, ::ink_storage::traits::StorageLayout)
     )]
     pub struct DAOComponentAddrs {
+        // base module contract's address
         base_addr: Option<AccountId>,
+        // erc20 module contract's address
         erc20_addr: Option<AccountId>,
+        // org module contract's address
         org_addr: Option<AccountId>,
+        // vault module contract's address
         vault_addr: Option<AccountId>,
+        // vote module contract's address
         vote_addr: Option<AccountId>,
+        // github module contract's address
         github_addr: Option<AccountId>,
     }
 
