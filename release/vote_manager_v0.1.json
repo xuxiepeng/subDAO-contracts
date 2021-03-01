@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xd12f907bae3aa9d7ca34d4d77049dd6c11c0ea37f31efd22e21c404312e3553d",
+    "hash": "0x3ecdc0d34a38e498e9fa00e5bd4a8e5608286fe5db6bc58e8e2d5fb5f984851e",
     "language": "ink! 3.0.0-rc2",
-    "compiler": "rustc 1.49.0-nightly"
+    "compiler": "rustc 1.50.0-nightly"
   },
   "contract": {
     "name": "vote_manager",

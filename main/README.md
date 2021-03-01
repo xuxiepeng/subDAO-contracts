@@ -4,6 +4,16 @@ main is a module to manager templates and instance DAO.
 
 ## Modules
 
+### DAOInstance
+```rust
+pub struct DAOInstance {
+        id: u64,
+        owner: AccountId,
+        dao_manager: DAOManager,
+        dao_manager_addr: AccountId,
+    }
+```
+
 ### DAOTemplate
 ```rust
 pub struct DAOTemplate {
@@ -63,6 +73,13 @@ query template addr.
 ```bash
 type: query
 definition: pub fn query_template_addr(&self) -> AccountId;
+```
+
+### query template addr by owner
+query template addr by owner.
+```bash
+type: query
+definition: pub fn list_dao_instances_by_owner(&mut self, owner: AccountId) -> Vec<DAOInstance>;
 ```
 
 ### instance DAO by template

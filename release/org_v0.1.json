@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xdfa0a3b21a63a1a95c4cb7419999bcfdde51b2c771011a0746bb8c46875e2ded",
+    "hash": "0x9cfb3fc08d5e0e05381b6a6c5dc07c892d84c3997b23b585851402fdf906148d",
     "language": "ink! 3.0.0-rc2",
     "compiler": "rustc 1.50.0-nightly"
   },
@@ -26,7 +26,7 @@
             }
           },
           {
-            "name": "_orgId",
+            "name": "org_id",
             "type": {
               "displayName": [
                 "u64"
@@ -60,7 +60,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "orgId",
+            "name": "org_id",
             "type": {
               "displayName": [
                 "u64"
@@ -70,7 +70,7 @@
           }
         ],
         "docs": [],
-        "name": "addDAOModeratorEvent"
+        "name": "AddDAOModeratorEvent"
       },
       {
         "args": [
@@ -88,7 +88,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "orgId",
+            "name": "org_id",
             "type": {
               "displayName": [
                 "u64"
@@ -98,7 +98,7 @@
           }
         ],
         "docs": [],
-        "name": "removeDAOModeratorEvent"
+        "name": "RemoveDAOModeratorEvent"
       },
       {
         "args": [
@@ -116,7 +116,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "orgId",
+            "name": "org_id",
             "type": {
               "displayName": [
                 "u64"
@@ -126,7 +126,7 @@
           }
         ],
         "docs": [],
-        "name": "addDAOMemberEvent"
+        "name": "AddDAOMemberEvent"
       },
       {
         "args": [
@@ -144,7 +144,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "orgId",
+            "name": "org_id",
             "type": {
               "displayName": [
                 "u64"
@@ -154,7 +154,7 @@
           }
         ],
         "docs": [],
-        "name": "removeDAOMemberEvent"
+        "name": "RemoveDAOMemberEvent"
       }
     ],
     "messages": [
@@ -555,7 +555,7 @@
               "ty": 10
             }
           },
-          "name": "orgId"
+          "name": "org_id"
         }
       ]
     }

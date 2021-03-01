@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x4d7f2217b037eb1b20f6e4acbdbeaa6394a67249f1082105ace626ac87f14361",
+    "hash": "0x2269bc27af81eb3c477429df659d4912c3ab4051035fa5ef0dc55e0ee9029a0a",
     "language": "ink! 3.0.0-rc2",
     "compiler": "rustc 1.50.0-nightly"
   },
@@ -17,7 +17,7 @@
       {
         "args": [
           {
-            "name": "_orgId",
+            "name": "_org_id",
             "type": {
               "displayName": [
                 "u64"
@@ -31,7 +31,7 @@
               "displayName": [
                 "OrgManager"
               ],
-              "type": 14
+              "type": 15
             }
           }
         ],
@@ -49,7 +49,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "tokenAddress",
+            "name": "token_address",
             "type": {
               "displayName": [
                 "AccountId"
@@ -60,7 +60,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "orgId",
+            "name": "org_id",
             "type": {
               "displayName": [
                 "u64"
@@ -70,14 +70,14 @@
           }
         ],
         "docs": [],
-        "name": "addVaultTokenEvent"
+        "name": "AddVaultTokenEvent"
       },
       {
         "args": [
           {
             "docs": [],
             "indexed": true,
-            "name": "tokenAddress",
+            "name": "token_address",
             "type": {
               "displayName": [
                 "AccountId"
@@ -88,7 +88,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "orgId",
+            "name": "org_id",
             "type": {
               "displayName": [
                 "u64"
@@ -98,14 +98,14 @@
           }
         ],
         "docs": [],
-        "name": "removeVaultTokenEvent"
+        "name": "RemoveVaultTokenEvent"
       },
       {
         "args": [
           {
             "docs": [],
             "indexed": true,
-            "name": "tokenAddress",
+            "name": "token_address",
             "type": {
               "displayName": [
                 "AccountId"
@@ -116,7 +116,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "orgId",
+            "name": "org_id",
             "type": {
               "displayName": [
                 "u64"
@@ -137,7 +137,7 @@
           }
         ],
         "docs": [],
-        "name": "getTokenBalanceEvent"
+        "name": "GetTokenBalanceEvent"
       },
       {
         "args": [
@@ -149,13 +149,13 @@
               "displayName": [
                 "String"
               ],
-              "type": 18
+              "type": 14
             }
           },
           {
             "docs": [],
             "indexed": true,
-            "name": "tokenAddress",
+            "name": "token_address",
             "type": {
               "displayName": [
                 "AccountId"
@@ -166,7 +166,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "fromAddress",
+            "name": "from_address",
             "type": {
               "displayName": [
                 "AccountId"
@@ -177,7 +177,7 @@
           {
             "docs": [],
             "indexed": false,
-            "name": "orgId",
+            "name": "org_id",
             "type": {
               "displayName": [
                 "u64"
@@ -198,7 +198,7 @@
           }
         ],
         "docs": [],
-        "name": "depositTokenEvent"
+        "name": "DepositTokenEvent"
       },
       {
         "args": [
@@ -210,13 +210,13 @@
               "displayName": [
                 "String"
               ],
-              "type": 18
+              "type": 14
             }
           },
           {
             "docs": [],
             "indexed": true,
-            "name": "tokenAddress",
+            "name": "token_address",
             "type": {
               "displayName": [
                 "AccountId"
@@ -227,7 +227,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "toAddress",
+            "name": "to_address",
             "type": {
               "displayName": [
                 "AccountId"
@@ -238,7 +238,7 @@
           {
             "docs": [],
             "indexed": false,
-            "name": "orgId",
+            "name": "org_id",
             "type": {
               "displayName": [
                 "u64"
@@ -259,7 +259,7 @@
           }
         ],
         "docs": [],
-        "name": "withdrawTokenEvent"
+        "name": "WithdrawTokenEvent"
       }
     ],
     "messages": [
@@ -294,7 +294,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 15
+          "type": 16
         },
         "selector": "0xfde31b75"
       },
@@ -320,7 +320,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 15
+          "type": 16
         },
         "selector": "0x4338d861"
       },
@@ -334,11 +334,11 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "alloc",
+            "ink_prelude",
             "vec",
             "Vec"
           ],
-          "type": 16
+          "type": 17
         },
         "selector": "0x0ca614db"
       },
@@ -408,7 +408,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 15
+          "type": 16
         },
         "selector": "0x3ce5f4a6"
       },
@@ -452,7 +452,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 15
+          "type": 16
         },
         "selector": "0xb41251e9"
       },
@@ -466,11 +466,11 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "alloc",
+            "ink_prelude",
             "vec",
             "Vec"
           ],
-          "type": 17
+          "type": 18
         },
         "selector": "0x324c23cf"
       }
@@ -806,7 +806,7 @@
               "ty": 10
             }
           },
-          "name": "orgId"
+          "name": "org_id"
         },
         {
           "layout": {
@@ -1071,6 +1071,10 @@
               "type": 10
             },
             {
+              "name": "token_name",
+              "type": 14
+            },
+            {
               "name": "from_address",
               "type": 4
             },
@@ -1094,6 +1098,11 @@
         "vault",
         "Transfer"
       ]
+    },
+    {
+      "def": {
+        "primitive": "str"
+      }
     },
     {
       "def": {
@@ -1129,11 +1138,6 @@
         "sequence": {
           "type": 13
         }
-      }
-    },
-    {
-      "def": {
-        "primitive": "str"
       }
     }
   ]

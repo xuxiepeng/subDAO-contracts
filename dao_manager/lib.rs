@@ -127,7 +127,8 @@ mod dao_manager {
         }
 
         #[ink(message)]
-        pub fn init(&mut self, erc20_name: String, erc20_symbol: String, erc20_initial_supply: u64, erc20_decimals: u8) -> bool {
+        pub fn init(&mut self, base_name: String, base_logo: String, base_desc: String,
+                    erc20_name: String, erc20_symbol: String, erc20_initial_supply: u64, erc20_decimals: u8) -> bool {
             assert_eq!(self.init, false);
             let controller = self.env().caller();
             assert_eq!(controller == self.controller, true);
@@ -140,7 +141,7 @@ mod dao_manager {
             let vault_code_hash = components_hash_map.get("VAULT");
             let vote_code_hash = components_hash_map.get("VOTE");
             let github_code_hash = components_hash_map.get("GITHUB");
-            self._init_base(base_code_hash);
+            self._init_base(base_code_hash, base_name, base_logo, base_desc);
             self._init_erc20(erc20_code_hash, erc20_name, erc20_symbol, erc20_initial_supply, erc20_decimals);
             self._init_org(org_code_hash);
             self._init_vault(vault_code_hash);
@@ -203,7 +204,8 @@ mod dao_manager {
         }
 
         /// init base
-        fn _init_base(&mut self, base_code_hash: Option<&Hash>) -> bool {
+        fn _init_base(&mut self, base_code_hash: Option<&Hash>,
+                      base_name: String, base_logo: String, base_desc: String) -> bool {
             if base_code_hash.is_none() {
                 return true;
             }
@@ -216,7 +218,8 @@ mod dao_manager {
                 .params();
             let init_result = ink_env::instantiate_contract(&instance_params);
             let contract_addr = init_result.expect("failed at instantiating the `Base` contract");
-            let contract_instance = ink_env::call::FromAccountId::from_account_id(contract_addr);
+            let mut contract_instance: Base = ink_env::call::FromAccountId::from_account_id(contract_addr);
+            contract_instance.init_base(base_name, base_logo, base_desc);
 
             self.components.base = Some(contract_instance);
             self.component_addrs.base_addr = Some(contract_addr);

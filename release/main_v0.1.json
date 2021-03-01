@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x9b450b7d6f39d1cc116b901b774ef3b282bb27f5c25b0b43cce9536834f193e9",
+    "hash": "0xd5b45321d5edd027613615e4d2caa8e1b940f00c5fc1f0bccc8bc02fa56713d9",
     "language": "ink! 3.0.0-rc2",
     "compiler": "rustc 1.50.0-nightly"
   },
@@ -56,7 +56,7 @@
               "displayName": [
                 "Option"
               ],
-              "type": 20
+              "type": 24
             }
           },
           {
@@ -84,7 +84,7 @@
               "displayName": [
                 "Hash"
               ],
-              "type": 12
+              "type": 15
             }
           }
         ],
@@ -98,7 +98,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 13
+          "type": 16
         },
         "selector": "0xa1ec5918"
       },
@@ -110,7 +110,7 @@
               "displayName": [
                 "String"
               ],
-              "type": 14
+              "type": 17
             }
           },
           {
@@ -119,7 +119,7 @@
               "displayName": [
                 "Hash"
               ],
-              "type": 12
+              "type": 15
             }
           },
           {
@@ -128,7 +128,7 @@
               "displayName": [
                 "BTreeMap"
               ],
-              "type": 15
+              "type": 18
             }
           }
         ],
@@ -142,7 +142,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 13
+          "type": 16
         },
         "selector": "0x1db8b2fa"
       },
@@ -158,7 +158,7 @@
           "displayName": [
             "Vec"
           ],
-          "type": 18
+          "type": 21
         },
         "selector": "0x6d935a7e"
       },
@@ -184,7 +184,7 @@
           "displayName": [
             "DAOTemplate"
           ],
-          "type": 19
+          "type": 22
         },
         "selector": "0x2728869d"
       },
@@ -235,9 +235,51 @@
           "displayName": [
             "bool"
           ],
-          "type": 13
+          "type": 16
         },
         "selector": "0xc2119911"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "list_dao_instances"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Vec"
+          ],
+          "type": 23
+        },
+        "selector": "0xea0dc02c"
+      },
+      {
+        "args": [
+          {
+            "name": "owner",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "list_dao_instances_by_owner"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Vec"
+          ],
+          "type": 23
+        },
+        "selector": "0x3caddb35"
       }
     ]
   },
@@ -402,6 +444,86 @@
             }
           },
           "name": "instance_map"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0600000001000000000000000000000000000000000000000000000000000000",
+                              "ty": 5
+                            }
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0700000001000000000000000000000000000000000000000000000000000000",
+                                      "ty": 6
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0700000002000000000000000000000000000000000000000000000000000000",
+                                          "ty": 12
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0800000001000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0800000002000000000000000000000000000000000000000000000000000000",
+                          "ty": 13
+                        }
+                      },
+                      "offset": "0x0700000002000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
+                    }
+                  },
+                  "name": "values"
+                }
+              ]
+            }
+          },
+          "name": "instance_map_by_owner"
         }
       ]
     }
@@ -557,6 +679,10 @@
         "composite": {
           "fields": [
             {
+              "name": "id",
+              "type": 4
+            },
+            {
               "name": "owner",
               "type": 1
             },
@@ -596,6 +722,71 @@
     },
     {
       "def": {
+        "variant": {
+          "variants": [
+            {
+              "fields": [
+                {
+                  "type": 8
+                }
+              ],
+              "name": "Vacant"
+            },
+            {
+              "fields": [
+                {
+                  "type": 1
+                }
+              ],
+              "name": "Occupied"
+            }
+          ]
+        }
+      },
+      "params": [
+        1
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Entry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "value",
+              "type": 14
+            },
+            {
+              "name": "key_index",
+              "type": 6
+            }
+          ]
+        }
+      },
+      "params": [
+        14
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "hashmap",
+        "ValueEntry"
+      ]
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 4
+        }
+      }
+    },
+    {
+      "def": {
         "composite": {
           "fields": [
             {
@@ -625,13 +816,13 @@
         "composite": {
           "fields": [
             {
-              "type": 17
+              "type": 20
             }
           ]
         }
       },
       "params": [
-        16
+        19
       ],
       "path": [
         "BTreeMap"
@@ -640,22 +831,22 @@
     {
       "def": {
         "tuple": [
-          14,
-          12
+          17,
+          15
         ]
       }
     },
     {
       "def": {
         "sequence": {
-          "type": 16
+          "type": 19
         }
       }
     },
     {
       "def": {
         "sequence": {
-          "type": 19
+          "type": 22
         }
       }
     },
@@ -673,15 +864,15 @@
             },
             {
               "name": "name",
-              "type": 14
+              "type": 17
             },
             {
               "name": "dao_manager_code_hash",
-              "type": 12
+              "type": 15
             },
             {
               "name": "components",
-              "type": 15
+              "type": 18
             }
           ]
         }
@@ -691,6 +882,13 @@
         "template_manager",
         "DAOTemplate"
       ]
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 10
+        }
+      }
     },
     {
       "def": {

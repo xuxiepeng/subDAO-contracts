@@ -28,6 +28,7 @@ mod main {
     derive(scale_info::TypeInfo, ink_storage::traits::StorageLayout)
     )]
     pub struct DAOInstance {
+        id: u64,
         owner: AccountId,
         dao_manager: DAOManager,
         dao_manager_addr: AccountId,
@@ -40,6 +41,7 @@ mod main {
         template: Option<TemplateManager>,
         instance_index: u64,
         instance_map: StorageHashMap<u64, DAOInstance>,
+        instance_map_by_owner: StorageHashMap<AccountId, Vec<u64>>,
     }
 
     #[ink(event)]
@@ -61,6 +63,7 @@ mod main {
                 template: None,
                 instance_index: 0,
                 instance_map: StorageHashMap::new(),
+                instance_map_by_owner: StorageHashMap::new(),
             };
             instance
         }
@@ -123,13 +126,41 @@ mod main {
                 dao_addr: dao_addr,
             });
 
+            let id_list = self.instance_map_by_owner.entry(controller.clone()).or_insert(Vec::new());
+            id_list.push(self.instance_index);
             self.instance_map.insert(self.instance_index, DAOInstance {
+                id: self.instance_index,
                 owner: controller,
                 dao_manager: dao_instance,
                 dao_manager_addr: dao_addr,
             });
             self.instance_index += 1;
             true
+        }
+
+        #[ink(message)]
+        pub fn list_dao_instances(&mut self) -> Vec<DAOInstance> {
+            let mut dao_vec = Vec::new();
+            let mut iter = self.instance_map.values();
+            let mut temp = iter.next();
+            while temp.is_some() {
+                dao_vec.push(temp.unwrap().clone());
+                temp = iter.next();
+            }
+            dao_vec
+        }
+
+        #[ink(message)]
+        pub fn list_dao_instances_by_owner(&mut self, owner: AccountId) -> Vec<DAOInstance> {
+            let id_list = self.instance_map_by_owner.get(&owner).unwrap();
+            let mut dao_vec = Vec::new();
+            let mut iter = id_list.into_iter();
+            let mut item = iter.next();
+            while item.is_some() {
+                dao_vec.push(self.instance_map.get(item.unwrap()).unwrap().clone());
+                item = iter.next();
+            }
+            dao_vec
         }
     }
 }

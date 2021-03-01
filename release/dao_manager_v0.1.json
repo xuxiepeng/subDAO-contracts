@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x9a440c9a1640a3cb3d24119be6a45f1e9f2049c52f2a0a808758952355cc0743",
+    "hash": "0x3a229e02231eb81298b00303ad7fdf5fd93158a421302d2e7f1fffdf6418cfd0",
     "language": "ink! 3.0.0-rc2",
     "compiler": "rustc 1.50.0-nightly"
   },
@@ -98,6 +98,33 @@
     "messages": [
       {
         "args": [
+          {
+            "name": "base_name",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 6
+            }
+          },
+          {
+            "name": "base_logo",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 6
+            }
+          },
+          {
+            "name": "base_desc",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 6
+            }
+          },
           {
             "name": "erc20_name",
             "type": {
