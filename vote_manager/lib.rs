@@ -69,7 +69,7 @@ mod vote_manager {
         desc: String,
         start_date: u64,
         vote_time: u64,
-        support_require_pct: u64,
+        support_require_num: u64,
         min_require_num: u64,
         support_num: u64,
         choice_index_lo: u32,
@@ -93,7 +93,7 @@ mod vote_manager {
         desc: String,
         start_date: u64,
         vote_time: u64,
-        support_require_pct: u64,
+        support_require_num: u64,
         min_require_num: u64,
         support_num: u64,
         choices: String,
@@ -149,7 +149,7 @@ mod vote_manager {
         }
 
         #[ink(message)]
-        pub fn new_vote(&mut self, title: String, desc: String, vote_time: u64, support_require_pct: u64, min_require_num: u64, choices: String) -> u64 {
+        pub fn new_vote(&mut self, title: String, desc: String, vote_time: u64, support_require_num: u64, min_require_num: u64, choices: String) -> u64 {
             let vote_id = self.votes_length.clone();
             self.votes_length += 1;
             let start_date: u64 = self.env().block_timestamp();
@@ -159,8 +159,8 @@ mod vote_manager {
                 title,
                 desc,
                 start_date: start_date,
-                vote_time: vote_time * 1000,
-                support_require_pct,
+                vote_time,
+                support_require_num,
                 min_require_num,
                 support_num: 0,
                 choice_index_lo: self.choices_num,
@@ -184,13 +184,16 @@ mod vote_manager {
             vote_id
         }
 
-        // #[ink(message)]
-        // pub fn execute(&mut self, vote_id: VoteId) -> bool {
-        //     if !self.vote_exists(vote_id) {
-        //         return false;
-        //     }
-        //     true 
-        // }
+        #[ink(message)]
+        pub fn execute(&mut self, vote_id: VoteId) {
+            assert!(self.vote_exists(vote_id));
+            let vote = self.votes.get(&vote_id).unwrap(); 
+            if self.can_execute(&vote) {
+                let mut vote = self.votes.get_mut(&vote_id).unwrap(); 
+                vote.executed = true;
+            }
+            // true
+        }
 
         #[ink(message)]
         pub fn vote(&mut self, vote_id: VoteId, support_choice: u32, voter: AccountId) -> bool {
@@ -300,7 +303,7 @@ mod vote_manager {
                 desc: vote.desc.clone(),
                 start_date: vote.start_date,
                 vote_time: vote.vote_time,
-                support_require_pct: vote.support_require_pct,
+                support_require_num: vote.support_require_num,
                 min_require_num: vote.min_require_num,
                 support_num: vote.support_num,
                 choices: choices_content,
@@ -321,11 +324,38 @@ mod vote_manager {
         }
 
         fn is_vote_executed(&self, vote: &Vote) -> bool {
-            return !vote.executed;
+            return vote.executed;
         }
 
         fn is_vote_finished(&self, vote: &Vote) -> bool {
             return self.env().block_timestamp() < vote.start_date + vote.vote_time;
+        }
+
+        fn can_execute(&self, vote: &Vote) -> bool {
+
+            if vote.executed {
+                return false;
+            }
+            if self.is_vote_open(&vote) {
+                return false;
+            }
+            if vote.support_num < vote.min_require_num {
+                return false;
+            }
+            if vote.support_num == 0 {
+                return false;
+            }
+            let mut index = 0;
+            let choices = &self.choices;
+            for choice in choices.iter() {
+                if index >= vote.choice_index_lo && index < vote.choice_index_ho {
+                    if choice.yea >= vote.support_require_num {
+                        return true;
+                    }
+                }
+                index += 1;
+            }
+            return false;
         }
     }
 
@@ -356,6 +386,13 @@ mod vote_manager {
                 ink_env::debug_println(&s);
             }
         }
+
+        #[ink::test]
+        fn test_calculate() {
+            let choice: u64 = 3;
+            let support: u64 = 5;
+            let t : u64 = choice * 1000 / support; 
+            ink_env::debug_println(t.to_string().as_str());
+        }
     }
-   
 }
