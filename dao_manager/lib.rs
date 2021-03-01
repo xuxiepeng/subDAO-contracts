@@ -127,8 +127,7 @@ mod dao_manager {
         }
 
         #[ink(message)]
-        pub fn init(&mut self, erc20_name: String, erc20_symbol: String, erc20_initial_supply: u64, erc20_decimals: u8,
-                    vote_time: u64, vote_support_require_pct: u64, vote_min_require_num: u64) -> bool {
+        pub fn init(&mut self, erc20_name: String, erc20_symbol: String, erc20_initial_supply: u64, erc20_decimals: u8) -> bool {
             assert_eq!(self.init, false);
             let controller = self.env().caller();
             assert_eq!(controller == self.controller, true);
@@ -145,7 +144,7 @@ mod dao_manager {
             self._init_erc20(erc20_code_hash, erc20_name, erc20_symbol, erc20_initial_supply, erc20_decimals);
             self._init_org(org_code_hash);
             self._init_vault(vault_code_hash);
-            self._init_vote(vote_code_hash, vote_time, vote_support_require_pct, vote_min_require_num);
+            self._init_vote(vote_code_hash);
             self._init_github(github_code_hash);
 
             self.init = true;
@@ -309,7 +308,7 @@ mod dao_manager {
         }
 
         /// init vote
-        fn _init_vote(&mut self, vote_code_hash: Option<&Hash>, vote_time: u64, support_require_pct: u64, min_require_num: u64) -> bool {
+        fn _init_vote(&mut self, vote_code_hash: Option<&Hash>) -> bool {
             if vote_code_hash.is_none() {
                 return true;
             }
