@@ -34,7 +34,7 @@ mod vault {
     use org::OrgManager;
 
     #[derive(
-    Debug, Clone, PartialEq, Eq, scale::Encode, scale::Decode, SpreadLayout, PackedLayout,Default,Copy
+    Debug, Clone, PartialEq, Eq, scale::Encode, scale::Decode, SpreadLayout, PackedLayout,Default
     )]
     #[cfg_attr(
     feature = "std",
@@ -43,7 +43,7 @@ mod vault {
     pub struct Transfer {
         transfer_id:u64,
         transfer_direction:u64,// 1: 国库转出，2:国库转入
-        // token_name: String,
+        token_name: String,
         from_address:AccountId,
         to_address:AccountId,
         value: u64,
@@ -290,7 +290,7 @@ mod vault {
                 let erc_20_address = self.visible_tokens.get(&token_address);
                 let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
 
-                let  token_name = erc_20.name();
+                let token_name = (&erc_20).name();
                 erc_20.transfer_from(from_address,token_address, value);
 
                 // 记录转账历史
@@ -304,7 +304,7 @@ mod vault {
                                              Transfer{
 
                                                  transfer_direction:2,// 1: 国库转出，2:国库转入
-                                                 //    token_name: token_name,
+                                                 token_name:token_name.clone(),
                                                  transfer_id:transfer_id,
                                                  from_address:from_address,
                                                  to_address:token_address,
@@ -313,7 +313,7 @@ mod vault {
 
                 let orgId = self.orgId;
                 self.env().emit_event(depositTokenEvent{
-                    token_name: token_name,
+                    token_name: token_name.clone(),
                     tokenAddress:token_address,
                     fromAddress:from_address,
                     orgId,
@@ -351,7 +351,8 @@ mod vault {
 
                 let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
 
-                let token_name = erc_20.name();
+              
+                let token_name = (&erc_20).name();
 
                 erc_20.transfer_from(token_address,to_address, value);
 
@@ -363,7 +364,7 @@ mod vault {
                 self.transfer_history.insert(transfer_id,
                                              Transfer{
                                                  transfer_direction:1,// 1: 国库转出，2:国库转入
-                                                 //   token_name: token_name,
+                                                 token_name: token_name.clone(),
                                                  transfer_id:transfer_id,
                                                  from_address:token_address,
                                                  to_address:to_address,
@@ -374,7 +375,7 @@ mod vault {
 
                 let orgId = self.orgId;
                 self.env().emit_event(withdrawTokenEvent{
-                    token_name: token_name,
+                    token_name: token_name.clone(),
                     tokenAddress:token_address,
                     toAddress:to_address,
                     orgId,
@@ -395,23 +396,12 @@ mod vault {
         pub fn get_transfer_history(&self) -> alloc::vec::Vec<Transfer> {
 
             let caller = self.env().caller();
-
-            self.transfer_history.keys();
             let mut v:alloc::vec::Vec<Transfer> = alloc::vec::Vec::new();
-            for key in self.transfer_history.keys() {
 
-                let temp = Transfer {
-                    transfer_direction:0,// 1: 国库转出，2:国库转入
-                    //    token_name: String::from(""),
-                    transfer_id:0,
-                    from_address: caller,
-                    to_address:caller,
-                    value:0,
-                    transfer_time:0,
-                };
+          //  ink_storage::collections::hashmap::Values
 
-                let  transfer = self.transfer_history.get(&key).unwrap_or(&temp);
-                v.push(*transfer);
+            for value in self.transfer_history.Values() {
+                v.push(*value);
 
             }
             v
