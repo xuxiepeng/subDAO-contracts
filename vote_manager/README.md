@@ -38,28 +38,30 @@ return:
 
 * result: true/false
 
-## query_one_vote(vote_id: VoteId) -> DisplayVote
+### execute(vote_id: VoteId)
+
+execute a vote. 
+
+mark status to executed.
+
+### query_one_vote(vote_id: VoteId) -> DisplayVote
 
 query vote by vote_id
 
 if vote_id didn't exist, the function will runtime overhead.
 
-## query_all_vote() -> alloc::vec::Vec<DisplayVote>
+### query_all_vote() -> alloc::vec::Vec<DisplayVote>
 
 query all votes
 
-## query_executed_vote() -> alloc::vec::Vec<DisplayVote>
+### query_executed_vote() -> alloc::vec::Vec<DisplayVote>
 
 query all executed votes.
 
-## query_open_vote() -> alloc::vec::Vec<DisplayVote>
+### query_open_vote() -> alloc::vec::Vec<DisplayVote>
 
 query all unfinshed votes.
 
-## query_wait_vote() -> alloc::vec::Vec<DisplayVote>
+### query_wait_vote() -> alloc::vec::Vec<DisplayVote>
 
 query all finished but unexecuted votes.
-
-## Todo
-
-* interaces of query
