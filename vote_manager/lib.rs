@@ -191,6 +191,9 @@ mod vote_manager {
             if self.can_execute(&vote) {
                 let mut vote = self.votes.get_mut(&vote_id).unwrap(); 
                 vote.executed = true;
+                self.env().emit_event(ExecuteVote{
+                    vote_id,
+                });
             }
             // true
         }
