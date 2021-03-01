@@ -16,7 +16,6 @@
 
 extern crate alloc;
 use ink_lang as ink;
-use alloc::vec::Vec;
 pub use self::org::OrgManager;
 
 #[ink::contract]
@@ -35,7 +34,7 @@ mod org {
         moderators: StorageHashMap<AccountId, String>,
         members: StorageHashMap<AccountId, String>,
         creator: AccountId,
-        orgId:u64,
+        org_id:u64,
     }
 
 
@@ -50,46 +49,46 @@ mod org {
     }
 
     #[ink(event)]
-    pub struct addDAOModeratorEvent {
+    pub struct AddDAOModeratorEvent {
         #[ink(topic)]
         moderator: AccountId,
         #[ink(topic)]
-        orgId:u64,
+        org_id:u64,
     }
 
     #[ink(event)]
-    pub struct removeDAOModeratorEvent {
+    pub struct RemoveDAOModeratorEvent {
         #[ink(topic)]
         moderator: AccountId,
         #[ink(topic)]
-        orgId:u64,
+        org_id:u64,
     }
 
 
     #[ink(event)]
-    pub struct addDAOMemberEvent {
+    pub struct AddDAOMemberEvent {
         #[ink(topic)]
         member: AccountId,
         #[ink(topic)]
-        orgId:u64,
+        org_id:u64,
     }
 
     #[ink(event)]
-    pub struct removeDAOMemberEvent {
+    pub struct RemoveDAOMemberEvent {
         #[ink(topic)]
         member: AccountId,
         #[ink(topic)]
-        orgId:u64,
+        org_id:u64,
     }
 
 
     impl OrgManager {
 
         #[ink(constructor)]
-        pub fn new(_creator: AccountId,_orgId:u64) -> Self {
+        pub fn new(_creator: AccountId,org_id:u64) -> Self {
             Self {
                 creator: _creator,
-                orgId:_orgId,
+                org_id:org_id,
                 moderators: StorageHashMap::default(),
                 members: StorageHashMap::default(),
             }
@@ -102,7 +101,7 @@ mod org {
 
         #[ink(message)]
         pub fn get_orgid(&self) -> u64 {
-            self.orgId
+            self.org_id
         }
 
 
@@ -143,10 +142,10 @@ mod org {
                 // 该成员已经存在，加入报错
                 Some(_) => { false},
                 None => {
-                    let orgId = self.orgId;
-                    self.env().emit_event(addDAOModeratorEvent{
+                    let org_id = self.org_id;
+                    self.env().emit_event(AddDAOModeratorEvent{
                     moderator,
-                    orgId,});
+                    org_id,});
                     true
                 }
             }
@@ -161,10 +160,10 @@ mod org {
                 // 该成员已经存在，加入报错
                 Some(_) => { false},
                 None => {
-                    let orgId = self.orgId;
-                    self.env().emit_event(addDAOMemberEvent{
+                    let org_id = self.org_id;
+                    self.env().emit_event(AddDAOMemberEvent{
                     member,
-                    orgId,
+                    org_id,
                 });
                     true
                 }
@@ -186,10 +185,10 @@ mod org {
                 // 该成员不存在，移除报错
                 None => { false}
                 Some(_) => {
-                    let orgId = self.orgId;
-                    self.env().emit_event(removeDAOModeratorEvent{
+                    let org_id = self.org_id;
+                    self.env().emit_event(RemoveDAOModeratorEvent{
                     moderator:member,
-                    orgId,
+                    org_id,
                 });
                      true
                 }
@@ -205,10 +204,10 @@ mod org {
                 // 该成员不存在，移除报错
                 None => { false}
                 Some(_) => {
-                    let orgId = self.orgId;
-                    self.env().emit_event(removeDAOMemberEvent{
+                    let org_id = self.org_id;
+                    self.env().emit_event(RemoveDAOMemberEvent{
                     member:member,
-                    orgId:orgId,
+                    org_id:org_id,
                 });
                      true
                 }
@@ -257,7 +256,7 @@ mod org {
             let mut org_manager = OrgManager::new(accounts.alice,1);
 
             assert_eq!(org_manager.creator, accounts.alice);
-            assert_eq!(org_manager.orgId, 1);
+            assert_eq!(org_manager.org_id, 1);
         }
 
         #[ink::test]

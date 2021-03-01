@@ -16,7 +16,7 @@
 
 extern crate alloc;
 use ink_lang as ink;
-use alloc::vec::Vec;
+//use ink_prelude::vec::Vec;
 pub use self::vault::VaultManager;
 
 #[ink::contract]
@@ -61,7 +61,7 @@ mod vault {
         token_balances: StorageHashMap<AccountId, u64>,
         visible_tokens: StorageHashMap<AccountId, AccountId>,
         transfer_history:StorageHashMap<u64,Transfer>,
-        orgId:u64,
+        org_id:u64,
         org:OrgManager,
     }
 
@@ -74,62 +74,62 @@ mod vault {
 
 
     #[ink(event)]
-    pub struct addVaultTokenEvent {
+    pub struct AddVaultTokenEvent {
         #[ink(topic)]
-        tokenAddress: AccountId,
+        token_address: AccountId,
         #[ink(topic)]
-        orgId:u64,
+        org_id:u64,
     }
 
 
 
 
     #[ink(event)]
-    pub struct removeVaultTokenEvent {
+    pub struct RemoveVaultTokenEvent {
         #[ink(topic)]
-        tokenAddress: AccountId,
+        token_address: AccountId,
         #[ink(topic)]
-        orgId:u64,
+        org_id:u64,
     }
 
 
 
     #[ink(event)]
-    pub struct getTokenBalanceEvent {
+    pub struct GetTokenBalanceEvent {
         #[ink(topic)]
-        tokenAddress:AccountId,
+        token_address:AccountId,
         #[ink(topic)]
-        orgId:u64,
+        org_id:u64,
         #[ink(topic)]
         balance:u64,
     }
 
     #[ink(event)]
-    pub struct depositTokenEvent {
+    pub struct DepositTokenEvent {
 
         #[ink(topic)]
         token_name:String,
         #[ink(topic)]
-        tokenAddress:AccountId,
+        token_address:AccountId,
         #[ink(topic)]
-        fromAddress:AccountId,
+        from_address:AccountId,
 
-        orgId:u64,
+        org_id:u64,
         #[ink(topic)]
         balance:u64,
     }
 
 
     #[ink(event)]
-    pub struct withdrawTokenEvent {
+    pub struct WithdrawTokenEvent {
         #[ink(topic)]
         token_name:String,
         #[ink(topic)]
-        tokenAddress:AccountId,
+        token_address:AccountId,
         #[ink(topic)]
-        toAddress:AccountId,
+        to_address:AccountId,
 
-        orgId:u64,
+        org_id:u64,
         #[ink(topic)]
         balance:u64,
     }
@@ -141,10 +141,10 @@ mod vault {
     impl VaultManager {
 
         #[ink(constructor)]
-        pub fn new(_orgId:u64, org: OrgManager) -> Self {
+        pub fn new(_org_id:u64, org: OrgManager) -> Self {
             Self {
 
-                orgId:_orgId,
+                org_id:_org_id,
                 tokens: StorageHashMap::default(),
                 token_balances: StorageHashMap::default(),
                 visible_tokens: StorageHashMap::default(),
@@ -198,7 +198,7 @@ mod vault {
                 return false;
             }
 
-            let erc_20 = self.get_erc20_by_address(erc_20_address);
+           // let erc_20 = self.get_erc20_by_address(erc_20_address);
 
             match self.tokens.insert(token_address,
                                      erc_20_address
@@ -211,10 +211,10 @@ mod vault {
                                                erc_20_address);
                     self.token_balances.insert(token_address,0);
 
-                    let orgId = self.orgId;
-                    self.env().emit_event(addVaultTokenEvent{
-                        tokenAddress:token_address,
-                        orgId,});
+                    let org_id = self.org_id;
+                    self.env().emit_event(AddVaultTokenEvent{
+                        token_address:token_address,
+                        org_id,});
                     true
                 }
             }
@@ -237,10 +237,10 @@ mod vault {
                 // 该成员不存在，移除报错
                 None => { false}
                 Some(_) => {
-                    let orgId = self.orgId;
-                    self.env().emit_event(removeVaultTokenEvent{
-                        tokenAddress:token_address,
-                        orgId,});
+                    let org_id = self.org_id;
+                    self.env().emit_event(RemoveVaultTokenEvent{
+                        token_address:token_address,
+                        org_id,});
                     true
                 }
             }
@@ -248,9 +248,9 @@ mod vault {
 
 
         #[ink(message)]
-        pub fn get_token_list(&self) -> alloc::vec::Vec<AccountId> {
+        pub fn get_token_list(&self) -> ink_prelude::vec::Vec<AccountId> {
             self.visible_tokens.keys();
-            let mut v:alloc::vec::Vec<AccountId> = alloc::vec::Vec::new();
+            let mut v:ink_prelude::vec::Vec<AccountId> = ink_prelude::vec::Vec::new();
             for key in self.visible_tokens.keys() {
                 v.push(*key)
             }
@@ -263,10 +263,10 @@ mod vault {
         pub fn get_balance_of(&self,token_address: AccountId) -> u64 {
             if self.token_balances.contains_key(&token_address) {
                 let balanceof =  self.token_balances.get(&token_address).copied().unwrap_or(0);
-                let orgId = self.orgId;
-                self.env().emit_event(getTokenBalanceEvent{
-                    tokenAddress:token_address,
-                    orgId,
+                let org_id = self.org_id;
+                self.env().emit_event(GetTokenBalanceEvent{
+                    token_address:token_address,
+                    org_id,
                     balance:balanceof,});
 
                 balanceof
@@ -311,12 +311,12 @@ mod vault {
                                                  value,
                                                  transfer_time});
 
-                let orgId = self.orgId;
-                self.env().emit_event(depositTokenEvent{
+                let org_id = self.org_id;
+                self.env().emit_event(DepositTokenEvent{
                     token_name: token_name.clone(),
-                    tokenAddress:token_address,
-                    fromAddress:from_address,
-                    orgId,
+                    token_address:token_address,
+                    from_address:from_address,
+                    org_id,
                     balance:balanceof,});
 
                 true
@@ -373,12 +373,12 @@ mod vault {
 
 
 
-                let orgId = self.orgId;
-                self.env().emit_event(withdrawTokenEvent{
+                let org_id = self.org_id;
+                self.env().emit_event(WithdrawTokenEvent{
                     token_name: token_name.clone(),
-                    tokenAddress:token_address,
-                    toAddress:to_address,
-                    orgId,
+                    token_address:token_address,
+                    to_address:to_address,
+                    org_id,
                     balance:balanceof,});
 
                 true
@@ -390,22 +390,20 @@ mod vault {
 
 
 
-
-
         #[ink(message)]
-        pub fn get_transfer_history(&self) -> alloc::vec::Vec<Transfer> {
-
-            let caller = self.env().caller();
-            let mut v:alloc::vec::Vec<Transfer> = alloc::vec::Vec::new();
-
-          //  ink_storage::collections::hashmap::Values
-
-            for value in self.transfer_history.Values() {
-                v.push(*value);
-
+        pub fn get_transfer_history(&self) -> ink_prelude::vec::Vec<Transfer> {
+            let mut temp_vec = ink_prelude::vec::Vec::new();
+            let mut iter = self.transfer_history.values();
+            let mut temp = iter.next();
+            while temp.is_some() {
+                temp_vec.push(temp.unwrap().clone());
+                temp = iter.next();
             }
-            v
+            temp_vec
         }
+
+
+       
 
     }
 
@@ -428,7 +426,7 @@ mod vault {
                     .expect("Cannot get accounts");
             // Create a new contract instance.
             let mut vault_manager = VaultManager::new(1);
-            assert_eq!(vault_manager.orgId, 1);
+            assert_eq!(vault_manager.org_id, 1);
         }
 
         #[ink::test]
