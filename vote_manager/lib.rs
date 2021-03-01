@@ -361,8 +361,13 @@ mod vote_manager {
 
     #[cfg(test)]
     mod tests {
-        // use super::*;
         use ink_lang as ink;
+
+        use super::*;
+        use ink_env::{
+            call,
+            test,
+        };
 
         #[ink::test]
         fn test_split() {
@@ -394,5 +399,27 @@ mod vote_manager {
             let t : u64 = choice * 1000 / support; 
             ink_env::debug_println(t.to_string().as_str());
         }
+
+        #[ink::test]
+        fn new_vote_manager() {
+            // let accounts =
+            //     ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
+            //         .expect("Cannot get accounts");
+            let vote_manager = VoteManager::new();
+
+            assert_eq!(vote_manager.votes_length, 0);
+        }
+
+        // #[ink::test]
+        // fn new_vote() {
+        //     let accounts =
+        //         ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
+        //             .expect("Cannot get accounts");
+        //     let vote_manager = VoteManager::new();
+            
+        //     let r = vote_manager.new_vote("hello".to_string(), "hello world".to_string(), 100, 1, 0, "A,B,C,D".to_string());
+        //     assert_eq!(r, 0);
+
+        // }
     }
 }

@@ -6,7 +6,7 @@
 
 Init a new vote module.
 
-### new_vote(title: String, desc: String, vote_time: u64, support_require_pct: u64, min_require_num: u64, choices: String) -> u64
+### new_vote(title: String, desc: String, vote_time: u64, support_require_num: u64, min_require_num: u64, choices: String) -> u64
 
 Create a new vote.
 
@@ -15,7 +15,7 @@ params:
 * title: the vote's title
 * desc: the vote's desc
 * vote_time: how long the vote durate by seconds.
-* support_require_pct: minimum support require percentage. ex. 75% -> 7500.
+* support_require_num: minimum support require numbers.
 * min_require_num: minimum voter require numbers.
 * choices: all vote choice, split by `,` , eg: A,B,C,D 
 
