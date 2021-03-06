@@ -74,6 +74,7 @@ mod main {
             let instance_params = TemplateManager::new(self.owner)
                 .endowment(total_balance / 4)
                 .code_hash(template_code_hash)
+                .salt_bytes(&[0xDE, 0xAD, 0xBE, 0xEF])
                 .params();
             let init_result = ink_env::instantiate_contract(&instance_params);
             let contract_addr = init_result.expect("failed at instantiating the `TemplateManager` contract");
@@ -116,6 +117,7 @@ mod main {
             let dao_instance_params = DAOManager::new(controller, self.instance_index, template)
                 .endowment(total_balance / 4)
                 .code_hash(dao_manager_code_hash)
+                .salt_bytes(&[0xDE, 0xAD, 0xBE, 0xEF])
                 .params();
             let dao_init_result = ink_env::instantiate_contract(&dao_instance_params);
             let dao_addr = dao_init_result.expect("failed at instantiating the `DAO Instance` contract");
