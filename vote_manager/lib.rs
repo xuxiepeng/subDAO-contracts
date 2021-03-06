@@ -153,7 +153,7 @@ mod vote_manager {
             let vote_id = self.votes_length.clone();
             self.votes_length += 1;
             let start_date: u64 = self.env().block_timestamp();
-            let vec: Vec<&str> = choices.split(",").collect();
+            let vec: Vec<&str> = choices.split("|").collect();
             let vote = Vote{
                 executed: false,
                 title,
@@ -299,7 +299,7 @@ mod vote_manager {
                 }
                 index += 1;
             }
-            let choices_content = choices.join(","); 
+            let choices_content = choices.join("|"); 
             let vote = DisplayVote{
                 executed: vote.executed,
                 title: vote.title.clone(),
