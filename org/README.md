@@ -37,7 +37,18 @@
 ### 2.10 resign(member: AccountId) -> bool
 + 管理员或普通成员自我退出
 
+### 2.11 get_dao_member_detail_list() -> alloc::vec::Vec<(AccountId, String)>
++ 返回当前的管理员列表,tuple 
+
+### 2.12  get_dao_moderator_detail_list() -> alloc::vec::Vec<(AccountId, String)>
++ 返回当前的普通成员的列表,tuple
+
 ### TODO 增加角色transfer
 
 ## 3 测试用例
 + 写了一些测试用例，来测试接口的功能。
+
+## 4 合约部署步骤:
+
+new(_creator: AccountId,_orgId:u64):self
+  需要选择 creator 的地址，和 orgid.
