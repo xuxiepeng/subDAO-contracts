@@ -63,6 +63,7 @@ mod vault {
         transfer_history:StorageHashMap<u64,Transfer>,
         org_id:u64,
         org:OrgManager,
+        vault_contract_address:AccountId,
     }
 
     /// Errors that can occur upon calling this contract.
@@ -110,8 +111,6 @@ mod vault {
         #[ink(topic)]
         token_name:String,
         #[ink(topic)]
-        token_address:AccountId,
-        #[ink(topic)]
         from_address:AccountId,
 
         org_id:u64,
@@ -124,8 +123,7 @@ mod vault {
     pub struct WithdrawTokenEvent {
         #[ink(topic)]
         token_name:String,
-        #[ink(topic)]
-        token_address:AccountId,
+       
         #[ink(topic)]
         to_address:AccountId,
 
@@ -141,7 +139,12 @@ mod vault {
     impl VaultManager {
 
         #[ink(constructor)]
-        pub fn new(_org_id:u64, org: OrgManager) -> Self {
+        pub fn new(org_contract_address: AccountId) -> Self {
+
+            let mut org = self.get_orgmanager_by_address(*org_contract_address.unwrap());
+
+            let _org_id = (&org).get_orgid();
+
             Self {
 
                 org_id:_org_id,
@@ -153,11 +156,25 @@ mod vault {
 
             }
         }
+        
+        // 保存当前国库合约的地址， 便于 后续erc20 使用
+        pub fn init(self,vault_contract_address: AccountId) -> Self{
+            Self {
+                vault_contract_address:vault_contract_address,
+            }
+        }
 
         // 由合约地址获取erc20 实例
         fn get_erc20_by_address(&self, address:AccountId) -> Erc20 {
             let  erc20_instance: Erc20 = ink_env::call::FromAccountId::from_account_id(address);
             erc20_instance
+
+        }
+
+         // 由合约地址获取OrgManager 实例
+        fn get_orgmanager_by_address(&self, address:AccountId) -> OrgManager {
+            let  org_instance: OrgManager = ink_env::call::FromAccountId::from_account_id(address);
+            org_instance
 
         }
 
@@ -187,7 +204,8 @@ mod vault {
 
 
         #[ink(message)]
-        pub fn add_vault_token(&mut self,erc_20_address:AccountId,token_address: AccountId) -> bool  {
+        pub fn add_vault_token(&mut self,erc_20_address:AccountId) -> bool  {
+            
             let caller = self.env().caller();
 
             // 国库权限控制: 只有管理员或者creator 可以增加 token
@@ -200,20 +218,20 @@ mod vault {
 
            // let erc_20 = self.get_erc20_by_address(erc_20_address);
 
-            match self.tokens.insert(token_address,
-                                     erc_20_address
+            match self.tokens.insert(
+                                     erc_20_address,self.vault_contract_address
             ) {
 
                 // 该token 已经存在，加入报错
                 Some(_) => { false},
                 None => {
-                    self.visible_tokens.insert(token_address,
-                                               erc_20_address);
-                    self.token_balances.insert(token_address,0);
+                    self.visible_tokens.insert(
+                                               erc_20_address,self.vault_contract_address);
+                    
 
                     let org_id = self.org_id;
                     self.env().emit_event(AddVaultTokenEvent{
-                        token_address:token_address,
+                        token_address:erc_20_address,
                         org_id,});
                     true
                 }
@@ -223,7 +241,7 @@ mod vault {
 
         #[ink(message)]
         // 移除token，只是从 token可见列表(visible_tokens)中移除，在tokens中该币仍然存在。
-        pub fn remove_vault_token(&mut self,token_address: AccountId) -> bool  {
+        pub fn remove_vault_token(&mut self,erc_20_address: AccountId) -> bool  {
 
             // 国库权限控制: 只有管理员或者creator 可以移除 token
             let caller = self.env().caller();
@@ -233,13 +251,13 @@ mod vault {
                 return false;
             }
 
-            match self.visible_tokens.take(&token_address) {
+            match self.visible_tokens.take(&erc_20_address) {
                 // 该成员不存在，移除报错
                 None => { false}
                 Some(_) => {
                     let org_id = self.org_id;
                     self.env().emit_event(RemoveVaultTokenEvent{
-                        token_address:token_address,
+                        token_address:erc_20_address,
                         org_id,});
                     true
                 }
@@ -260,12 +278,18 @@ mod vault {
 
 
         #[ink(message)]
-        pub fn get_balance_of(&self,token_address: AccountId) -> u64 {
-            if self.token_balances.contains_key(&token_address) {
-                let balanceof =  self.token_balances.get(&token_address).copied().unwrap_or(0);
+        pub fn get_balance_of(&self,erc_20_address: AccountId) -> u64 {
+
+            // 只允许查询 “注册tokens 列表” 中的 erc20 token 的余额
+            if self.tokens.contains_key(&erc_20_address) {
+
+                let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
+                let token_name = (&erc_20).name();
+                let balanceof = erc_20.balance_of(self.vault_contract_address);
+
                 let org_id = self.org_id;
                 self.env().emit_event(GetTokenBalanceEvent{
-                    token_address:token_address,
+                    token_address:erc_20_address,
                     org_id,
                     balance:balanceof,});
 
@@ -276,22 +300,23 @@ mod vault {
             }
         }
 
-
+       
         #[ink(message)]
-        // 把资金存入国库
-        pub fn deposit(&mut self,token_address: AccountId,from_address:AccountId,value:u64) -> bool {
-            if self.token_balances.contains_key(&token_address) {
+        // 把资金存入国库，目前只允许 往 “注册tokens 列表” 里 的 币转账。
+        pub fn deposit(&mut self, erc_20_address:AccountId, from_address:AccountId,value:u64) -> bool {
 
-                let mut balanceof =  self.token_balances.get(&token_address).copied().unwrap_or(0);
-                balanceof = balanceof + value;
-                self.token_balances.insert(token_address,balanceof);
+            let to_address = self.vault_contract_address;
+          
+            if self.tokens.contains_key(&erc_20_address) {
+
+                let mut balanceof =  self.get_balance_of(erc_20_address);
 
 
-                let erc_20_address = self.visible_tokens.get(&token_address);
                 let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
 
                 let token_name = (&erc_20).name();
-                erc_20.transfer_from(from_address,token_address, value);
+              
+                erc_20.transfer_from(from_address,to_address, value);
 
                 // 记录转账历史
 
@@ -307,16 +332,15 @@ mod vault {
                                                  token_name:token_name.clone(),
                                                  transfer_id:transfer_id,
                                                  from_address:from_address,
-                                                 to_address:token_address,
+                                                 to_address:to_address,
                                                  value,
                                                  transfer_time});
 
                 let org_id = self.org_id;
                 self.env().emit_event(DepositTokenEvent{
                     token_name: token_name.clone(),
-                    token_address:token_address,
                     from_address:from_address,
-                    org_id,
+                    org_id:org_id,
                     balance:balanceof,});
 
                 true
@@ -326,12 +350,15 @@ mod vault {
             }
         }
 
-
+        
 
         #[ink(message)]
-        // 把资金转出国库
-        pub fn withdraw(&mut self,token_address: AccountId,to_address:AccountId,value:u64) -> bool {
-            if self.token_balances.contains_key(&token_address) {
+        // 把资金转出国库，目前只允许 从 “可见 tokens 列表” 里的币 转出。同时， 只有管理员或者creator ,可以转出资金。
+        pub fn withdraw(&mut self,erc_20_address:AccountId,to_address:AccountId,value:u64) -> bool {
+
+            let from_address = self.vault_contract_address;
+
+            if self.visible_tokens.contains_key(&erc_20_address) {
 
 
                 // 国库权限控制: 只有管理员或者creator ,可以转出资金
@@ -342,19 +369,17 @@ mod vault {
                     return false;
                 }
 
-                let mut balanceof =  self.token_balances.get(&token_address).copied().unwrap_or(0);
-                balanceof = balanceof - value;
-                self.token_balances.insert(token_address,balanceof);
 
+                let mut balanceof =  self.get_balance_of(erc_20_address);
 
-                let erc_20_address = self.visible_tokens.get(&token_address);
 
                 let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
 
-              
                 let token_name = (&erc_20).name();
+              
+                erc_20.transfer_from(from_address,to_address, value);
 
-                erc_20.transfer_from(token_address,to_address, value);
+              
 
                 // 记录转账历史
                 let transfer_id:u64 = (self.transfer_history.len()+1).into();
@@ -366,7 +391,7 @@ mod vault {
                                                  transfer_direction:1,// 1: 国库转出，2:国库转入
                                                  token_name: token_name.clone(),
                                                  transfer_id:transfer_id,
-                                                 from_address:token_address,
+                                                 from_address:from_address,
                                                  to_address:to_address,
                                                  value:value,
                                                  transfer_time:transfer_time});
@@ -376,7 +401,6 @@ mod vault {
                 let org_id = self.org_id;
                 self.env().emit_event(WithdrawTokenEvent{
                     token_name: token_name.clone(),
-                    token_address:token_address,
                     to_address:to_address,
                     org_id,
                     balance:balanceof,});
@@ -403,10 +427,7 @@ mod vault {
         }
 
 
-       
-
     }
-
 
     /// Unit tests
     #[cfg(test)]
