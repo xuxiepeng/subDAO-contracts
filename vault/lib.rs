@@ -61,9 +61,9 @@ mod vault {
         token_balances: StorageHashMap<AccountId, u64>,
         visible_tokens: StorageHashMap<AccountId, AccountId>,
         transfer_history:StorageHashMap<u64,Transfer>,
-        org_id:u64,
-        org:OrgManager,
+        org_contract_address:AccountId,
         vault_contract_address:AccountId,
+        org_id:u64,
     }
 
     /// Errors that can occur upon calling this contract.
@@ -141,38 +141,36 @@ mod vault {
         #[ink(constructor)]
         pub fn new(org_contract_address: AccountId) -> Self {
 
-            let mut org = self.get_orgmanager_by_address(*org_contract_address.unwrap());
-
-            let _org_id = (&org).get_orgid();
-
             Self {
-
-                org_id:_org_id,
+                org_contract_address:org_contract_address,
                 tokens: StorageHashMap::default(),
                 token_balances: StorageHashMap::default(),
                 visible_tokens: StorageHashMap::default(),
                 transfer_history: StorageHashMap::default(),
-                org:org,
+                vault_contract_address:org_contract_address,
+                org_id:0,
 
             }
         }
         
         // 保存当前国库合约的地址， 便于 后续erc20 使用
-        pub fn init(self,vault_contract_address: AccountId) -> Self{
-            Self {
-                vault_contract_address:vault_contract_address,
-            }
+        pub fn init(mut self,vault_contract_address: AccountId) -> bool {
+            let mut org = self.get_orgmanager_by_address(self.org_contract_address);
+            let  _org_id = (&org).get_orgid();
+            self.vault_contract_address = vault_contract_address;
+            self.org_id = _org_id;
+            true
         }
 
         // 由合约地址获取erc20 实例
-        fn get_erc20_by_address(&self, address:AccountId) -> Erc20 {
+        pub fn get_erc20_by_address(&self, address:AccountId) -> Erc20 {
             let  erc20_instance: Erc20 = ink_env::call::FromAccountId::from_account_id(address);
             erc20_instance
 
         }
 
          // 由合约地址获取OrgManager 实例
-        fn get_orgmanager_by_address(&self, address:AccountId) -> OrgManager {
+        pub fn get_orgmanager_by_address(&self, address:AccountId) -> OrgManager {
             let  org_instance: OrgManager = ink_env::call::FromAccountId::from_account_id(address);
             org_instance
 
@@ -180,7 +178,7 @@ mod vault {
 
         // 国库操作的权限检查
         fn check_authority(&self, caller:AccountId) -> bool {
-            let org = &self.org;
+            let  org = self.get_orgmanager_by_address(self.org_contract_address);
 
             let creator = org.get_dao_creator();
             let moderator_list = org.get_dao_moderator_list();
@@ -283,7 +281,8 @@ mod vault {
             // 只允许查询 “注册tokens 列表” 中的 erc20 token 的余额
             if self.tokens.contains_key(&erc_20_address) {
 
-                let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
+               // let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
+                let mut erc_20 = self.get_erc20_by_address(erc_20_address);
                 let token_name = (&erc_20).name();
                 let balanceof = erc_20.balance_of(self.vault_contract_address);
 
@@ -312,7 +311,8 @@ mod vault {
                 let mut balanceof =  self.get_balance_of(erc_20_address);
 
 
-                let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
+                //let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
+                let mut erc_20 = self.get_erc20_by_address(erc_20_address);
 
                 let token_name = (&erc_20).name();
               
@@ -373,7 +373,8 @@ mod vault {
                 let mut balanceof =  self.get_balance_of(erc_20_address);
 
 
-                let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
+                //let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
+                let mut erc_20 = self.get_erc20_by_address(erc_20_address);
 
                 let token_name = (&erc_20).name();
               
