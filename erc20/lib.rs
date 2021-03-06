@@ -86,6 +86,11 @@ mod erc20 {
         }
 
         #[ink(message)]
+        pub fn owner(&self) -> AccountId {
+            self.owner
+        }
+
+        #[ink(message)]
         pub fn balance_of(&self, owner: AccountId) -> u64 {
             self.balance_of_or_zero(&owner)
         }
