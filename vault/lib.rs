@@ -58,12 +58,10 @@ mod vault {
     pub struct VaultManager {
 
         tokens: StorageHashMap<AccountId, AccountId>,
-        token_balances: StorageHashMap<AccountId, u64>,
         visible_tokens: StorageHashMap<AccountId, AccountId>,
         transfer_history:StorageHashMap<u64,Transfer>,
         org_contract_address:AccountId,
         vault_contract_address:AccountId,
-        org_id:u64,
     }
 
     /// Errors that can occur upon calling this contract.
@@ -78,8 +76,7 @@ mod vault {
     pub struct AddVaultTokenEvent {
         #[ink(topic)]
         token_address: AccountId,
-        #[ink(topic)]
-        org_id:u64,
+
     }
 
 
@@ -89,8 +86,7 @@ mod vault {
     pub struct RemoveVaultTokenEvent {
         #[ink(topic)]
         token_address: AccountId,
-        #[ink(topic)]
-        org_id:u64,
+
     }
 
 
@@ -99,8 +95,7 @@ mod vault {
     pub struct GetTokenBalanceEvent {
         #[ink(topic)]
         token_address:AccountId,
-        #[ink(topic)]
-        org_id:u64,
+
         #[ink(topic)]
         balance:u64,
     }
@@ -113,7 +108,6 @@ mod vault {
         #[ink(topic)]
         from_address:AccountId,
 
-        org_id:u64,
         #[ink(topic)]
         balance:u64,
     }
@@ -127,7 +121,6 @@ mod vault {
         #[ink(topic)]
         to_address:AccountId,
 
-        org_id:u64,
         #[ink(topic)]
         balance:u64,
     }
@@ -141,26 +134,20 @@ mod vault {
         #[ink(constructor)]
         pub fn new(org_contract_address: AccountId) -> Self {
 
+            let vault_contract_address = Self::env().account_id();
+
             Self {
                 org_contract_address:org_contract_address,
                 tokens: StorageHashMap::default(),
-                token_balances: StorageHashMap::default(),
                 visible_tokens: StorageHashMap::default(),
                 transfer_history: StorageHashMap::default(),
-                vault_contract_address:org_contract_address,
-                org_id:0,
+                vault_contract_address: vault_contract_address,
+
 
             }
         }
 
-        // 保存当前国库合约的地址， 便于 后续erc20 使用
-        pub fn init_vault(mut self,vault_contract_address: AccountId) -> bool {
-            let mut org = self.get_orgmanager_by_address(self.org_contract_address);
-            let  _org_id = (&org).get_orgid();
-            self.vault_contract_address = vault_contract_address;
-            self.org_id = _org_id;
-            true
-        }
+
 
         // 由合约地址获取erc20 实例
         pub fn get_erc20_by_address(&self, address:AccountId) -> Erc20 {
@@ -177,18 +164,17 @@ mod vault {
         }
 
         // 国库操作的权限检查
-        fn check_authority(&self, caller:AccountId) -> bool {
+        #[ink(message)]
+        pub fn check_authority(&self, caller:AccountId) -> bool {
+            return true;
             let  org = self.get_orgmanager_by_address(self.org_contract_address);
 
             let creator = org.get_dao_creator();
             let moderator_list = org.get_dao_moderator_list();
 
-
-
             if caller == creator {
                 return true;
             }
-
             for key in moderator_list {
                 let moderator = key;
                 if caller == moderator {
@@ -208,13 +194,13 @@ mod vault {
 
             // 国库权限控制: 只有管理员或者creator 可以增加 token
 
-            let can_operate = self.check_authority(caller);
+             let can_operate = self.check_authority(caller);
+
 
             if can_operate == false {
                 return false;
             }
 
-           // let erc_20 = self.get_erc20_by_address(erc_20_address);
 
             match self.tokens.insert(
                                      erc_20_address,self.vault_contract_address
@@ -227,10 +213,10 @@ mod vault {
                                                erc_20_address,self.vault_contract_address);
 
 
-                    let org_id = self.org_id;
+
                     self.env().emit_event(AddVaultTokenEvent{
                         token_address:erc_20_address,
-                        org_id,});
+                        });
                     true
                 }
             }
@@ -253,10 +239,10 @@ mod vault {
                 // 该成员不存在，移除报错
                 None => { false}
                 Some(_) => {
-                    let org_id = self.org_id;
+
                     self.env().emit_event(RemoveVaultTokenEvent{
                         token_address:erc_20_address,
-                        org_id,});
+                        });
                     true
                 }
             }
@@ -282,14 +268,13 @@ mod vault {
             if self.tokens.contains_key(&erc_20_address) {
 
                // let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
-                let mut erc_20 = self.get_erc20_by_address(erc_20_address);
-                let token_name = (&erc_20).name();
+                let  erc_20 = self.get_erc20_by_address(erc_20_address);
+                //let token_name = (&erc_20).name();
                 let balanceof = erc_20.balance_of(self.vault_contract_address);
 
-                let org_id = self.org_id;
+
                 self.env().emit_event(GetTokenBalanceEvent{
                     token_address:erc_20_address,
-                    org_id,
                     balance:balanceof,});
 
                 balanceof
@@ -308,7 +293,7 @@ mod vault {
 
             if self.tokens.contains_key(&erc_20_address) {
 
-                let mut balanceof =  self.get_balance_of(erc_20_address);
+                let  balanceof =  self.get_balance_of(erc_20_address);
 
 
                 //let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
@@ -336,11 +321,10 @@ mod vault {
                                                  value,
                                                  transfer_time});
 
-                let org_id = self.org_id;
+
                 self.env().emit_event(DepositTokenEvent{
                     token_name: token_name.clone(),
                     from_address:from_address,
-                    org_id:org_id,
                     balance:balanceof,});
 
                 true
@@ -370,7 +354,7 @@ mod vault {
                 }
 
 
-                let mut balanceof =  self.get_balance_of(erc_20_address);
+                let  balanceof =  self.get_balance_of(erc_20_address);
 
 
                 //let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
@@ -399,11 +383,10 @@ mod vault {
 
 
 
-                let org_id = self.org_id;
+
                 self.env().emit_event(WithdrawTokenEvent{
                     token_name: token_name.clone(),
                     to_address:to_address,
-                    org_id,
                     balance:balanceof,});
 
                 true
