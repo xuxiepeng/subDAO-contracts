@@ -123,7 +123,7 @@ mod vault {
     pub struct WithdrawTokenEvent {
         #[ink(topic)]
         token_name:String,
-       
+
         #[ink(topic)]
         to_address:AccountId,
 
@@ -152,9 +152,9 @@ mod vault {
 
             }
         }
-        
+
         // 保存当前国库合约的地址， 便于 后续erc20 使用
-        pub fn init(mut self,vault_contract_address: AccountId) -> bool {
+        pub fn init_vault(mut self,vault_contract_address: AccountId) -> bool {
             let mut org = self.get_orgmanager_by_address(self.org_contract_address);
             let  _org_id = (&org).get_orgid();
             self.vault_contract_address = vault_contract_address;
@@ -203,7 +203,7 @@ mod vault {
 
         #[ink(message)]
         pub fn add_vault_token(&mut self,erc_20_address:AccountId) -> bool  {
-            
+
             let caller = self.env().caller();
 
             // 国库权限控制: 只有管理员或者creator 可以增加 token
@@ -225,7 +225,7 @@ mod vault {
                 None => {
                     self.visible_tokens.insert(
                                                erc_20_address,self.vault_contract_address);
-                    
+
 
                     let org_id = self.org_id;
                     self.env().emit_event(AddVaultTokenEvent{
@@ -299,13 +299,13 @@ mod vault {
             }
         }
 
-       
+
         #[ink(message)]
         // 把资金存入国库，目前只允许 往 “注册tokens 列表” 里 的 币转账。
         pub fn deposit(&mut self, erc_20_address:AccountId, from_address:AccountId,value:u64) -> bool {
 
             let to_address = self.vault_contract_address;
-          
+
             if self.tokens.contains_key(&erc_20_address) {
 
                 let mut balanceof =  self.get_balance_of(erc_20_address);
@@ -315,7 +315,7 @@ mod vault {
                 let mut erc_20 = self.get_erc20_by_address(erc_20_address);
 
                 let token_name = (&erc_20).name();
-              
+
                 erc_20.transfer_from(from_address,to_address, value);
 
                 // 记录转账历史
@@ -350,7 +350,7 @@ mod vault {
             }
         }
 
-        
+
 
         #[ink(message)]
         // 把资金转出国库，目前只允许 从 “可见 tokens 列表” 里的币 转出。同时， 只有管理员或者creator ,可以转出资金。
@@ -377,10 +377,10 @@ mod vault {
                 let mut erc_20 = self.get_erc20_by_address(erc_20_address);
 
                 let token_name = (&erc_20).name();
-              
+
                 erc_20.transfer_from(from_address,to_address, value);
 
-              
+
 
                 // 记录转账历史
                 let transfer_id:u64 = (self.transfer_history.len()+1).into();
