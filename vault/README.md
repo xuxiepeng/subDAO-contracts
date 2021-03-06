@@ -3,9 +3,8 @@
 DAO 组织的运营是需要资金支持的，国库模块主要用于 DAO 资金的管理。
 
 ## 2.接口描述
-
-### 2.1 init(vault_contract_address: AccountId)
-+ 对国库进行初始化。保存当前国库合约的地址， 便于 后续erc20 转账使用
+### 2.1  new(org_contract_address: AccountId)
++   需要选择 org 合约的地址
 
 ### 2.2 add_vault_token(erc_20_address:AccountId) -> bool
 + 增加一种token。erc_20_address: 该 erc 20 的合约地址。
@@ -36,6 +35,9 @@ DAO 组织的运营是需要资金支持的，国库模块主要用于 DAO 资�
 ## 3 测试用例
 + 写了一些测试用例，来测试接口的功能。
 
-## 4  todo:
+## 4 合约部署步骤:
+
+ new(org_contract_address: AccountId)
+  需要选择 org 合约的地址。
 
 
