@@ -33,5 +33,5 @@ return the owner of dao
 ## How to test
 
 ```
-cargo +nightly test
+cargo +nightly test -- --nocapture
 ```

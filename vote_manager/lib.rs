@@ -64,6 +64,7 @@ mod vote_manager {
         )
     )]
     pub struct Vote {
+        vote_id: VoteId,
         executed: bool,
         title: String,
         desc: String,
@@ -88,6 +89,7 @@ mod vote_manager {
         )
     )]
     pub struct DisplayVote {
+        vote_id: VoteId,
         executed: bool,
         title: String,
         desc: String,
@@ -153,8 +155,9 @@ mod vote_manager {
             let vote_id = self.votes_length.clone();
             self.votes_length += 1;
             let start_date: u64 = self.env().block_timestamp();
-            let vec: Vec<&str> = choices.split(",").collect();
+            let vec: Vec<&str> = choices.split("|").collect();
             let vote = Vote{
+                vote_id: vote_id,
                 executed: false,
                 title,
                 desc,
@@ -299,8 +302,9 @@ mod vote_manager {
                 }
                 index += 1;
             }
-            let choices_content = choices.join(","); 
+            let choices_content = choices.join("|"); 
             let vote = DisplayVote{
+                vote_id: vote.vote_id,
                 executed: vote.executed,
                 title: vote.title.clone(),
                 desc: vote.desc.clone(),

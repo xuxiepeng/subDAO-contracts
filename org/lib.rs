@@ -116,6 +116,7 @@ mod org {
 
         }
 
+
         #[ink(message)]
         pub fn get_dao_members_list(&self) -> alloc::vec::Vec<AccountId> {
             self.members.keys();
@@ -124,6 +125,35 @@ mod org {
                 v.push(*key)
             }
             v
+        }
+
+
+        #[ink(message)]
+        pub fn get_dao_moderator_detail_list(&self) -> alloc::vec::Vec<(AccountId, String)> {
+            self.moderators.keys();
+            let mut v:alloc::vec::Vec<(AccountId, String)> = alloc::vec::Vec::new();
+            for key in self.moderators.keys() {
+
+                let value = self.moderators.get(key).unwrap().clone();
+
+                v.push((*key,value))
+            }
+            v
+
+        }
+
+        #[ink(message)]
+        pub fn get_dao_member_detail_list(&self) -> alloc::vec::Vec<(AccountId, String)> {
+            self.members.keys();
+            let mut v:alloc::vec::Vec<(AccountId, String)> = alloc::vec::Vec::new();
+            for key in self.members.keys() {
+
+                let value = self.members.get(key).unwrap().clone();
+
+                v.push((*key,value))
+            }
+            v
+
         }
 
 

@@ -81,6 +81,16 @@ mod erc20 {
         }
 
         #[ink(message)]
+        pub fn decimals(&self) -> u8 {
+            self.decimals
+        }
+
+        #[ink(message)]
+        pub fn owner(&self) -> AccountId {
+            self.owner
+        }
+
+        #[ink(message)]
         pub fn balance_of(&self, owner: AccountId) -> u64 {
             self.balance_of_or_zero(&owner)
         }
@@ -237,11 +247,45 @@ mod erc20 {
 
             ink_env::debug_println(&token.name());
             ink_env::debug_println(&token.symbol());
-            ink_env::debug_println(&format!("name is {}", token.total_supply()));
+            ink_env::debug_println(&format!("total supply  is {}", token.total_supply()));
+            ink_env::debug_println(&format!("decimals  is {}", token.decimals()));
 
             assert_eq!(token.name(), "SubDAO Token");
             assert_eq!(token.symbol(), "SDT");
             assert_eq!(token.total_supply(), 100000000);
+            assert_eq!(token.decimals(), 4);
+        }
+
+        #[ink::test]
+        fn transfer_works() {
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+
+            let mut token = Erc20::new(
+                "SubDAO Token".to_string()
+                , "SDT".to_string()
+                , 100000000
+                , 4
+                , accounts.alice
+                );
+
+            ink_env::debug_println(&token.name());
+            ink_env::debug_println(&token.symbol());
+            ink_env::debug_println(&format!("total supply is {}", token.total_supply()));
+            ink_env::debug_println(&format!("decimals  is {}", token.decimals()));
+
+            assert_eq!(token.name(), "SubDAO Token");
+            assert_eq!(token.symbol(), "SDT");
+            assert_eq!(token.total_supply(), 100000000);
+            assert_eq!(token.decimals(), 4);
+
+            let amount: u64 = 99_u64 * 10_u64.pow(token.decimals() as u32);
+            token.transfer(accounts.bob, amount);
+            
+            ink_env::debug_println(&format!("bob balance  is {}", token.balance_of(accounts.bob)));
+            assert_eq!(token.balance_of(accounts.bob), amount);
+
+            ink_env::debug_println(&format!("alice balance  is {}", token.balance_of(accounts.alice)));
+            assert_eq!(token.balance_of(accounts.alice), token.total_supply() - amount);
         }
     }
 }
