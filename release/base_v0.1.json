@@ -1,0 +1,305 @@
+{
+  "metadataVersion": "0.1.0",
+  "source": {
+    "hash": "0xf23a5d0b700662f650d85dbf4d60d40003d08fd2a6d48f2adb3d0f451ab1148c",
+    "language": "ink! 3.0.0-rc3",
+    "compiler": "rustc 1.50.0-nightly"
+  },
+  "contract": {
+    "name": "base",
+    "version": "0.1.0",
+    "authors": [
+      "[your_name] <[your_email]>"
+    ]
+  },
+  "spec": {
+    "constructors": [
+      {
+        "args": [],
+        "docs": [],
+        "name": [
+          "new"
+        ],
+        "selector": "0x9bae9d5e"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "name": [
+          "default"
+        ],
+        "selector": "0xed4b9d1b"
+      }
+    ],
+    "docs": [],
+    "events": [],
+    "messages": [
+      {
+        "args": [
+          {
+            "name": "name",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "logo",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "desc",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "init_base"
+        ],
+        "payable": false,
+        "returnType": null,
+        "selector": "0x7cade53a"
+      },
+      {
+        "args": [
+          {
+            "name": "name",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "set_name"
+        ],
+        "payable": false,
+        "returnType": null,
+        "selector": "0x24d2da30"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "get_name"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "String"
+          ],
+          "type": 4
+        },
+        "selector": "0xa148a32a"
+      },
+      {
+        "args": [
+          {
+            "name": "logo",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "set_logo"
+        ],
+        "payable": false,
+        "returnType": null,
+        "selector": "0x4b74fa40"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "get_logo"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "String"
+          ],
+          "type": 4
+        },
+        "selector": "0x26c98f47"
+      },
+      {
+        "args": [
+          {
+            "name": "desc",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "set_desc"
+        ],
+        "payable": false,
+        "returnType": null,
+        "selector": "0x95407827"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "get_desc"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "String"
+          ],
+          "type": 4
+        },
+        "selector": "0x26277d2b"
+      },
+      {
+        "args": [
+          {
+            "name": "owner",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "set_owner"
+        ],
+        "payable": false,
+        "returnType": null,
+        "selector": "0x367facd6"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "get_owner"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "AccountId"
+          ],
+          "type": 1
+        },
+        "selector": "0x07fcd0b1"
+      }
+    ]
+  },
+  "storage": {
+    "struct": {
+      "fields": [
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "ty": 1
+            }
+          },
+          "name": "owner"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
+              "ty": 4
+            }
+          },
+          "name": "name"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
+              "ty": 4
+            }
+          },
+          "name": "logo"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0300000000000000000000000000000000000000000000000000000000000000",
+              "ty": 4
+            }
+          },
+          "name": "desc"
+        }
+      ]
+    }
+  },
+  "types": [
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "type": 2,
+              "typeName": "[u8; 32]"
+            }
+          ]
+        }
+      },
+      "path": [
+        "ink_env",
+        "types",
+        "AccountId"
+      ]
+    },
+    {
+      "def": {
+        "array": {
+          "len": 32,
+          "type": 3
+        }
+      }
+    },
+    {
+      "def": {
+        "primitive": "u8"
+      }
+    },
+    {
+      "def": {
+        "primitive": "str"
+      }
+    }
+  ]
+}
