@@ -362,7 +362,8 @@ mod vault {
 
                 let token_name = (&erc_20).name();
 
-                erc_20.transfer_from(from_address,to_address, value);
+                //erc_20.transfer_from(from_address,to_address, value);
+                erc_20.transfer(to_address, value);
 
 
 
