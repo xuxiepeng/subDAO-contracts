@@ -295,8 +295,7 @@ mod dao_manager {
             let total_balance = Self::env().balance();
             // instance org
             let org_addr = self.component_addrs.org_addr.unwrap();
-            let org_instance: OrgManager = ink_env::call::FromAccountId::from_account_id(org_addr);
-            let vault_instance_params = VaultManager::new(self.org_id, org_instance)
+            let vault_instance_params = VaultManager::new(org_addr)
                 .endowment(total_balance / 4)
                 .code_hash(vault_code_hash)
                 .salt_bytes(&[0xDE, 0xAD, 0xBE, 0xEF])
