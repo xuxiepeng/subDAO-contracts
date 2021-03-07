@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xd5b45321d5edd027613615e4d2caa8e1b940f00c5fc1f0bccc8bc02fa56713d9",
+    "hash": "0x2defd5e0b4063900a02767065b5e5693f942670f2730998719f08049a2c285b9",
     "language": "ink! 3.0.0-rc2",
     "compiler": "rustc 1.50.0-nightly"
   },
@@ -30,7 +30,7 @@
         "name": [
           "new"
         ],
-        "selector": "0xd183512b"
+        "selector": "0x9bae9d5e"
       }
     ],
     "docs": [],
@@ -100,7 +100,7 @@
           ],
           "type": 16
         },
-        "selector": "0xa1ec5918"
+        "selector": "0x44d6441f"
       },
       {
         "args": [
@@ -144,7 +144,7 @@
           ],
           "type": 16
         },
-        "selector": "0x1db8b2fa"
+        "selector": "0xc39c7d18"
       },
       {
         "args": [],
@@ -160,7 +160,7 @@
           ],
           "type": 21
         },
-        "selector": "0x6d935a7e"
+        "selector": "0x3c8b590e"
       },
       {
         "args": [
@@ -186,7 +186,7 @@
           ],
           "type": 22
         },
-        "selector": "0x2728869d"
+        "selector": "0x816a1109"
       },
       {
         "args": [],
@@ -202,7 +202,7 @@
           ],
           "type": 1
         },
-        "selector": "0x863a8656"
+        "selector": "0xcba1196e"
       },
       {
         "args": [
@@ -237,7 +237,7 @@
           ],
           "type": 16
         },
-        "selector": "0xc2119911"
+        "selector": "0xb332bcd1"
       },
       {
         "args": [],
@@ -253,7 +253,7 @@
           ],
           "type": 23
         },
-        "selector": "0xea0dc02c"
+        "selector": "0x1baed2cd"
       },
       {
         "args": [
@@ -279,7 +279,7 @@
           ],
           "type": 23
         },
-        "selector": "0x3caddb35"
+        "selector": "0x21743714"
       }
     ]
   },
@@ -534,7 +534,8 @@
         "composite": {
           "fields": [
             {
-              "type": 2
+              "type": 2,
+              "typeName": "[u8; 32]"
             }
           ]
         }
@@ -569,15 +570,18 @@
           "fields": [
             {
               "name": "last_vacant",
-              "type": 6
+              "type": 6,
+              "typeName": "Index"
             },
             {
               "name": "len",
-              "type": 6
+              "type": 6,
+              "typeName": "u32"
             },
             {
               "name": "len_entries",
-              "type": 6
+              "type": 6,
+              "typeName": "u32"
             }
           ]
         }
@@ -601,7 +605,8 @@
             {
               "fields": [
                 {
-                  "type": 8
+                  "type": 8,
+                  "typeName": "VacantEntry"
                 }
               ],
               "name": "Vacant"
@@ -609,7 +614,8 @@
             {
               "fields": [
                 {
-                  "type": 4
+                  "type": 4,
+                  "typeName": "T"
                 }
               ],
               "name": "Occupied"
@@ -633,11 +639,13 @@
           "fields": [
             {
               "name": "next",
-              "type": 6
+              "type": 6,
+              "typeName": "Index"
             },
             {
               "name": "prev",
-              "type": 6
+              "type": 6,
+              "typeName": "Index"
             }
           ]
         }
@@ -655,11 +663,13 @@
           "fields": [
             {
               "name": "value",
-              "type": 10
+              "type": 10,
+              "typeName": "V"
             },
             {
               "name": "key_index",
-              "type": 6
+              "type": 6,
+              "typeName": "KeyIndex"
             }
           ]
         }
@@ -680,19 +690,23 @@
           "fields": [
             {
               "name": "id",
-              "type": 4
+              "type": 4,
+              "typeName": "u64"
             },
             {
               "name": "owner",
-              "type": 1
+              "type": 1,
+              "typeName": "AccountId"
             },
             {
               "name": "dao_manager",
-              "type": 11
+              "type": 11,
+              "typeName": "DAOManager"
             },
             {
               "name": "dao_manager_addr",
-              "type": 1
+              "type": 1,
+              "typeName": "AccountId"
             }
           ]
         }
@@ -709,7 +723,8 @@
           "fields": [
             {
               "name": "account_id",
-              "type": 1
+              "type": 1,
+              "typeName": "AccountId"
             }
           ]
         }
@@ -727,7 +742,8 @@
             {
               "fields": [
                 {
-                  "type": 8
+                  "type": 8,
+                  "typeName": "VacantEntry"
                 }
               ],
               "name": "Vacant"
@@ -735,7 +751,8 @@
             {
               "fields": [
                 {
-                  "type": 1
+                  "type": 1,
+                  "typeName": "T"
                 }
               ],
               "name": "Occupied"
@@ -759,11 +776,13 @@
           "fields": [
             {
               "name": "value",
-              "type": 14
+              "type": 14,
+              "typeName": "V"
             },
             {
               "name": "key_index",
-              "type": 6
+              "type": 6,
+              "typeName": "KeyIndex"
             }
           ]
         }
@@ -790,7 +809,8 @@
         "composite": {
           "fields": [
             {
-              "type": 2
+              "type": 2,
+              "typeName": "[u8; 32]"
             }
           ]
         }
@@ -816,7 +836,8 @@
         "composite": {
           "fields": [
             {
-              "type": 20
+              "type": 20,
+              "typeName": "[(K, V)]"
             }
           ]
         }
@@ -856,23 +877,28 @@
           "fields": [
             {
               "name": "id",
-              "type": 4
+              "type": 4,
+              "typeName": "u64"
             },
             {
               "name": "owner",
-              "type": 1
+              "type": 1,
+              "typeName": "AccountId"
             },
             {
               "name": "name",
-              "type": 17
+              "type": 17,
+              "typeName": "String"
             },
             {
               "name": "dao_manager_code_hash",
-              "type": 15
+              "type": 15,
+              "typeName": "Hash"
             },
             {
               "name": "components",
-              "type": 18
+              "type": 18,
+              "typeName": "BTreeMap<String, Hash>"
             }
           ]
         }
@@ -900,7 +926,8 @@
             {
               "fields": [
                 {
-                  "type": 1
+                  "type": 1,
+                  "typeName": "T"
                 }
               ],
               "name": "Some"
