@@ -1,43 +1,48 @@
 # SubDAO Valut Module
-## 1.模块概述
-DAO 组织的运营是需要资金支持的，国库模块主要用于 DAO 资金的管理。
+## Overview
 
-## 2.接口描述
-### 2.1  new(org_contract_address: AccountId)
-+   需要选择 org 合约的地址
+Valut for a DAO
 
-### 2.2 add_vault_token(erc_20_address:AccountId) -> bool
-+ 增加一种token。erc_20_address: 该 erc 20 的合约地址。
+### new(org_contract_address: AccountId)
 
-### 2.3 remove_vault_token(erc_20_address: AccountId) -> bool
-+ 移除一种token。移除只是从 token可见列表(visible_tokens)中移除，在tokens中该币仍然存在。
+Create
 
-### 2.4 get_token_list()：vec::Vec<AccountId>
-+ 返回当前的可见的token 列表。只有可见的token ,才能给组织内的成员奖励。
+### add_vault_token(erc_20_address:AccountId) -> bool
 
-### 2.5 get_balance_of(erc_20_address: AccountId) -> u64
-+ 返回某一个token的余额。erc_20_address: 该 erc 20 的合约地址。 加了一个权限控制（只允许查询 “注册tokens 列表” 中的 erc20 token 的余额）
+add a token contract to support list
 
-### 2.6 deposit(erc_20_address:AccountId, from_address:AccountId,value:u64) -> bool
-+ 把某一种token的 指定数量的资金存入国库,目前只允许 往 “注册tokens 列表” 里 的 币转账。
-  from_address:从该账号地址转入国库。
-  erc_20_address: 该 erc 20 的合约地址。
+### remove_vault_token(erc_20_address: AccountId) -> bool
+
+remove a token contract from support list
+
+### get_token_list()：vec::Vec<AccountId>
+
+get supported token list
+
+### get_balance_of(erc_20_address: AccountId) -> u64
+
+get token balance of currect vault
+
+### deposit(erc_20_address:AccountId, from_address:AccountId,value:u64) -> bool
+
+deposit token
     
+### withdraw(erc_20_address:AccountId,to_address:AccountId,value:u64) -> bool
 
-### 2.7 withdraw(erc_20_address:AccountId,to_address:AccountId,value:u64) -> bool
-+ 把某一种token的 指定数量的资金转出国库,并奖励给某位成员。把资金转出国库，目前只允许 从 “可见 tokens 列表” 里的币 转出。同时， 只有管理员或者creator ,可以转出资金。
-  to_address:从国库的资金转入该账号地址。
-  erc_20_address: 该 erc 20 的合约地址。
+withdraw token from the specific token contract to account. The token contract should be in the support list.
 
-### 2.8 get_transfer_history()：vec::Vec<Transfer> 
-+ 返回转账的流水。
+### get_transfer_history()：vec::Vec<Transfer> 
 
-## 3 测试用例
-+ 写了一些测试用例，来测试接口的功能。
+get transfer history
 
-## 4 合约部署步骤:
+## Test
 
- new(org_contract_address: AccountId)
-  需要选择 org 合约的地址。
+```
+cargo +nightly test
+```
+
+## Deploy
+
+call `new(org_contract_address: AccountId)` with the org address.
 
 

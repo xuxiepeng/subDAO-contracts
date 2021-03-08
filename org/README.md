@@ -1,54 +1,63 @@
 # SubDAO Org Module
-## 1.模块概述
-对于任何一个组织而言都存在不同的组织形式，但是一定会存在组织的创建者，组织的管理者以及组织的参与者。
-在 SubDAO Org Module 提供灵活的方式来区分不同的成员身份和其所承担的 DAO 社区治理职责。
-当前版本以极简的方式实现不同成员的身份划分和职责设定，成员身份划分为创建者、管理者、参与者三种身份。
-代码主要实现了组织的不同角色成员的添加，删除，查询列表等操作。
+## Overview
+Each DAO will have creator, moderator and normal member.
 
-## 2.接口描述
+### new(_creator: AccountId,_orgId:u64):self
 
-### 2.1 new(_creator: AccountId,_orgId:u64):self
-+ 用组织id,创建者账号，创建一个新的组织。
+create a new org
 
-### 2.2 get_dao_creator():AccountId
-+ 返回组织的创建者
+### get_dao_creator():AccountId
 
-### 2.3 get_orgid(): u64 
-+ 返回组织的id
+get creator
 
-### 2.4 get_dao_moderator_list():Vec<AccountId>
-+ 返回当前的管理员列表
+### get_orgid(): u64 
 
-### 2.5 get_dao_members_list():Vec<AccountId>
-+ 返回当前的普通成员的列表
+get org id
 
-### 2.6 add_dao_moderator(name:String,moderator: AccountId):bool
-+ 添加一个管理员
+### get_dao_moderator_list():Vec<AccountId>
 
-### 2.7 add_dao_member(name:String,member: AccountId):bool
-+ 添加一个普通成员
+get moderator list
+
+### get_dao_members_list():Vec<AccountId>
+
+get member list
+
+### add_dao_moderator(name:String,moderator: AccountId):bool
+
+add moderator
+
+### add_dao_member(name:String,member: AccountId):bool
+
+add member
 
 ### 2.8 remove_dao_moderator(name:String,moderator: AccountId):bool
-+ 移除一个管理员
 
-### 2.9 remove_dao_member(name:String,member: AccountId):bool
-+ 移除一个普通成员
+remove moderator
 
-### 2.10 resign(member: AccountId) -> bool
-+ 管理员或普通成员自我退出
+### remove_dao_member(name:String,member: AccountId):bool
 
-### 2.11 get_dao_member_detail_list() -> alloc::vec::Vec<(AccountId, String)>
-+ 返回当前的管理员列表,tuple 
+remove member
 
-### 2.12  get_dao_moderator_detail_list() -> alloc::vec::Vec<(AccountId, String)>
-+ 返回当前的普通成员的列表,tuple
+### resign(member: AccountId) -> bool
 
-### TODO 增加角色transfer
+resgin from org
 
-## 3 测试用例
-+ 写了一些测试用例，来测试接口的功能。
+### get_dao_member_detail_list() -> alloc::vec::Vec<(AccountId, String)>
 
-## 4 合约部署步骤:
+get member list, tuple
 
-new(_creator: AccountId,_orgId:u64):self
-  需要选择 creator 的地址，和 orgid.
+### get_dao_moderator_detail_list() -> alloc::vec::Vec<(AccountId, String)>
+
+get moderator list, tuple
+
+### TODO: transfer ownership
+
+## Test
+
+```
+carge +nightly test
+```
+
+## Deploy
+
+call `new(_creator: AccountId,_orgId:u64):self` with creator's address and org id.
