@@ -215,7 +215,6 @@ mod dao_manager {
             let instance_params = Base::new()
                 .endowment(total_balance / 4)
                 .code_hash(base_code_hash)
-                .salt_bytes(&[0xDE, 0xAD, 0xBE, 0xEF])
                 .params();
             let init_result = ink_env::instantiate_contract(&instance_params);
             let contract_addr = init_result.expect("failed at instantiating the `Base` contract");
@@ -244,7 +243,6 @@ mod dao_manager {
             let erc20_instance_params = Erc20::new(name, symbol, initial_supply, decimals, Self::env().account_id())
                 .endowment(total_balance / 4)
                 .code_hash(erc20_code_hash)
-                .salt_bytes(&[0xDE, 0xAD, 0xBE, 0xEF])
                 .params();
             let erc20_init_result = ink_env::instantiate_contract(&erc20_instance_params);
             let erc20_addr = erc20_init_result.expect("failed at instantiating the `Erc20` contract");
@@ -271,7 +269,6 @@ mod dao_manager {
             let org_instance_params = OrgManager::new(Self::env().account_id(), self.org_id)
                 .endowment(total_balance / 4)
                 .code_hash(org_code_hash)
-                .salt_bytes(&[0xDE, 0xAD, 0xBE, 0xEF])
                 .params();
             let org_init_result = ink_env::instantiate_contract(&org_instance_params);
             let org_addr = org_init_result.expect("failed at instantiating the `Org` contract");
@@ -298,7 +295,6 @@ mod dao_manager {
             let vault_instance_params = VaultManager::new(org_addr)
                 .endowment(total_balance / 4)
                 .code_hash(vault_code_hash)
-                .salt_bytes(&[0xDE, 0xAD, 0xBE, 0xEF])
                 .params();
             let vault_init_result = ink_env::instantiate_contract(&vault_instance_params);
             let vault_addr = vault_init_result.expect("failed at instantiating the `Org` contract");
@@ -324,7 +320,6 @@ mod dao_manager {
             let vote_instance_params = VoteManager::new()
                 .endowment(total_balance / 4)
                 .code_hash(vote_code_hash)
-                .salt_bytes(&[0xDE, 0xAD, 0xBE, 0xEF])
                 .params();
             let vote_init_result = ink_env::instantiate_contract(&vote_instance_params);
             let vote_addr = vote_init_result.expect("failed at instantiating the `Vote` contract");
@@ -350,7 +345,6 @@ mod dao_manager {
             let github_instance_params = Github::new()
                 .endowment(total_balance / 4)
                 .code_hash(github_code_hash)
-                .salt_bytes(&[0xDE, 0xAD, 0xBE, 0xEF])
                 .params();
             let github_init_result = ink_env::instantiate_contract(&github_instance_params);
             let github_addr = github_init_result.expect("failed at instantiating the `Github` contract");

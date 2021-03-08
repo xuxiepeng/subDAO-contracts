@@ -1,8 +1,8 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xf955189f963829c88e691c3553059a115b4d62ead242ea747a4597e958509aea",
-    "language": "ink! 3.0.0-rc3",
+    "hash": "0x10cf6affda6013cfa10788ecea08f08527bb57869e9d458a47ab785ee64bbc4e",
+    "language": "ink! 3.0.0-rc1",
     "compiler": "rustc 1.50.0-nightly"
   },
   "contract": {
@@ -39,7 +39,7 @@
         "name": [
           "new"
         ],
-        "selector": "0x9bae9d5e"
+        "selector": "0xd183512b"
       }
     ],
     "docs": [],
@@ -172,7 +172,7 @@
           ],
           "type": 4
         },
-        "selector": "0x54fafbf6"
+        "selector": "0x29e1aeed"
       },
       {
         "args": [],
@@ -188,7 +188,7 @@
           ],
           "type": 10
         },
-        "selector": "0xfab40e7a"
+        "selector": "0xa17b2868"
       },
       {
         "args": [],
@@ -206,7 +206,7 @@
           ],
           "type": 11
         },
-        "selector": "0x04f66148"
+        "selector": "0xbce489b4"
       },
       {
         "args": [],
@@ -224,7 +224,7 @@
           ],
           "type": 11
         },
-        "selector": "0x667ee137"
+        "selector": "0xcf6c19d3"
       },
       {
         "args": [],
@@ -242,7 +242,7 @@
           ],
           "type": 12
         },
-        "selector": "0x6f1e4d23"
+        "selector": "0xd1eb73e8"
       },
       {
         "args": [],
@@ -260,7 +260,7 @@
           ],
           "type": 12
         },
-        "selector": "0xcf27bdd7"
+        "selector": "0xf594b278"
       },
       {
         "args": [
@@ -295,7 +295,7 @@
           ],
           "type": 14
         },
-        "selector": "0xd9c6b562"
+        "selector": "0x75b5bf28"
       },
       {
         "args": [
@@ -330,7 +330,7 @@
           ],
           "type": 14
         },
-        "selector": "0xabac9e06"
+        "selector": "0x34c0dfc4"
       },
       {
         "args": [
@@ -356,7 +356,7 @@
           ],
           "type": 14
         },
-        "selector": "0xbbbbce3c"
+        "selector": "0xf555353e"
       },
       {
         "args": [
@@ -382,7 +382,7 @@
           ],
           "type": 14
         },
-        "selector": "0x5d57e605"
+        "selector": "0xd0d0e013"
       },
       {
         "args": [
@@ -408,7 +408,7 @@
           ],
           "type": 14
         },
-        "selector": "0xe5ef22d5"
+        "selector": "0xd807454b"
       }
     ]
   },
@@ -603,18 +603,15 @@
           "fields": [
             {
               "name": "last_vacant",
-              "type": 2,
-              "typeName": "Index"
+              "type": 2
             },
             {
               "name": "len",
-              "type": 2,
-              "typeName": "u32"
+              "type": 2
             },
             {
               "name": "len_entries",
-              "type": 2,
-              "typeName": "u32"
+              "type": 2
             }
           ]
         }
@@ -638,8 +635,7 @@
             {
               "fields": [
                 {
-                  "type": 7,
-                  "typeName": "VacantEntry"
+                  "type": 7
                 }
               ],
               "name": "Vacant"
@@ -647,8 +643,7 @@
             {
               "fields": [
                 {
-                  "type": 4,
-                  "typeName": "T"
+                  "type": 4
                 }
               ],
               "name": "Occupied"
@@ -671,8 +666,7 @@
         "composite": {
           "fields": [
             {
-              "type": 5,
-              "typeName": "[u8; 32]"
+              "type": 5
             }
           ]
         }
@@ -702,13 +696,11 @@
           "fields": [
             {
               "name": "next",
-              "type": 2,
-              "typeName": "Index"
+              "type": 2
             },
             {
               "name": "prev",
-              "type": 2,
-              "typeName": "Index"
+              "type": 2
             }
           ]
         }
@@ -726,13 +718,11 @@
           "fields": [
             {
               "name": "value",
-              "type": 9,
-              "typeName": "V"
+              "type": 9
             },
             {
               "name": "key_index",
-              "type": 2,
-              "typeName": "KeyIndex"
+              "type": 2
             }
           ]
         }

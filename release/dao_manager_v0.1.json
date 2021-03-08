@@ -1,8 +1,8 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x47b7d4eb97d3ce0df58814d914a0145a247231efe5e80ab4ea72319feed01117",
-    "language": "ink! 3.0.0-rc3",
+    "hash": "0x8bdd8d52fb2367d25e17341402b83bd502ef64666ffd6ed17dd6b253137c1298",
+    "language": "ink! 3.0.0-rc1",
     "compiler": "rustc 1.50.0-nightly"
   },
   "contract": {
@@ -45,12 +45,12 @@
           }
         ],
         "docs": [
-          "Constructor that initializes the `bool` value to the given `init_value`."
+          " Constructor that initializes the `bool` value to the given `init_value`."
         ],
         "name": [
           "new"
         ],
-        "selector": "0x9bae9d5e"
+        "selector": "0xd183512b"
       }
     ],
     "docs": [],
@@ -174,7 +174,7 @@
           ],
           "type": 1
         },
-        "selector": "0x44d6441f"
+        "selector": "0xa1ec5918"
       },
       {
         "args": [],
@@ -190,7 +190,7 @@
           ],
           "type": 12
         },
-        "selector": "0x063f051b"
+        "selector": "0x0db17698"
       },
       {
         "args": [
@@ -225,7 +225,7 @@
           ],
           "type": 1
         },
-        "selector": "0x84a15da1"
+        "selector": "0xfae3a09d"
       },
       {
         "args": [
@@ -260,7 +260,7 @@
           ],
           "type": 1
         },
-        "selector": "0xa9b6f1b0"
+        "selector": "0x66612e04"
       },
       {
         "args": [
@@ -295,7 +295,7 @@
           ],
           "type": 1
         },
-        "selector": "0x61143ff8"
+        "selector": "0x8b31777e"
       },
       {
         "args": [
@@ -330,7 +330,7 @@
           ],
           "type": 1
         },
-        "selector": "0xd9c6b562"
+        "selector": "0x75b5bf28"
       },
       {
         "args": [
@@ -356,7 +356,7 @@
           ],
           "type": 1
         },
-        "selector": "0xbbbbce3c"
+        "selector": "0xf555353e"
       }
     ]
   },
@@ -842,8 +842,7 @@
         "composite": {
           "fields": [
             {
-              "type": 3,
-              "typeName": "[u8; 32]"
+              "type": 3
             }
           ]
         }
@@ -882,8 +881,7 @@
         "composite": {
           "fields": [
             {
-              "type": 3,
-              "typeName": "[u8; 32]"
+              "type": 3
             }
           ]
         }
@@ -899,8 +897,7 @@
         "composite": {
           "fields": [
             {
-              "type": 10,
-              "typeName": "[(K, V)]"
+              "type": 10
             }
           ]
         }
@@ -933,28 +930,23 @@
           "fields": [
             {
               "name": "id",
-              "type": 5,
-              "typeName": "u64"
+              "type": 5
             },
             {
               "name": "owner",
-              "type": 2,
-              "typeName": "AccountId"
+              "type": 2
             },
             {
               "name": "name",
-              "type": 6,
-              "typeName": "String"
+              "type": 6
             },
             {
               "name": "dao_manager_code_hash",
-              "type": 7,
-              "typeName": "Hash"
+              "type": 7
             },
             {
               "name": "components",
-              "type": 8,
-              "typeName": "BTreeMap<String, Hash>"
+              "type": 8
             }
           ]
         }
@@ -971,33 +963,27 @@
           "fields": [
             {
               "name": "base_addr",
-              "type": 13,
-              "typeName": "Option<AccountId>"
+              "type": 13
             },
             {
               "name": "erc20_addr",
-              "type": 13,
-              "typeName": "Option<AccountId>"
+              "type": 13
             },
             {
               "name": "org_addr",
-              "type": 13,
-              "typeName": "Option<AccountId>"
+              "type": 13
             },
             {
               "name": "vault_addr",
-              "type": 13,
-              "typeName": "Option<AccountId>"
+              "type": 13
             },
             {
               "name": "vote_addr",
-              "type": 13,
-              "typeName": "Option<AccountId>"
+              "type": 13
             },
             {
               "name": "github_addr",
-              "type": 13,
-              "typeName": "Option<AccountId>"
+              "type": 13
             }
           ]
         }
@@ -1018,8 +1004,7 @@
             {
               "fields": [
                 {
-                  "type": 2,
-                  "typeName": "T"
+                  "type": 2
                 }
               ],
               "name": "Some"
