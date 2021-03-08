@@ -1,8 +1,8 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xf23a5d0b700662f650d85dbf4d60d40003d08fd2a6d48f2adb3d0f451ab1148c",
-    "language": "ink! 3.0.0-rc3",
+    "hash": "0xc985171119b3bc4fd71eb810697502bd5918f4d9b6a1677dc27e28d64ad682e2",
+    "language": "ink! 3.0.0-rc1",
     "compiler": "rustc 1.50.0-nightly"
   },
   "contract": {
@@ -20,7 +20,7 @@
         "name": [
           "new"
         ],
-        "selector": "0x9bae9d5e"
+        "selector": "0xd183512b"
       },
       {
         "args": [],
@@ -28,7 +28,7 @@
         "name": [
           "default"
         ],
-        "selector": "0xed4b9d1b"
+        "selector": "0x6a3712e2"
       }
     ],
     "docs": [],
@@ -71,7 +71,7 @@
         ],
         "payable": false,
         "returnType": null,
-        "selector": "0x7cade53a"
+        "selector": "0xb26659eb"
       },
       {
         "args": [
@@ -92,7 +92,7 @@
         ],
         "payable": false,
         "returnType": null,
-        "selector": "0x24d2da30"
+        "selector": "0x6aaa7f82"
       },
       {
         "args": [],
@@ -108,7 +108,7 @@
           ],
           "type": 4
         },
-        "selector": "0xa148a32a"
+        "selector": "0xa15ab5e0"
       },
       {
         "args": [
@@ -129,7 +129,7 @@
         ],
         "payable": false,
         "returnType": null,
-        "selector": "0x4b74fa40"
+        "selector": "0xe3ebdd88"
       },
       {
         "args": [],
@@ -145,7 +145,7 @@
           ],
           "type": 4
         },
-        "selector": "0x26c98f47"
+        "selector": "0x8b0c9e43"
       },
       {
         "args": [
@@ -166,7 +166,7 @@
         ],
         "payable": false,
         "returnType": null,
-        "selector": "0x95407827"
+        "selector": "0x9ad37616"
       },
       {
         "args": [],
@@ -182,7 +182,7 @@
           ],
           "type": 4
         },
-        "selector": "0x26277d2b"
+        "selector": "0x16b26064"
       },
       {
         "args": [
@@ -203,7 +203,7 @@
         ],
         "payable": false,
         "returnType": null,
-        "selector": "0x367facd6"
+        "selector": "0x47c28005"
       },
       {
         "args": [],
@@ -219,7 +219,7 @@
           ],
           "type": 1
         },
-        "selector": "0x07fcd0b1"
+        "selector": "0x58e3162e"
       }
     ]
   },
@@ -271,8 +271,7 @@
         "composite": {
           "fields": [
             {
-              "type": 2,
-              "typeName": "[u8; 32]"
+              "type": 2
             }
           ]
         }

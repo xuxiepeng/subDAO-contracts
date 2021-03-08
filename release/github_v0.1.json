@@ -1,8 +1,8 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xea3afea25daad749c2fd0e1b603218a062e76586855951f80a380ee4ce750dc2",
-    "language": "ink! 3.0.0-rc3",
+    "hash": "0x71d166dfc1bd655b08c8e1584f6b492738f86c3fd14f94f98aec7793316b43ec",
+    "language": "ink! 3.0.0-rc1",
     "compiler": "rustc 1.50.0-nightly"
   },
   "contract": {
@@ -20,7 +20,7 @@
         "name": [
           "default"
         ],
-        "selector": "0xed4b9d1b"
+        "selector": "0x6a3712e2"
       },
       {
         "args": [],
@@ -28,7 +28,7 @@
         "name": [
           "new"
         ],
-        "selector": "0x9bae9d5e"
+        "selector": "0xd183512b"
       }
     ],
     "docs": [],
@@ -173,7 +173,7 @@
           ],
           "type": 16
         },
-        "selector": "0x7785c42c"
+        "selector": "0x7cac330d"
       },
       {
         "args": [
@@ -199,7 +199,7 @@
           ],
           "type": 15
         },
-        "selector": "0x2bd1c60d"
+        "selector": "0x673fdc68"
       },
       {
         "args": [
@@ -234,7 +234,7 @@
           ],
           "type": 16
         },
-        "selector": "0x3f6aec3f"
+        "selector": "0x0adbe364"
       },
       {
         "args": [],
@@ -250,7 +250,7 @@
           ],
           "type": 1
         },
-        "selector": "0x96c0c172"
+        "selector": "0x3fa5f3ff"
       }
     ]
   },
@@ -441,18 +441,15 @@
           "fields": [
             {
               "name": "last_vacant",
-              "type": 3,
-              "typeName": "Index"
+              "type": 3
             },
             {
               "name": "len",
-              "type": 3,
-              "typeName": "u32"
+              "type": 3
             },
             {
               "name": "len_entries",
-              "type": 3,
-              "typeName": "u32"
+              "type": 3
             }
           ]
         }
@@ -476,8 +473,7 @@
             {
               "fields": [
                 {
-                  "type": 5,
-                  "typeName": "VacantEntry"
+                  "type": 5
                 }
               ],
               "name": "Vacant"
@@ -485,8 +481,7 @@
             {
               "fields": [
                 {
-                  "type": 1,
-                  "typeName": "T"
+                  "type": 1
                 }
               ],
               "name": "Occupied"
@@ -510,13 +505,11 @@
           "fields": [
             {
               "name": "next",
-              "type": 3,
-              "typeName": "Index"
+              "type": 3
             },
             {
               "name": "prev",
-              "type": 3,
-              "typeName": "Index"
+              "type": 3
             }
           ]
         }
@@ -534,13 +527,11 @@
           "fields": [
             {
               "name": "value",
-              "type": 7,
-              "typeName": "V"
+              "type": 7
             },
             {
               "name": "key_index",
-              "type": 3,
-              "typeName": "KeyIndex"
+              "type": 3
             }
           ]
         }
@@ -561,23 +552,19 @@
           "fields": [
             {
               "name": "repo_url",
-              "type": 8,
-              "typeName": "String"
+              "type": 8
             },
             {
               "name": "pr_number",
-              "type": 1,
-              "typeName": "u64"
+              "type": 1
             },
             {
               "name": "github_id",
-              "type": 1,
-              "typeName": "u64"
+              "type": 1
             },
             {
               "name": "account_id",
-              "type": 9,
-              "typeName": "AccountId"
+              "type": 9
             }
           ]
         }
@@ -598,8 +585,7 @@
         "composite": {
           "fields": [
             {
-              "type": 10,
-              "typeName": "[u8; 32]"
+              "type": 10
             }
           ]
         }
@@ -630,8 +616,7 @@
             {
               "fields": [
                 {
-                  "type": 5,
-                  "typeName": "VacantEntry"
+                  "type": 5
                 }
               ],
               "name": "Vacant"
@@ -639,8 +624,7 @@
             {
               "fields": [
                 {
-                  "type": 13,
-                  "typeName": "T"
+                  "type": 13
                 }
               ],
               "name": "Occupied"
@@ -672,13 +656,11 @@
           "fields": [
             {
               "name": "value",
-              "type": 15,
-              "typeName": "V"
+              "type": 15
             },
             {
               "name": "key_index",
-              "type": 3,
-              "typeName": "KeyIndex"
+              "type": 3
             }
           ]
         }
@@ -705,8 +687,7 @@
             {
               "fields": [
                 {
-                  "type": 17,
-                  "typeName": "T"
+                  "type": 17
                 }
               ],
               "name": "Ok"
@@ -714,8 +695,7 @@
             {
               "fields": [
                 {
-                  "type": 18,
-                  "typeName": "E"
+                  "type": 18
                 }
               ],
               "name": "Err"
