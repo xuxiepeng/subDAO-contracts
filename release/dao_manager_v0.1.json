@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x8bdd8d52fb2367d25e17341402b83bd502ef64666ffd6ed17dd6b253137c1298",
+    "hash": "0x14e641a0bc5179a4d04a3255ccad20bc8ec91c8b6e95131df64385c341a687ae",
     "language": "ink! 3.0.0-rc1",
     "compiler": "rustc 1.50.0-nightly"
   },
@@ -54,47 +54,7 @@
       }
     ],
     "docs": [],
-    "events": [
-      {
-        "args": [
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "dao_addr",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 2
-            }
-          },
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "component_type",
-            "type": {
-              "displayName": [
-                "ComponentType"
-              ],
-              "type": 14
-            }
-          },
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "component_addr",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 2
-            }
-          }
-        ],
-        "docs": [],
-        "name": "InstanceComponent"
-      }
-    ],
+    "events": [],
     "messages": [
       {
         "args": [
@@ -1017,43 +977,6 @@
       ],
       "path": [
         "Option"
-      ]
-    },
-    {
-      "def": {
-        "variant": {
-          "variants": [
-            {
-              "discriminant": 0,
-              "name": "Base"
-            },
-            {
-              "discriminant": 1,
-              "name": "Erc20"
-            },
-            {
-              "discriminant": 2,
-              "name": "Org"
-            },
-            {
-              "discriminant": 3,
-              "name": "Vault"
-            },
-            {
-              "discriminant": 4,
-              "name": "VoteManager"
-            },
-            {
-              "discriminant": 5,
-              "name": "Github"
-            }
-          ]
-        }
-      },
-      "path": [
-        "dao_manager",
-        "dao_manager",
-        "ComponentType"
       ]
     }
   ]

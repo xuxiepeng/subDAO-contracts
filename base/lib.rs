@@ -8,7 +8,22 @@ pub use self::base::Base;
 mod base {
 
     use alloc::string::String;
+    use ink_storage::{
+        traits::{PackedLayout, SpreadLayout},
+    };
 
+    #[derive(scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout)]
+    #[cfg_attr(
+    feature = "std",
+    derive(scale_info::TypeInfo, ink_storage::traits::StorageLayout)
+    )]
+    pub struct DisplayBase {
+        owner: AccountId,
+        name: String,
+        logo: String,
+        desc: String,
+    }
+    
     #[ink(storage)]
     pub struct Base {
         owner: AccountId,
@@ -88,6 +103,16 @@ mod base {
         #[ink(message)]
         pub fn get_owner(&self) -> AccountId {
             self.owner
+        }
+
+        #[ink(message)]
+        pub fn get_base(&self) -> DisplayBase {
+            DisplayBase {
+                owner: self.owner,
+                name: self.name.clone(),
+                logo: self.logo.clone(),
+                desc: self.desc.clone(),
+            }
         }
     }
 

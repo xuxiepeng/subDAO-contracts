@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xc985171119b3bc4fd71eb810697502bd5918f4d9b6a1677dc27e28d64ad682e2",
+    "hash": "0xa092a63a72f64433b6577c8bc5289fdcf5656da7a6cfe2ea20951b8fab90cb1f",
     "language": "ink! 3.0.0-rc1",
     "compiler": "rustc 1.50.0-nightly"
   },
@@ -220,6 +220,22 @@
           "type": 1
         },
         "selector": "0x58e3162e"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "get_base"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "DisplayBase"
+          ],
+          "type": 5
+        },
+        "selector": "0xc56e8540"
       }
     ]
   },
@@ -299,6 +315,35 @@
       "def": {
         "primitive": "str"
       }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "owner",
+              "type": 1
+            },
+            {
+              "name": "name",
+              "type": 4
+            },
+            {
+              "name": "logo",
+              "type": 4
+            },
+            {
+              "name": "desc",
+              "type": 4
+            }
+          ]
+        }
+      },
+      "path": [
+        "base",
+        "base",
+        "DisplayBase"
+      ]
     }
   ]
 }

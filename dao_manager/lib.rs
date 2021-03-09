@@ -72,32 +72,6 @@ mod dao_manager {
         component_addrs: DAOComponentAddrs,
     }
 
-    #[derive(
-    Debug, Copy, Clone, PartialEq, Eq, scale::Encode, scale::Decode, SpreadLayout, PackedLayout
-    )]
-    #[cfg_attr(
-    feature = "std",
-    derive(::scale_info::TypeInfo, ::ink_storage::traits::StorageLayout)
-    )]
-    pub enum ComponentType {
-        Base,
-        Erc20,
-        Org,
-        Vault,
-        VoteManager,
-        Github,
-    }
-
-    #[ink(event)]
-    pub struct InstanceComponent {
-        #[ink(topic)]
-        dao_addr: AccountId,
-        #[ink(topic)]
-        component_type: ComponentType,
-        #[ink(topic)]
-        component_addr: AccountId,
-    }
-
     impl DAOManager {
         /// Constructor that initializes the `bool` value to the given `init_value`.
         #[ink(constructor)]
@@ -223,11 +197,6 @@ mod dao_manager {
 
             self.components.base = Some(contract_instance);
             self.component_addrs.base_addr = Some(contract_addr);
-            self.env().emit_event(InstanceComponent {
-                dao_addr: Self::env().account_id(),
-                component_type: ComponentType::Base,
-                component_addr: contract_addr,
-            });
 
             true
         }
@@ -250,11 +219,6 @@ mod dao_manager {
 
             self.components.erc20 = Some(erc20_instance);
             self.component_addrs.erc20_addr = Some(erc20_addr);
-            self.env().emit_event(InstanceComponent {
-                dao_addr: Self::env().account_id(),
-                component_type: ComponentType::Erc20,
-                component_addr: erc20_addr,
-            });
             true
         }
 
@@ -275,11 +239,6 @@ mod dao_manager {
             let org_instance = ink_env::call::FromAccountId::from_account_id(org_addr);
             self.components.org = Some(org_instance);
             self.component_addrs.org_addr = Some(org_addr);
-            self.env().emit_event(InstanceComponent {
-                dao_addr: Self::env().account_id(),
-                component_type: ComponentType::Org,
-                component_addr: org_addr,
-            });
             true
         }
 
@@ -301,11 +260,6 @@ mod dao_manager {
             let vault_instance = ink_env::call::FromAccountId::from_account_id(vault_addr);
             self.components.vault = Some(vault_instance);
             self.component_addrs.vault_addr = Some(vault_addr);
-            self.env().emit_event(InstanceComponent {
-                dao_addr: Self::env().account_id(),
-                component_type: ComponentType::Vault,
-                component_addr: vault_addr,
-            });
             true
         }
 
@@ -326,11 +280,6 @@ mod dao_manager {
             let vote_instance = ink_env::call::FromAccountId::from_account_id(vote_addr);
             self.components.vote = Some(vote_instance);
             self.component_addrs.vote_addr = Some(vote_addr);
-            self.env().emit_event(InstanceComponent {
-                dao_addr: Self::env().account_id(),
-                component_type: ComponentType::VoteManager,
-                component_addr: vote_addr,
-            });
             true
         }
 
@@ -351,11 +300,6 @@ mod dao_manager {
             let github_instance = ink_env::call::FromAccountId::from_account_id(github_addr);
             self.components.github = Some(github_instance);
             self.component_addrs.github_addr = Some(github_addr);
-            self.env().emit_event(InstanceComponent {
-                dao_addr: Self::env().account_id(),
-                component_type: ComponentType::Github,
-                component_addr: github_addr,
-            });
             true
         }
     }
