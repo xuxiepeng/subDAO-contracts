@@ -257,7 +257,8 @@ mod dao_manager {
                 .params();
             let vault_init_result = ink_env::instantiate_contract(&vault_instance_params);
             let vault_addr = vault_init_result.expect("failed at instantiating the `Org` contract");
-            let vault_instance = ink_env::call::FromAccountId::from_account_id(vault_addr);
+            let mut vault_instance: VaultManager = ink_env::call::FromAccountId::from_account_id(vault_addr);
+            vault_instance.add_vault_token(self.component_addrs.erc20_addr.unwrap());
             self.components.vault = Some(vault_instance);
             self.component_addrs.vault_addr = Some(vault_addr);
             true
