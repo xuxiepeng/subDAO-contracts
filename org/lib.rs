@@ -1,17 +1,3 @@
-// Copyright 2018-2020 Parity Technologies (UK) Ltd.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 #![cfg_attr(not(feature = "std"), no_std)]
 
 extern crate alloc;
@@ -162,14 +148,12 @@ mod org {
         pub fn add_dao_moderator(&mut self,name:String,moderator: AccountId) -> bool  {
             let caller = self.env().caller();
 
-            // 如果调用者不是组织创建者，即报错
             if &caller != & self.creator {
                 return false;
             }
 
 
             match self.moderators.insert(moderator,name) {
-                // 该成员已经存在，加入报错
                 Some(_) => { false},
                 None => {
                     let org_id = self.org_id;
@@ -187,7 +171,6 @@ mod org {
 
 
             match self.members.insert(member,name) {
-                // 该成员已经存在，加入报错
                 Some(_) => { false},
                 None => {
                     let org_id = self.org_id;
@@ -206,13 +189,11 @@ mod org {
 
             let caller = self.env().caller();
 
-            // 如果调用者不是组织创建者，即报错
             if &caller != & self.creator {
                 return false;
             }
 
             match self.moderators.take(&member) {
-                // 该成员不存在，移除报错
                 None => { false}
                 Some(_) => {
                     let org_id = self.org_id;
@@ -231,7 +212,6 @@ mod org {
         pub fn remove_dao_member(&mut self, member: AccountId) -> bool  {
 
             match self.members.take(&member) {
-                // 该成员不存在，移除报错
                 None => { false}
                 Some(_) => {
                     let org_id = self.org_id;
@@ -247,16 +227,14 @@ mod org {
 
 
         #[ink(message)]
-        //成员自我退出
         pub fn resign(&mut self,member: AccountId) -> bool  {
 
 
-            //管理者角色退出
             if self.members.contains_key(&member) {
                 self.members.take(&member);
                 return true;
             };
-            //普通用户角色的退出
+
             if self.moderators.contains_key(&member) {
                 self.moderators.take(&member);
                 return true;
