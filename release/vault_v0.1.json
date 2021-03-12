@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x90a430134fa2c118b043b13b188ca1e23d319e18ca2b3a4bc910cbd27fbad6b7",
+    "hash": "0x715840b7a4cc2631118fe7f8f14d33f34710b4b1de7579f6ac9261846dfe09e2",
     "language": "ink! 3.0.0-rc1",
-    "compiler": "rustc 1.50.0-nightly"
+    "compiler": "rustc 1.52.0-nightly"
   },
   "contract": {
     "name": "vault",
@@ -124,7 +124,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "balance",
+            "name": "value",
             "type": {
               "displayName": [
                 "u64"
@@ -163,7 +163,7 @@
           {
             "docs": [],
             "indexed": true,
-            "name": "balance",
+            "name": "value",
             "type": {
               "displayName": [
                 "u64"

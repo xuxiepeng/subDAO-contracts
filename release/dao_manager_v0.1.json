@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x705c9d3f99c83ff6f4f973c7b00617d3822cf0950375a2d6fbe8bb0a57082294",
+    "hash": "0x14275dcd5c4b0fa2d72e06b2a178e284055d23400409bfae6b60d8c7a61326b7",
     "language": "ink! 3.0.0-rc1",
-    "compiler": "rustc 1.50.0-nightly"
+    "compiler": "rustc 1.52.0-nightly"
   },
   "contract": {
     "name": "dao_manager",
