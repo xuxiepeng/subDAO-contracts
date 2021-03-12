@@ -95,7 +95,7 @@ mod vault {
         from_address:AccountId,
 
         #[ink(topic)]
-        balance:u64,
+        value:u64,
     }
 
 
@@ -108,7 +108,7 @@ mod vault {
         to_address:AccountId,
 
         #[ink(topic)]
-        balance:u64,
+        value:u64,
     }
 
 
@@ -269,7 +269,7 @@ mod vault {
 
             if self.tokens.contains_key(&erc_20_address) {
 
-                let  balanceof =  self.get_balance_of(erc_20_address);
+                // let  balanceof =  self.get_balance_of(erc_20_address);
 
 
                 //let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
@@ -278,7 +278,6 @@ mod vault {
                 let token_name = (&erc_20).name();
 
                 erc_20.transfer_from(from_address,to_address, value);
-
 
                 let transfer_id:u64 = (self.transfer_history.len()+1).into();
 
@@ -300,8 +299,7 @@ mod vault {
                 self.env().emit_event(DepositTokenEvent{
                     token_name: token_name.clone(),
                     from_address:from_address,
-                    balance:balanceof,});
-
+                    value:value});
                 true
 
             } else{
@@ -327,7 +325,7 @@ mod vault {
                 }
 
 
-                let  balanceof =  self.get_balance_of(erc_20_address);
+                // let  balanceof =  self.get_balance_of(erc_20_address);
 
 
                 //let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
@@ -360,7 +358,7 @@ mod vault {
                 self.env().emit_event(WithdrawTokenEvent{
                     token_name: token_name.clone(),
                     to_address:to_address,
-                    balance:balanceof,});
+                    value:value,});
 
                 true
 
