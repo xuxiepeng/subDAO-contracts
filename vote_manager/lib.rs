@@ -162,7 +162,7 @@ mod vote_manager {
                 title,
                 desc,
                 start_date: start_date,
-                vote_time,
+                vote_time * 1000,
                 support_require_num,
                 min_require_num,
                 support_num: 0,
