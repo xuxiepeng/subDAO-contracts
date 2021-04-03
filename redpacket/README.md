@@ -1,37 +1,69 @@
 # SubDAO RedPacket Module
 
 ## Structures
-
+### red packet struct
+```rust
+pub struct RedPacket {
+        id: u64,
+        creator: AccountId,
+        // red packet allow claim number
+        total_number: u64,
+        // red packet user who claimed number
+        claimed_number: u64,
+        // red packet token type, 0 unit, 1 erc20
+        token_type: u8,
+        // red packet if use random, 0 no use random, 1 use random
+        if_random: u8,
+        // red packet token address
+        token_addr: AccountId,
+        // red packet password
+        password: Hash,
+        // red packet remaining tokens
+        remaining_tokens: u64,
+        // red packet start time
+        start_time: u64,
+        end_time: u64,
+        // claim tokens map by address
+        claim_list: BTreeMap<AccountId, u64>,
+        // is refund by creator
+        is_refund: bool,
+    }
+```
 
 ## Interfaces
 
-### init_base(name: String, logo: String, desc: String)
+### create_red_packet(token_type: u8, if_random: u8, total_number: u64,
+                                 end_time: u64, token_addr: AccountId, total_tokens: u64, password: Hash) -> bool
 
-init base module with name, logo url, desc.
+create red packet
+params:
+token_type, 0 for unit, 1 for erc20, 0 is not support for now;
+if_random, 0 distribute avg, 1 random;
+total_number, claim number;
+end_time, claim end time;
+token_addr, erc20 address;
+total_tokens, deposit tokens number;
+password, for claim to verify;
 
-### set_name(name: String)
-set name of dao
+### claim(id: u64, password: Hash, recipient: AccountId) -> bool
 
-### get_name() -> String
-return the name of dao
+claim red packet
+params:
+id, id of red packet;
+password, for claim to verify;
+recipient, claim to address;
 
-### set_logo(logo: String)
-set the logo url of dao
+### check_red_packet(id: u64) -> RedPacket
 
-### get_logo() -> String
-return the logo url of dao
+query red packet
+params:
+id, id of red packet;
 
-### set_desc(desc: String)
-set the description of dao
+### refund(id: u64) -> bool
 
-### get_desc() -> String
-return the description of dao
-
-### set_owner(owner: AccountId)
-set the owner of dao
-
-### get_owner() -> AccountId
-return the owner of dao
+refund red packet, only by red packet creator;
+params:
+id, id of red packet;
 
 ## How to test
 
