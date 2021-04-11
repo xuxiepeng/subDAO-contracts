@@ -24,9 +24,9 @@ function build_module() {
       exit 1
     fi
     echo "copy to ../release"
-    cp ${m_dir}/target/${m_name}.wasm ../release/${m_name}_v$VERSION.wasm
-    cp ${m_dir}/target/${m_name}.contract ../release/${m_name}_v$VERSION.contract
-    cp ${m_dir}/target/metadata.json ../release/${m_name}_v$VERSION.json
+    cp ${m_dir}/target/ink/${m_name}.wasm ../release/${m_name}_v$VERSION.wasm
+    cp ${m_dir}/target/ink/${m_name}.contract ../release/${m_name}_v$VERSION.contract
+    cp ${m_dir}/target/ink/metadata.json ../release/${m_name}_v$VERSION.json
     cd -
 }
 
@@ -37,7 +37,7 @@ mkdir -p ${WORK_DIR}/release
 build_module ${BASE_MODULE}
 build_module ${TEMPLATE_MODULE}
 build_module ${ERC20_MODULE}
-build_module ${GITHUB_MODULE}
+# build_module ${GITHUB_MODULE}
 build_module ${ORG_MODULE}
 build_module ${VAULT_MODULE}
 build_module ${VOTE_MODULE}
