@@ -68,12 +68,14 @@ mod main {
             instance
         }
         #[ink(message)]
-        pub fn init(&mut self, template_code_hash: Hash) -> bool {
+        pub fn init(&mut self, template_code_hash: Hash, version: u32) -> bool {
             let total_balance = Self::env().balance();
             // instance template_manager
+            let salt = version.to_le_bytes();
             let instance_params = TemplateManager::new(self.owner)
                 .endowment(total_balance / 4)
                 .code_hash(template_code_hash)
+                .salt_bytes(salt)
                 .params();
             let init_result = ink_env::instantiate_contract(&instance_params);
             let contract_addr = init_result.expect("failed at instantiating the `TemplateManager` contract");
@@ -105,7 +107,7 @@ mod main {
         }
 
         #[ink(message)]
-        pub fn instance_by_template(&mut self, index: u64, controller: AccountId) -> bool {
+        pub fn instance_by_template(&mut self, index: u64, controller: AccountId, version: u32) -> bool {
             assert_eq!(self.instance_index + 1 > self.instance_index, true);
             let total_balance = Self::env().balance();
             // assert_eq!(total_balance >= 20, true);
@@ -113,9 +115,11 @@ mod main {
             // instance dao_manager
             let template = self.query_template_by_index(index);
             let dao_manager_code_hash = template.dao_manager_code_hash;
+            let salt = version.to_le_bytes();
             let dao_instance_params = DAOManager::new(controller, self.instance_index, template)
                 .endowment(total_balance / 4)
                 .code_hash(dao_manager_code_hash)
+                .salt_bytes(salt)
                 .params();
             let dao_init_result = ink_env::instantiate_contract(&dao_instance_params);
             let dao_addr = dao_init_result.expect("failed at instantiating the `DAO Instance` contract");
