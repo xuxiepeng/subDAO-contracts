@@ -1,5 +1,5 @@
 # subDAO-contracts
-contracts for subDAO, using [ink!](https://github.com/paritytech/ink).
+contracts for subDAO, using [ink! 3.0.0.0-rc3](https://github.com/paritytech/ink/tree/v3.0.0-rc3).
 
 ## install cargo-contract
 reference [here](https://substrate.dev/substrate-contracts-workshop/#/0/setup).
@@ -32,18 +32,8 @@ cargo +nightly contract build
 ```
 ./build.sh
 ```
+the ABI, wasm, and contract files are copied in `./release` dir.
 
 ## install by polkadot.js apps
 visit [polkadot.js apps](https://polkadot.js.org/apps/), and connect subDAO node.
 then `Develpoer`->`Contract`->`upload WASM`.
-
-## generate a new contract
-```bash
-cargo contract new test
-```
-
-## build all contracts
-```bash
-./build.sh
-```
-the ABI and wasm copied in `./traget` dir.
