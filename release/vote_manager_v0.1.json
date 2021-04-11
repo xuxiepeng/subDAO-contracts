@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x423752dfe49324799d1428a36187613e45a668379fb360c889d679adb9c771d1",
-    "language": "ink! 3.0.0-rc1",
-    "compiler": "rustc 1.50.0-nightly"
+    "hash": "0x6c6f8481cf8f84ed85eed117924d89fcd5f9256afd8bae5f0faa21a07e014c69",
+    "language": "ink! 3.0.0-rc3",
+    "compiler": "rustc 1.53.0-nightly"
   },
   "contract": {
     "name": "vote_manager",
@@ -20,7 +20,7 @@
         "name": [
           "new"
         ],
-        "selector": "0xd183512b"
+        "selector": "0x9bae9d5e"
       }
     ],
     "docs": [],
@@ -180,7 +180,7 @@
           ],
           "type": 1
         },
-        "selector": "0x093e59d4"
+        "selector": "0xf5fcf913"
       },
       {
         "args": [
@@ -201,7 +201,7 @@
         ],
         "payable": false,
         "returnType": null,
-        "selector": "0xa01a3bfd"
+        "selector": "0xd00ec894"
       },
       {
         "args": [
@@ -245,7 +245,7 @@
           ],
           "type": 8
         },
-        "selector": "0x2202830d"
+        "selector": "0x083be260"
       },
       {
         "args": [
@@ -271,7 +271,7 @@
           ],
           "type": 17
         },
-        "selector": "0xdd23bbf1"
+        "selector": "0xcfa25eb2"
       },
       {
         "args": [],
@@ -289,7 +289,7 @@
           ],
           "type": 18
         },
-        "selector": "0xa1f8db86"
+        "selector": "0x478edcb1"
       },
       {
         "args": [],
@@ -307,7 +307,7 @@
           ],
           "type": 18
         },
-        "selector": "0x2b47bbb5"
+        "selector": "0xd4a52712"
       },
       {
         "args": [],
@@ -325,7 +325,7 @@
           ],
           "type": 18
         },
-        "selector": "0x399571b3"
+        "selector": "0x310fed41"
       },
       {
         "args": [],
@@ -343,7 +343,7 @@
           ],
           "type": 18
         },
-        "selector": "0xfe44cf9c"
+        "selector": "0x6c8372e4"
       }
     ]
   },
@@ -577,15 +577,18 @@
           "fields": [
             {
               "name": "last_vacant",
-              "type": 3
+              "type": 3,
+              "typeName": "Index"
             },
             {
               "name": "len",
-              "type": 3
+              "type": 3,
+              "typeName": "u32"
             },
             {
               "name": "len_entries",
-              "type": 3
+              "type": 3,
+              "typeName": "u32"
             }
           ]
         }
@@ -609,7 +612,8 @@
             {
               "fields": [
                 {
-                  "type": 5
+                  "type": 5,
+                  "typeName": "VacantEntry"
                 }
               ],
               "name": "Vacant"
@@ -617,7 +621,8 @@
             {
               "fields": [
                 {
-                  "type": 1
+                  "type": 1,
+                  "typeName": "T"
                 }
               ],
               "name": "Occupied"
@@ -641,11 +646,13 @@
           "fields": [
             {
               "name": "next",
-              "type": 3
+              "type": 3,
+              "typeName": "Index"
             },
             {
               "name": "prev",
-              "type": 3
+              "type": 3,
+              "typeName": "Index"
             }
           ]
         }
@@ -663,11 +670,13 @@
           "fields": [
             {
               "name": "value",
-              "type": 7
+              "type": 7,
+              "typeName": "V"
             },
             {
               "name": "key_index",
-              "type": 3
+              "type": 3,
+              "typeName": "KeyIndex"
             }
           ]
         }
@@ -688,47 +697,58 @@
           "fields": [
             {
               "name": "vote_id",
-              "type": 1
+              "type": 1,
+              "typeName": "VoteId"
             },
             {
               "name": "executed",
-              "type": 8
+              "type": 8,
+              "typeName": "bool"
             },
             {
               "name": "title",
-              "type": 9
+              "type": 9,
+              "typeName": "String"
             },
             {
               "name": "desc",
-              "type": 9
+              "type": 9,
+              "typeName": "String"
             },
             {
               "name": "start_date",
-              "type": 1
+              "type": 1,
+              "typeName": "u64"
             },
             {
               "name": "vote_time",
-              "type": 1
+              "type": 1,
+              "typeName": "u64"
             },
             {
               "name": "support_require_num",
-              "type": 1
+              "type": 1,
+              "typeName": "u64"
             },
             {
               "name": "min_require_num",
-              "type": 1
+              "type": 1,
+              "typeName": "u64"
             },
             {
               "name": "support_num",
-              "type": 1
+              "type": 1,
+              "typeName": "u64"
             },
             {
               "name": "choice_index_lo",
-              "type": 3
+              "type": 3,
+              "typeName": "u32"
             },
             {
               "name": "choice_index_ho",
-              "type": 3
+              "type": 3,
+              "typeName": "u32"
             }
           ]
         }
@@ -756,7 +776,8 @@
             {
               "fields": [
                 {
-                  "type": 5
+                  "type": 5,
+                  "typeName": "VacantEntry"
                 }
               ],
               "name": "Vacant"
@@ -764,7 +785,8 @@
             {
               "fields": [
                 {
-                  "type": 11
+                  "type": 11,
+                  "typeName": "T"
                 }
               ],
               "name": "Occupied"
@@ -795,7 +817,8 @@
         "composite": {
           "fields": [
             {
-              "type": 13
+              "type": 13,
+              "typeName": "[u8; 32]"
             }
           ]
         }
@@ -825,11 +848,13 @@
           "fields": [
             {
               "name": "value",
-              "type": 3
+              "type": 3,
+              "typeName": "V"
             },
             {
               "name": "key_index",
-              "type": 3
+              "type": 3,
+              "typeName": "KeyIndex"
             }
           ]
         }
@@ -850,15 +875,18 @@
           "fields": [
             {
               "name": "choice_id",
-              "type": 3
+              "type": 3,
+              "typeName": "ChoiceId"
             },
             {
               "name": "content",
-              "type": 9
+              "type": 9,
+              "typeName": "String"
             },
             {
               "name": "yea",
-              "type": 1
+              "type": 1,
+              "typeName": "u64"
             }
           ]
         }
@@ -875,43 +903,53 @@
           "fields": [
             {
               "name": "vote_id",
-              "type": 1
+              "type": 1,
+              "typeName": "VoteId"
             },
             {
               "name": "executed",
-              "type": 8
+              "type": 8,
+              "typeName": "bool"
             },
             {
               "name": "title",
-              "type": 9
+              "type": 9,
+              "typeName": "String"
             },
             {
               "name": "desc",
-              "type": 9
+              "type": 9,
+              "typeName": "String"
             },
             {
               "name": "start_date",
-              "type": 1
+              "type": 1,
+              "typeName": "u64"
             },
             {
               "name": "vote_time",
-              "type": 1
+              "type": 1,
+              "typeName": "u64"
             },
             {
               "name": "support_require_num",
-              "type": 1
+              "type": 1,
+              "typeName": "u64"
             },
             {
               "name": "min_require_num",
-              "type": 1
+              "type": 1,
+              "typeName": "u64"
             },
             {
               "name": "support_num",
-              "type": 1
+              "type": 1,
+              "typeName": "u64"
             },
             {
               "name": "choices",
-              "type": 9
+              "type": 9,
+              "typeName": "String"
             }
           ]
         }

@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xe8556c7f3ef7035e402b44925a15a4231684c63597d3ee85d503a3626a4bcd97",
-    "language": "ink! 3.0.0-rc1",
-    "compiler": "rustc 1.50.0-nightly"
+    "hash": "0xb6a89ec85fd8f10b3f7394335056912c8b9186186095872755e1d1fbf7b3b787",
+    "language": "ink! 3.0.0-rc3",
+    "compiler": "rustc 1.53.0-nightly"
   },
   "contract": {
     "name": "base",
@@ -20,7 +20,7 @@
         "name": [
           "new"
         ],
-        "selector": "0xd183512b"
+        "selector": "0x9bae9d5e"
       },
       {
         "args": [],
@@ -28,7 +28,7 @@
         "name": [
           "default"
         ],
-        "selector": "0x6a3712e2"
+        "selector": "0xed4b9d1b"
       }
     ],
     "docs": [],
@@ -71,7 +71,7 @@
         ],
         "payable": false,
         "returnType": null,
-        "selector": "0xb26659eb"
+        "selector": "0x7cade53a"
       },
       {
         "args": [
@@ -92,7 +92,7 @@
         ],
         "payable": false,
         "returnType": null,
-        "selector": "0x6aaa7f82"
+        "selector": "0x24d2da30"
       },
       {
         "args": [],
@@ -108,7 +108,7 @@
           ],
           "type": 4
         },
-        "selector": "0xa15ab5e0"
+        "selector": "0xa148a32a"
       },
       {
         "args": [
@@ -129,7 +129,7 @@
         ],
         "payable": false,
         "returnType": null,
-        "selector": "0xe3ebdd88"
+        "selector": "0x4b74fa40"
       },
       {
         "args": [],
@@ -145,7 +145,7 @@
           ],
           "type": 4
         },
-        "selector": "0x8b0c9e43"
+        "selector": "0x26c98f47"
       },
       {
         "args": [
@@ -166,7 +166,7 @@
         ],
         "payable": false,
         "returnType": null,
-        "selector": "0x9ad37616"
+        "selector": "0x95407827"
       },
       {
         "args": [],
@@ -182,7 +182,7 @@
           ],
           "type": 4
         },
-        "selector": "0x16b26064"
+        "selector": "0x26277d2b"
       },
       {
         "args": [
@@ -203,7 +203,7 @@
         ],
         "payable": false,
         "returnType": null,
-        "selector": "0x47c28005"
+        "selector": "0x367facd6"
       },
       {
         "args": [],
@@ -219,7 +219,7 @@
           ],
           "type": 1
         },
-        "selector": "0x58e3162e"
+        "selector": "0x07fcd0b1"
       },
       {
         "args": [],
@@ -235,7 +235,7 @@
           ],
           "type": 5
         },
-        "selector": "0xc56e8540"
+        "selector": "0x76e236fd"
       }
     ]
   },
@@ -287,7 +287,8 @@
         "composite": {
           "fields": [
             {
-              "type": 2
+              "type": 2,
+              "typeName": "[u8; 32]"
             }
           ]
         }
@@ -322,19 +323,23 @@
           "fields": [
             {
               "name": "owner",
-              "type": 1
+              "type": 1,
+              "typeName": "AccountId"
             },
             {
               "name": "name",
-              "type": 4
+              "type": 4,
+              "typeName": "String"
             },
             {
               "name": "logo",
-              "type": 4
+              "type": 4,
+              "typeName": "String"
             },
             {
               "name": "desc",
-              "type": 4
+              "type": 4,
+              "typeName": "String"
             }
           ]
         }

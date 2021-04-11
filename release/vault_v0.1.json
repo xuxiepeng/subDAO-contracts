@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xac4770549c338262a32cc0074066d000e9d2692564d6bd5553f9575b9b08043c",
-    "language": "ink! 3.0.0-rc1",
-    "compiler": "rustc 1.50.0-nightly"
+    "hash": "0x841854edcd66654d2d1fc0e2fcf8190c34bf72d7056891ca2945b71eb0e94d93",
+    "language": "ink! 3.0.0-rc3",
+    "compiler": "rustc 1.53.0-nightly"
   },
   "contract": {
     "name": "vault",
@@ -30,7 +30,7 @@
         "name": [
           "new"
         ],
-        "selector": "0xd183512b"
+        "selector": "0x9bae9d5e"
       }
     ],
     "docs": [],
@@ -201,7 +201,7 @@
           ],
           "type": 14
         },
-        "selector": "0xaee06489"
+        "selector": "0x2e7c1f44"
       },
       {
         "args": [
@@ -227,7 +227,7 @@
           ],
           "type": 14
         },
-        "selector": "0xfde31b75"
+        "selector": "0x420a0900"
       },
       {
         "args": [
@@ -253,7 +253,7 @@
           ],
           "type": 14
         },
-        "selector": "0x4338d861"
+        "selector": "0x3a3ac188"
       },
       {
         "args": [],
@@ -271,7 +271,7 @@
           ],
           "type": 15
         },
-        "selector": "0x0ca614db"
+        "selector": "0x600804bc"
       },
       {
         "args": [
@@ -297,7 +297,7 @@
           ],
           "type": 10
         },
-        "selector": "0x58bb0f42"
+        "selector": "0x1c18fd00"
       },
       {
         "args": [
@@ -341,7 +341,7 @@
           ],
           "type": 14
         },
-        "selector": "0x3ce5f4a6"
+        "selector": "0x2d10c9bd"
       },
       {
         "args": [
@@ -385,7 +385,7 @@
           ],
           "type": 14
         },
-        "selector": "0xb41251e9"
+        "selector": "0x410fcc9d"
       },
       {
         "args": [],
@@ -403,7 +403,7 @@
           ],
           "type": 16
         },
-        "selector": "0x324c23cf"
+        "selector": "0x7c9f68dd"
       }
     ]
   },
@@ -678,15 +678,18 @@
           "fields": [
             {
               "name": "last_vacant",
-              "type": 2
+              "type": 2,
+              "typeName": "Index"
             },
             {
               "name": "len",
-              "type": 2
+              "type": 2,
+              "typeName": "u32"
             },
             {
               "name": "len_entries",
-              "type": 2
+              "type": 2,
+              "typeName": "u32"
             }
           ]
         }
@@ -710,7 +713,8 @@
             {
               "fields": [
                 {
-                  "type": 7
+                  "type": 7,
+                  "typeName": "VacantEntry"
                 }
               ],
               "name": "Vacant"
@@ -718,7 +722,8 @@
             {
               "fields": [
                 {
-                  "type": 4
+                  "type": 4,
+                  "typeName": "T"
                 }
               ],
               "name": "Occupied"
@@ -741,7 +746,8 @@
         "composite": {
           "fields": [
             {
-              "type": 5
+              "type": 5,
+              "typeName": "[u8; 32]"
             }
           ]
         }
@@ -771,11 +777,13 @@
           "fields": [
             {
               "name": "next",
-              "type": 2
+              "type": 2,
+              "typeName": "Index"
             },
             {
               "name": "prev",
-              "type": 2
+              "type": 2,
+              "typeName": "Index"
             }
           ]
         }
@@ -793,11 +801,13 @@
           "fields": [
             {
               "name": "value",
-              "type": 4
+              "type": 4,
+              "typeName": "V"
             },
             {
               "name": "key_index",
-              "type": 2
+              "type": 2,
+              "typeName": "KeyIndex"
             }
           ]
         }
@@ -819,7 +829,8 @@
             {
               "fields": [
                 {
-                  "type": 7
+                  "type": 7,
+                  "typeName": "VacantEntry"
                 }
               ],
               "name": "Vacant"
@@ -827,7 +838,8 @@
             {
               "fields": [
                 {
-                  "type": 10
+                  "type": 10,
+                  "typeName": "T"
                 }
               ],
               "name": "Occupied"
@@ -856,11 +868,13 @@
           "fields": [
             {
               "name": "value",
-              "type": 12
+              "type": 12,
+              "typeName": "V"
             },
             {
               "name": "key_index",
-              "type": 2
+              "type": 2,
+              "typeName": "KeyIndex"
             }
           ]
         }
@@ -881,31 +895,38 @@
           "fields": [
             {
               "name": "transfer_id",
-              "type": 10
+              "type": 10,
+              "typeName": "u64"
             },
             {
               "name": "transfer_direction",
-              "type": 10
+              "type": 10,
+              "typeName": "u64"
             },
             {
               "name": "token_name",
-              "type": 13
+              "type": 13,
+              "typeName": "String"
             },
             {
               "name": "from_address",
-              "type": 4
+              "type": 4,
+              "typeName": "AccountId"
             },
             {
               "name": "to_address",
-              "type": 4
+              "type": 4,
+              "typeName": "AccountId"
             },
             {
               "name": "value",
-              "type": 10
+              "type": 10,
+              "typeName": "u64"
             },
             {
               "name": "transfer_time",
-              "type": 10
+              "type": 10,
+              "typeName": "u64"
             }
           ]
         }

@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x30de408d6f1e0c5a3b1a3b6cc735a7a42631f95e4d24dd14c1a99446e1045342",
-    "language": "ink! 3.0.0-rc1",
-    "compiler": "rustc 1.50.0-nightly"
+    "hash": "0x5407d8f2a36bb521610d207e33d1cfdb07ad8e8d816bf38e529e2754451f90c4",
+    "language": "ink! 3.0.0-rc3",
+    "compiler": "rustc 1.53.0-nightly"
   },
   "contract": {
     "name": "redpacket",
@@ -39,7 +39,7 @@
         "name": [
           "new"
         ],
-        "selector": "0xd183512b"
+        "selector": "0x9bae9d5e"
       }
     ],
     "docs": [],
@@ -174,7 +174,7 @@
           ],
           "type": 15
         },
-        "selector": "0x37f34492"
+        "selector": "0x1c30b046"
       },
       {
         "args": [
@@ -218,7 +218,7 @@
           ],
           "type": 15
         },
-        "selector": "0xa560f4c2"
+        "selector": "0xb388803f"
       },
       {
         "args": [
@@ -244,7 +244,7 @@
           ],
           "type": 15
         },
-        "selector": "0x65483da9"
+        "selector": "0xa5a47441"
       },
       {
         "args": [
@@ -270,7 +270,7 @@
           ],
           "type": 10
         },
-        "selector": "0x934cfe72"
+        "selector": "0xf7156ae4"
       },
       {
         "args": [],
@@ -286,7 +286,7 @@
           ],
           "type": 1
         },
-        "selector": "0x66154539"
+        "selector": "0xfeaea4fa"
       }
     ]
   },
@@ -409,7 +409,8 @@
         "composite": {
           "fields": [
             {
-              "type": 2
+              "type": 2,
+              "typeName": "[u8; 32]"
             }
           ]
         }
@@ -444,15 +445,18 @@
           "fields": [
             {
               "name": "last_vacant",
-              "type": 6
+              "type": 6,
+              "typeName": "Index"
             },
             {
               "name": "len",
-              "type": 6
+              "type": 6,
+              "typeName": "u32"
             },
             {
               "name": "len_entries",
-              "type": 6
+              "type": 6,
+              "typeName": "u32"
             }
           ]
         }
@@ -476,7 +480,8 @@
             {
               "fields": [
                 {
-                  "type": 8
+                  "type": 8,
+                  "typeName": "VacantEntry"
                 }
               ],
               "name": "Vacant"
@@ -484,7 +489,8 @@
             {
               "fields": [
                 {
-                  "type": 4
+                  "type": 4,
+                  "typeName": "T"
                 }
               ],
               "name": "Occupied"
@@ -508,11 +514,13 @@
           "fields": [
             {
               "name": "next",
-              "type": 6
+              "type": 6,
+              "typeName": "Index"
             },
             {
               "name": "prev",
-              "type": 6
+              "type": 6,
+              "typeName": "Index"
             }
           ]
         }
@@ -530,11 +538,13 @@
           "fields": [
             {
               "name": "value",
-              "type": 10
+              "type": 10,
+              "typeName": "V"
             },
             {
               "name": "key_index",
-              "type": 6
+              "type": 6,
+              "typeName": "KeyIndex"
             }
           ]
         }
@@ -555,55 +565,68 @@
           "fields": [
             {
               "name": "id",
-              "type": 4
+              "type": 4,
+              "typeName": "u64"
             },
             {
               "name": "creator",
-              "type": 1
+              "type": 1,
+              "typeName": "AccountId"
             },
             {
               "name": "total_number",
-              "type": 4
+              "type": 4,
+              "typeName": "u64"
             },
             {
               "name": "claimed_number",
-              "type": 4
+              "type": 4,
+              "typeName": "u64"
             },
             {
               "name": "token_type",
-              "type": 3
+              "type": 3,
+              "typeName": "u8"
             },
             {
               "name": "if_random",
-              "type": 3
+              "type": 3,
+              "typeName": "u8"
             },
             {
               "name": "token_addr",
-              "type": 1
+              "type": 1,
+              "typeName": "AccountId"
             },
             {
               "name": "password",
-              "type": 11
+              "type": 11,
+              "typeName": "Hash"
             },
             {
               "name": "remaining_tokens",
-              "type": 4
+              "type": 4,
+              "typeName": "u64"
             },
             {
               "name": "start_time",
-              "type": 4
+              "type": 4,
+              "typeName": "u64"
             },
             {
               "name": "end_time",
-              "type": 4
+              "type": 4,
+              "typeName": "u64"
             },
             {
               "name": "claim_list",
-              "type": 12
+              "type": 12,
+              "typeName": "BTreeMap<AccountId, u64>"
             },
             {
               "name": "is_refund",
-              "type": 15
+              "type": 15,
+              "typeName": "bool"
             }
           ]
         }
@@ -619,7 +642,8 @@
         "composite": {
           "fields": [
             {
-              "type": 2
+              "type": 2,
+              "typeName": "[u8; 32]"
             }
           ]
         }
@@ -635,7 +659,8 @@
         "composite": {
           "fields": [
             {
-              "type": 14
+              "type": 14,
+              "typeName": "[(K, V)]"
             }
           ]
         }

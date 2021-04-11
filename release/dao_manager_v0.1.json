@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xa0ae7f239ae4cffd964477feb536fcd8421e7253e2ba7dbce3df8ae85fa332e6",
-    "language": "ink! 3.0.0-rc1",
-    "compiler": "rustc 1.50.0-nightly"
+    "hash": "0xa4e7efec0bf613a19ddc63bdb7f7e0ea92754ddaa3fa498ea4e9212aa02a2a97",
+    "language": "ink! 3.0.0-rc3",
+    "compiler": "rustc 1.53.0-nightly"
   },
   "contract": {
     "name": "dao_manager",
@@ -45,12 +45,12 @@
           }
         ],
         "docs": [
-          " Constructor that initializes the `bool` value to the given `init_value`."
+          "Constructor that initializes the `bool` value to the given `init_value`."
         ],
         "name": [
           "new"
         ],
-        "selector": "0xd183512b"
+        "selector": "0x9bae9d5e"
       }
     ],
     "docs": [],
@@ -120,6 +120,15 @@
               ],
               "type": 4
             }
+          },
+          {
+            "name": "version",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 12
+            }
           }
         ],
         "docs": [],
@@ -134,7 +143,7 @@
           ],
           "type": 1
         },
-        "selector": "0xa1ec5918"
+        "selector": "0x44d6441f"
       },
       {
         "args": [],
@@ -148,9 +157,9 @@
           "displayName": [
             "DAOComponentAddrs"
           ],
-          "type": 12
+          "type": 13
         },
-        "selector": "0x0db17698"
+        "selector": "0x063f051b"
       },
       {
         "args": [
@@ -185,7 +194,7 @@
           ],
           "type": 1
         },
-        "selector": "0xfae3a09d"
+        "selector": "0x84a15da1"
       },
       {
         "args": [
@@ -220,7 +229,7 @@
           ],
           "type": 1
         },
-        "selector": "0x66612e04"
+        "selector": "0xa9b6f1b0"
       },
       {
         "args": [
@@ -255,7 +264,7 @@
           ],
           "type": 1
         },
-        "selector": "0x8b31777e"
+        "selector": "0x61143ff8"
       },
       {
         "args": [
@@ -290,7 +299,7 @@
           ],
           "type": 1
         },
-        "selector": "0x75b5bf28"
+        "selector": "0xd9c6b562"
       },
       {
         "args": [
@@ -316,7 +325,7 @@
           ],
           "type": 1
         },
-        "selector": "0xf555353e"
+        "selector": "0xbbbbce3c"
       }
     ]
   },
@@ -582,7 +591,16 @@
                     }
                   },
                   "name": "vote"
-                },
+                }
+              ]
+            }
+          },
+          "name": "components"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
                 {
                   "layout": {
                     "enum": {
@@ -592,18 +610,9 @@
                           "fields": [
                             {
                               "layout": {
-                                "struct": {
-                                  "fields": [
-                                    {
-                                      "layout": {
-                                        "cell": {
-                                          "key": "0x0e00000000000000000000000000000000000000000000000000000000000000",
-                                          "ty": 2
-                                        }
-                                      },
-                                      "name": "account_id"
-                                    }
-                                  ]
+                                "cell": {
+                                  "key": "0x0e00000000000000000000000000000000000000000000000000000000000000",
+                                  "ty": 2
                                 }
                               },
                               "name": null
@@ -616,17 +625,8 @@
                       }
                     }
                   },
-                  "name": "github"
-                }
-              ]
-            }
-          },
-          "name": "components"
-        },
-        {
-          "layout": {
-            "struct": {
-              "fields": [
+                  "name": "base_addr"
+                },
                 {
                   "layout": {
                     "enum": {
@@ -651,7 +651,7 @@
                       }
                     }
                   },
-                  "name": "base_addr"
+                  "name": "erc20_addr"
                 },
                 {
                   "layout": {
@@ -677,7 +677,7 @@
                       }
                     }
                   },
-                  "name": "erc20_addr"
+                  "name": "org_addr"
                 },
                 {
                   "layout": {
@@ -703,7 +703,7 @@
                       }
                     }
                   },
-                  "name": "org_addr"
+                  "name": "vault_addr"
                 },
                 {
                   "layout": {
@@ -729,59 +729,7 @@
                       }
                     }
                   },
-                  "name": "vault_addr"
-                },
-                {
-                  "layout": {
-                    "enum": {
-                      "dispatchKey": "0x1200000000000000000000000000000000000000000000000000000000000000",
-                      "variants": {
-                        "0": {
-                          "fields": [
-                            {
-                              "layout": {
-                                "cell": {
-                                  "key": "0x1300000000000000000000000000000000000000000000000000000000000000",
-                                  "ty": 2
-                                }
-                              },
-                              "name": null
-                            }
-                          ]
-                        },
-                        "1": {
-                          "fields": []
-                        }
-                      }
-                    }
-                  },
                   "name": "vote_addr"
-                },
-                {
-                  "layout": {
-                    "enum": {
-                      "dispatchKey": "0x1300000000000000000000000000000000000000000000000000000000000000",
-                      "variants": {
-                        "0": {
-                          "fields": [
-                            {
-                              "layout": {
-                                "cell": {
-                                  "key": "0x1400000000000000000000000000000000000000000000000000000000000000",
-                                  "ty": 2
-                                }
-                              },
-                              "name": null
-                            }
-                          ]
-                        },
-                        "1": {
-                          "fields": []
-                        }
-                      }
-                    }
-                  },
-                  "name": "github_addr"
                 }
               ]
             }
@@ -802,7 +750,8 @@
         "composite": {
           "fields": [
             {
-              "type": 3
+              "type": 3,
+              "typeName": "[u8; 32]"
             }
           ]
         }
@@ -841,7 +790,8 @@
         "composite": {
           "fields": [
             {
-              "type": 3
+              "type": 3,
+              "typeName": "[u8; 32]"
             }
           ]
         }
@@ -857,7 +807,8 @@
         "composite": {
           "fields": [
             {
-              "type": 10
+              "type": 10,
+              "typeName": "[(K, V)]"
             }
           ]
         }
@@ -890,23 +841,28 @@
           "fields": [
             {
               "name": "id",
-              "type": 5
+              "type": 5,
+              "typeName": "u64"
             },
             {
               "name": "owner",
-              "type": 2
+              "type": 2,
+              "typeName": "AccountId"
             },
             {
               "name": "name",
-              "type": 6
+              "type": 6,
+              "typeName": "String"
             },
             {
               "name": "dao_manager_code_hash",
-              "type": 7
+              "type": 7,
+              "typeName": "Hash"
             },
             {
               "name": "components",
-              "type": 8
+              "type": 8,
+              "typeName": "BTreeMap<String, Hash>"
             }
           ]
         }
@@ -919,31 +875,37 @@
     },
     {
       "def": {
+        "primitive": "u32"
+      }
+    },
+    {
+      "def": {
         "composite": {
           "fields": [
             {
               "name": "base_addr",
-              "type": 13
+              "type": 14,
+              "typeName": "Option<AccountId>"
             },
             {
               "name": "erc20_addr",
-              "type": 13
+              "type": 14,
+              "typeName": "Option<AccountId>"
             },
             {
               "name": "org_addr",
-              "type": 13
+              "type": 14,
+              "typeName": "Option<AccountId>"
             },
             {
               "name": "vault_addr",
-              "type": 13
+              "type": 14,
+              "typeName": "Option<AccountId>"
             },
             {
               "name": "vote_addr",
-              "type": 13
-            },
-            {
-              "name": "github_addr",
-              "type": 13
+              "type": 14,
+              "typeName": "Option<AccountId>"
             }
           ]
         }
@@ -964,7 +926,8 @@
             {
               "fields": [
                 {
-                  "type": 2
+                  "type": 2,
+                  "typeName": "T"
                 }
               ],
               "name": "Some"
