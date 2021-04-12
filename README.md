@@ -1,6 +1,12 @@
 # subDAO-contracts
-contracts for subDAO, using [ink!](https://github.com/paritytech/ink).
+Contracts for SubDAO, using [ink!](https://github.com/paritytech/ink).
 
+
+# Using the pre-compiled contracts
+If you just want to try these contracts, please use the pre-compiled contracts in `release` folder.
+
+
+# Build from source
 ## install cargo-contract
 reference [here]().
 
