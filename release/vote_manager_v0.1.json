@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x2993f4877b69c1d2026a51cb7aae7e23eda466a9e9aa9797b2639476646a3fc2",
+    "hash": "0x870878062b78bfdf5b3c37f0ce4caba0b1e19ee17538d82839cb8148fa36b49b",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -166,6 +166,15 @@
               ],
               "type": 9
             }
+          },
+          {
+            "name": "need_trigger",
+            "type": {
+              "displayName": [
+                "bool"
+              ],
+              "type": 8
+            }
           }
         ],
         "docs": [],
@@ -296,7 +305,7 @@
         "docs": [],
         "mutates": false,
         "name": [
-          "query_executed_vote"
+          "query_history_vote"
         ],
         "payable": false,
         "returnType": {
@@ -307,14 +316,14 @@
           ],
           "type": 18
         },
-        "selector": "0xd4a52712"
+        "selector": "0xf3de25f4"
       },
       {
         "args": [],
         "docs": [],
         "mutates": false,
         "name": [
-          "query_open_vote"
+          "query_active_vote"
         ],
         "payable": false,
         "returnType": {
@@ -325,14 +334,14 @@
           ],
           "type": 18
         },
-        "selector": "0x310fed41"
+        "selector": "0xd1111104"
       },
       {
         "args": [],
         "docs": [],
         "mutates": false,
         "name": [
-          "query_wait_vote"
+          "query_pending_vote"
         ],
         "payable": false,
         "returnType": {
@@ -343,7 +352,7 @@
           ],
           "type": 18
         },
-        "selector": "0x6c8372e4"
+        "selector": "0x40c5faf0"
       }
     ]
   },
@@ -716,6 +725,11 @@
               "typeName": "String"
             },
             {
+              "name": "need_trigger",
+              "type": 8,
+              "typeName": "bool"
+            },
+            {
               "name": "start_date",
               "type": 1,
               "typeName": "u64"
@@ -920,6 +934,11 @@
               "name": "desc",
               "type": 9,
               "typeName": "String"
+            },
+            {
+              "name": "need_trigger",
+              "type": 8,
+              "typeName": "bool"
             },
             {
               "name": "start_date",
