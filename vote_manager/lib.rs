@@ -11,6 +11,7 @@ mod vote_manager {
     use alloc::vec;
     use alloc::vec::Vec;
     use alloc::string::String;
+    use vault::VaultManager;
 
     use ink_storage::{
         collections::{
@@ -25,14 +26,6 @@ mod vote_manager {
 
     type VoteId = u64;
     type ChoiceId = u32;
-
-    #[derive(Debug, PartialEq, Eq, scale::Encode, scale::Decode, PackedLayout, SpreadLayout)]
-    #[cfg_attr(feature = "std", derive(scale_info::TypeInfo, ink_storage::traits::StorageLayout))]
-    enum VoterState {
-        Absent,
-        Yea,
-        Nay,
-    }
 
     #[derive(scale::Encode, scale::Decode, SpreadLayout, PackedLayout)]
     #[cfg_attr(
@@ -74,6 +67,9 @@ mod vote_manager {
         support_require_num: u64,
         min_require_num: u64,
         support_num: u64,
+        erc20_address: AccountId,
+        to_address: AccountId,
+        value: u64,
         choice_index_lo: u32,
         choice_index_ho: u32,
     }
@@ -106,6 +102,7 @@ mod vote_manager {
 
     #[ink(storage)]
     pub struct VoteManager {
+        vault: VaultManager,
         votes_length: u64,
         votes: StorageHashMap<VoteId, Vote>,
         voters: StorageHashMap<(VoteId, AccountId), ChoiceId>,
@@ -142,8 +139,10 @@ mod vote_manager {
     impl VoteManager {
 
         #[ink(constructor)]
-        pub fn new() -> Self {
+        pub fn new(vault_address: AccountId) -> Self {
+            let vault_instance = ink_env::call::FromAccountId::from_account_id(vault_address);
             Self { 
+                vault: vault_instance,
                 votes_length: 0,
                 votes: StorageHashMap::default(),
                 voters: StorageHashMap::default(),
@@ -165,14 +164,18 @@ mod vote_manager {
                 desc,
                 start_date: start_date,
                 vote_time,
-                need_trigger,
+                need_trigger: false,
                 support_require_num,
                 min_require_num,
                 support_num: 0,
+                erc20_address: AccountId::default(), 
+                to_address: AccountId::default(),
+                value: 0,
                 choice_index_lo: self.choices_num,
                 choice_index_ho: self.choices_num + vec.len() as u32,
             };
-            self.choices_num += vec.len() as u32;
+            // self.make_vote(vote_id, &vote, &vec)
+            self.choices_num += choices.len() as u32;
             let mut index = 0;
             for choice_content in vec.iter() {
                 self.choices.push(Choice{
@@ -191,17 +194,81 @@ mod vote_manager {
         }
 
         #[ink(message)]
-        pub fn execute(&mut self, vote_id: VoteId) {
+        pub fn new_vote_with_transfer(&mut self, title: String, desc: String, vote_time: u64, support_require_num: u64, min_require_num: u64, choices: String, erc20_address:AccountId, to_address:AccountId, value:u64) -> u64 {
+            let vote_id = self.votes_length.clone();
+            self.votes_length += 1;
+            let start_date: u64 = self.env().block_timestamp();
+            let vec: Vec<&str> = choices.split("|").collect();
+            let vote = Vote{
+                vote_id: vote_id,
+                executed: false,
+                title,
+                desc,
+                start_date: start_date,
+                vote_time,
+                need_trigger: true,
+                support_require_num,
+                min_require_num,
+                support_num: 0,
+                erc20_address,
+                to_address,
+                value,
+                choice_index_lo: self.choices_num,
+                choice_index_ho: self.choices_num + vec.len() as u32,
+            };
+            // self.make_vote(vote_id, &vote, &vec)
+            self.choices_num += choices.len() as u32;
+            let mut index = 0;
+            for choice_content in vec.iter() {
+                self.choices.push(Choice{
+                    choice_id: index,
+                    content: String::from(*choice_content),
+                    yea: 0,
+                });
+                index += 1;
+            }
+            self.votes.insert(vote_id, vote);
+            self.env().emit_event(StartVote{
+                vote_id,
+                creator: self.env().caller(),
+            });
+            vote_id
+        }
+
+        // fn make_vote(&mut self, vote_id: VoteId, vote: &Vote, choices: &Vec<&str>) -> u64 {
+        //     self.choices_num += choices.len() as u32;
+        //     let mut index = 0;
+        //     for choice_content in choices.iter() {
+        //         self.choices.push(Choice{
+        //             choice_id: index,
+        //             content: String::from(*choice_content),
+        //             yea: 0,
+        //         });
+        //         index += 1;
+        //     }
+        //     self.votes.insert(vote_id, vote);
+        //     self.env().emit_event(StartVote{
+        //         vote_id,
+        //         creator: self.env().caller(),
+        //     });
+        //     vote_id
+        // }
+
+        #[ink(message)]
+        pub fn execute(&mut self, vote_id: VoteId) -> bool {
             assert!(self.vote_exists(vote_id));
             let vote = self.votes.get(&vote_id).unwrap(); 
             if self.can_execute(&vote) {
                 let mut vote = self.votes.get_mut(&vote_id).unwrap(); 
                 vote.executed = true;
+                let result = self.vault.withdraw(vote.erc20_address, vote.to_address, vote.value);
                 self.env().emit_event(ExecuteVote{
                     vote_id,
                 });
+                result
+            } else {
+                true
             }
-            // true
         }
 
         #[ink(message)]
