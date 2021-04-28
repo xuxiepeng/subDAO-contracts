@@ -152,7 +152,7 @@ mod vote_manager {
         }
 
         #[ink(message)]
-        pub fn new_vote(&mut self, title: String, desc: String, vote_time: u64, support_require_num: u64, min_require_num: u64, choices: String, need_trigger: bool) -> u64 {
+        pub fn new_vote(&mut self, title: String, desc: String, vote_time: u64, support_require_num: u64, min_require_num: u64, choices: String) -> u64 {
             let vote_id = self.votes_length.clone();
             self.votes_length += 1;
             let start_date: u64 = self.env().block_timestamp();
@@ -174,8 +174,11 @@ mod vote_manager {
                 choice_index_lo: self.choices_num,
                 choice_index_ho: self.choices_num + vec.len() as u32,
             };
-            // self.make_vote(vote_id, &vote, &vec)
-            self.choices_num += choices.len() as u32;
+            let choices_len = vec.len() as u32;
+            if choices_len == 0 {
+                return 0;
+            }
+            self.choices_num += choices_len;
             let mut index = 0;
             for choice_content in vec.iter() {
                 self.choices.push(Choice{
@@ -216,8 +219,11 @@ mod vote_manager {
                 choice_index_lo: self.choices_num,
                 choice_index_ho: self.choices_num + vec.len() as u32,
             };
-            // self.make_vote(vote_id, &vote, &vec)
-            self.choices_num += choices.len() as u32;
+            let choices_len = vec.len() as u32;
+            if choices_len == 0 {
+                return 0;
+            }
+            self.choices_num += choices_len;
             let mut index = 0;
             for choice_content in vec.iter() {
                 self.choices.push(Choice{
@@ -235,25 +241,7 @@ mod vote_manager {
             vote_id
         }
 
-        // fn make_vote(&mut self, vote_id: VoteId, vote: &Vote, choices: &Vec<&str>) -> u64 {
-        //     self.choices_num += choices.len() as u32;
-        //     let mut index = 0;
-        //     for choice_content in choices.iter() {
-        //         self.choices.push(Choice{
-        //             choice_id: index,
-        //             content: String::from(*choice_content),
-        //             yea: 0,
-        //         });
-        //         index += 1;
-        //     }
-        //     self.votes.insert(vote_id, vote);
-        //     self.env().emit_event(StartVote{
-        //         vote_id,
-        //         creator: self.env().caller(),
-        //     });
-        //     vote_id
-        // }
-
+       
         #[ink(message)]
         pub fn execute(&mut self, vote_id: VoteId) -> bool {
             assert!(self.vote_exists(vote_id));
