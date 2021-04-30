@@ -20,6 +20,7 @@ mod org {
         moderators: StorageHashMap<AccountId, String>,
         members: StorageHashMap<AccountId, String>,
         creator: AccountId,
+        owner: AccountId,
         org_id:u64,
     }
 
@@ -75,6 +76,7 @@ mod org {
             Self {
                 creator: _creator,
                 org_id:org_id,
+                owner:_creator,
                 moderators: StorageHashMap::default(),
                 members: StorageHashMap::default(),
             }
@@ -83,6 +85,11 @@ mod org {
         #[ink(message)]
         pub fn get_dao_creator(&self) -> AccountId {
             self.creator
+        }
+
+        #[ink(message)]
+        pub fn get_dao_owner(&self) -> AccountId {
+            self.owner
         }
 
         #[ink(message)]
@@ -158,8 +165,8 @@ mod org {
                 None => {
                     let org_id = self.org_id;
                     self.env().emit_event(AddDAOModeratorEvent{
-                    moderator,
-                    org_id,});
+                        moderator,
+                        org_id,});
                     true
                 }
             }
@@ -175,9 +182,9 @@ mod org {
                 None => {
                     let org_id = self.org_id;
                     self.env().emit_event(AddDAOMemberEvent{
-                    member,
-                    org_id,
-                });
+                        member,
+                        org_id,
+                    });
                     true
                 }
             }
@@ -198,10 +205,10 @@ mod org {
                 Some(_) => {
                     let org_id = self.org_id;
                     self.env().emit_event(RemoveDAOModeratorEvent{
-                    moderator:member,
-                    org_id,
-                });
-                     true
+                        moderator:member,
+                        org_id,
+                    });
+                    true
                 }
             }
 
@@ -216,10 +223,10 @@ mod org {
                 Some(_) => {
                     let org_id = self.org_id;
                     self.env().emit_event(RemoveDAOMemberEvent{
-                    member:member,
-                    org_id:org_id,
-                });
-                     true
+                        member:member,
+                        org_id:org_id,
+                    });
+                    true
                 }
             }
 
@@ -240,6 +247,20 @@ mod org {
                 return true;
             };
             return false;
+        }
+
+        #[ink(message)]
+        pub fn transfer_ownership(&mut self,new_owner: AccountId) -> bool  {
+
+            let caller = self.env().caller();
+
+            // only owner can transfer the ownership of the org
+            if &caller != & self.owner {
+                return false;
+            }
+
+            self.owner = new_owner;
+            return true;
         }
     }
 
