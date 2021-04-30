@@ -47,7 +47,7 @@ mod auth {
     #[ink(storage)]
     pub struct Auth {
         owner: AccountId,
-        actions: StorageHashMap<(contract_name,function_name),ActionId>,
+        actions: StorageHashMap<(contract_name,function_name),Action>,
         actions_auths: StorageHashMap<(AccountId,ActionId), Action>,
     }
 
