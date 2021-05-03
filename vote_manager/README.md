@@ -8,16 +8,34 @@ Init a new vote module.
 
 ### new_vote(title: String, desc: String, vote_time: u64, support_require_num: u64, min_require_num: u64, choices: String) -> u64
 
-Create a new vote.
+Create a new vote without trigger.
 
 params:
 
 * title: the vote's title
 * desc: the vote's desc
-* vote_time: how long the vote durate by seconds.
+* vote_time: how long the vote durate by milliseconds.
 * support_require_num: minimum support require numbers.
 * min_require_num: minimum voter require numbers.
-* choices: all vote choice, split by `,` , eg: A,B,C,D 
+* choices: all vote choice, split by `|` , eg: A|B|C|D 
+
+return
+
+* vote_id
+
+### new_vote_with_transfer(title: String, desc: String, vote_time: u64, support_require_num: u64, min_require_num: u64, choices: String, erc20_address:AccountId, to_address:AccountId, value:u64) -> u64
+
+create a new vote with transfer trigger.
+
+* title: the vote's title
+* desc: the vote's desc
+* vote_time: how long the vote durate by milliseconds.
+* support_require_num: minimum support require numbers.
+* min_require_num: minimum voter require numbers.
+* choices: all vote choice, split by `|` , eg: A|B|C|D
+* erc20_address: a address of a erc20 contract.
+* to_address: when trigger invoke, who will receive tokens.
+* value: tokens amount.
 
 return
 
@@ -54,14 +72,14 @@ if vote_id didn't exist, the function will runtime overhead.
 
 query all votes
 
-### query_executed_vote() -> alloc::vec::Vec<DisplayVote>
+### query_history_vote() -> alloc::vec::Vec<DisplayVote>
 
-query all executed votes.
+query history votes.
 
-### query_open_vote() -> alloc::vec::Vec<DisplayVote>
+### query_active_vote() -> alloc::vec::Vec<DisplayVote>
 
-query all unfinshed votes.
+query all active votes.
 
-### query_wait_vote() -> alloc::vec::Vec<DisplayVote>
+### query_pending_vote() -> alloc::vec::Vec<DisplayVote>
 
 query all finished but unexecuted votes.
