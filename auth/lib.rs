@@ -67,7 +67,7 @@ mod auth {
         #[ink(message)]
         pub fn has_permission(& self, account_id: AccountId,contract_name: String, function_name: String)  -> bool {
             if let Some(action) = self.actions.get(&(contract_name, function_name)) {
-                if let Some(auth) = self.actions_auths.get(&(action.account_id, account_id)) {
+                if let Some(auth) = self.actions_auths.get(&(account_id, action.action_id)) {
                     true 
                 }            
             }
@@ -78,7 +78,7 @@ mod auth {
         pub fn grant_permission(& mut self, account_id: AccountId,contract_name: String, function_name: String) ->  Result<()> {
             assert!(self.owner == self.env().caller);
             if let Some(action) = self.actions.get(&(contract_name, function_name)){
-                self.actions_auths.insert(&(action.account_id, account_id), action);
+                self.actions_auths.insert(&(account_id, action.action_id), action);
                 Ok(())
            }
            Err("grant permission failed")
@@ -89,7 +89,7 @@ mod auth {
         pub fn revoke_permission(& mut self,account_id: AccountId,contract_name: String, function_name: String) -> Result<()> {
             assert!(self.owner == self.env().caller);
             if let Some(action) = self.actions.get(&(contract_name, function_name)){
-                self.actions_auths.take(&(action.account_id, account_id));
+                self.actions_auths.take(&(account_id, action.action_id));
                 Ok(())
            }
            Err("remove permission failed")
@@ -123,7 +123,11 @@ mod auth {
         pub fn show_actions_by_contract(& self, contract_name: String) -> Vec<Action> {
         
             let mut actions_vec = Vec::new();
-           // todo:
+            for ((cname, fname), val) in &self.actions {
+                if  cname == contract_name {
+                    actions_vec.push(&val);
+                }
+            }
             actions_vec
         }
 
@@ -131,7 +135,11 @@ mod auth {
         pub fn show_actions_by_user(& self, owner: AccountId) -> Vec<Action> {
         
             let mut actions_vec = Vec::new();
-           // todo:
+            for ((account_id, action_id), val) in &self.actions_auths {
+                if account_id == owner {
+                    actions_vec.push(&val)
+                }
+            }
             actions_vec
         }
 
