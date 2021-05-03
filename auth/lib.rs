@@ -47,6 +47,7 @@ mod auth {
     #[ink(storage)]
     pub struct Auth {
         owner: AccountId,
+        action_id: ActionId,
         actions: StorageHashMap<(contract_name,function_name),Action>,
         actions_auths: StorageHashMap<(AccountId,ActionId), Action>,
     }
@@ -57,6 +58,7 @@ mod auth {
         pub fn new(owner: AccountId) -> Self {
             Self {
                 owner,
+                0,
                 actions: StorageHashMap::new(),
                 actions_auths: StorageHashMap::new(),
             }
@@ -64,41 +66,57 @@ mod auth {
         
         #[ink(message)]
         pub fn has_permission(& self, account_id: AccountId,contract_name: String, function_name: String)  -> bool {
-           let mut res = false;
-            // todo:
-           res
+            if let Some(action) = self.actions.get(&(contract_name, function_name)) {
+                if let Some(auth) = self.actions_auths.get(&(action.account_id, account_id)) {
+                    true 
+                }            
+            }
+           return res;
         }
 
         #[ink(message)]
         pub fn grant_permission(& mut self, account_id: AccountId,contract_name: String, function_name: String) ->  Result<()> {
-           // only auth owner can perform
-            // todo:
-           Ok(())
+            assert!(self.owner == self.env().caller);
+            if let Some(action) = self.actions.get(&(contract_name, function_name)){
+                self.actions_auths.insert(&(action.account_id, account_id), action);
+                Ok(())
+           }
+           Err("grant permission failed")
         }
 
 
         #[ink(message)]
         pub fn revoke_permission(& mut self,account_id: AccountId,contract_name: String, function_name: String) -> Result<()> {
-          // only auth owner can perform
-           // todo:
-             Ok(())
+            assert!(self.owner == self.env().caller);
+            if let Some(action) = self.actions.get(&(contract_name, function_name)){
+                self.actions_auths.take(&(action.account_id, account_id));
+                Ok(())
+           }
+           Err("remove permission failed")
         }
 
+        
         #[ink(message)]
-        pub fn register_action(& mut self,contract_name: String, function_name: String) -> bool {
-            // only auth owner can perform
-            let mut res = false;
-            // todo:
-           res
+        pub fn register_action(& mut self,contract_name: String, function_name: String, action_title: String) -> bool {
+            assert!(self.owner == self.env().caller);
+            let action_id = self.action_id;
+            self.action_id += 1;
+            let action = Action{
+                action_id,
+                action_title,
+                contract_name,
+                function_name,
+            }
+            self.actions.insert(&(contract_name, function_name), &action);
+            true
         }
 
 
         #[ink(message)]
         pub fn cancel_action(& mut self,contract_name: String, function_name: String) -> bool {
-            // only auth owner can perform
-            let mut res = false;
-            // todo:
-           res
+            assert!(self.owner == self.env().caller);
+            self.actions.take(&(contract_name, function_name));
+            true
         }
 
         #[ink(message)]
