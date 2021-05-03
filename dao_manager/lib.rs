@@ -280,8 +280,9 @@ mod dao_manager {
             let vote_code_hash = vote_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
             // instance org
+            let vault_addr = self.component_addrs.vault_addr.unwrap();
             let salt = version.to_le_bytes();
-            let vote_instance_params = VoteManager::new()
+            let vote_instance_params = VoteManager::new(vault_addr)
                 .endowment(total_balance / 4)
                 .code_hash(vote_code_hash)
                 .salt_bytes(salt)
