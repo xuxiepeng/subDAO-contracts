@@ -1,5 +1,5 @@
 # SubDAO Valut Module
-## Overview
+## 1. Overview
 
 Valut for a DAO
 
@@ -35,14 +35,24 @@ withdraw token from the specific token contract to account. The token contract s
 
 get transfer history
 
-## Test
+
+## 2 Permission Control
+
++ let can_operate = self.check_authority(caller,"vault","remove_vault_token");
++ let can_operate = self.check_authority(caller,"vault","add_vault_token");
++ let can_operate = self.check_authority(caller,"vault","withdraw");
+
+
+## 3. Test
 
 ```
 cargo +nightly test
 ```
 
-## Deploy
+## 4. Deploy
 
 call `new(org_contract_address: AccountId)` with the org address.
+
+
 
 
