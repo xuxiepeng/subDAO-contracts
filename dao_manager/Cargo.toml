@@ -24,6 +24,7 @@ vote_manager = { version = "0.1.0", path = "../vote_manager", default-features =
 # github = { version = "0.1.0", path = "../github", default-features = false, features = ["ink-as-dependency"] }
 base = { version = "0.1.0", path = "../base", default-features = false, features = ["ink-as-dependency"] }
 template_manager = { version = "0.1.0", path = "../template_manager", default-features = false, features = ["ink-as-dependency"] }
+auth = { version = "0.1.0", path = "../auth", default-features = false, features = ["ink-as-dependency"] }
 
 [lib]
 name = "dao_manager"
@@ -52,5 +53,6 @@ std = [
  #   "github/std",
     "base/std",
     "template_manager/std",
+    "auth/std",
 ]
 ink-as-dependency = []
