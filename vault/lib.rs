@@ -18,6 +18,7 @@ mod vault {
 
     use erc20::Erc20;
     use org::OrgManager;
+    use auth::Auth;
 
     #[derive(
     Debug, Clone, PartialEq, Eq, scale::Encode, scale::Decode, SpreadLayout, PackedLayout,Default
@@ -48,6 +49,7 @@ mod vault {
         transfer_history:StorageHashMap<u64,Transfer>,
         org_contract_address:AccountId,
         vault_contract_address:AccountId,
+        auth_contract_address:AccountId,
     }
 
     /// Errors that can occur upon calling this contract.
@@ -118,12 +120,13 @@ mod vault {
     impl VaultManager {
 
         #[ink(constructor)]
-        pub fn new(org_contract_address: AccountId) -> Self {
+        pub fn new(org_contract_address: AccountId,auth_contract_address: AccountId) -> Self {
 
             let vault_contract_address = Self::env().account_id();
 
             Self {
                 org_contract_address:org_contract_address,
+                auth_contract_address:auth_contract_address,
                 tokens: StorageHashMap::default(),
                 visible_tokens: StorageHashMap::default(),
                 transfer_history: StorageHashMap::default(),
@@ -141,32 +144,50 @@ mod vault {
 
         }
 
+        pub fn get_auth_by_address(&self, address:AccountId) -> Auth {
+            let  auth_instance: Auth = ink_env::call::FromAccountId::from_account_id(address);
+            auth_instance
+
+        }
+
         pub fn get_orgmanager_by_address(&self, address:AccountId) -> OrgManager {
             let  org_instance: OrgManager = ink_env::call::FromAccountId::from_account_id(address);
             org_instance
 
         }
 
+        // #[ink(message)]
+        // pub fn check_authority(&self, caller:AccountId) -> bool {
+        //     //return true;
+        //     let  org = self.get_orgmanager_by_address(self.org_contract_address);
+
+        //     let creator = org.get_dao_creator();
+        //     let moderator_list = org.get_dao_moderator_list();
+
+        //     if caller == creator {
+        //         return true;
+        //     }
+        //     for key in moderator_list {
+        //         let moderator = key;
+        //         if caller == moderator {
+        //             return true;
+        //         }
+        //     }
+        //     return false;
+
+        // }
+
+
         #[ink(message)]
-        pub fn check_authority(&self, caller:AccountId) -> bool {
+        pub fn check_authority(&self, caller:AccountId,contract_name,function_name) -> bool {
             //return true;
-            let  org = self.get_orgmanager_by_address(self.org_contract_address);
+            let  auth = self.get_auth_by_address(self.auth_contract_address);
 
-            let creator = org.get_dao_creator();
-            let moderator_list = org.get_dao_moderator_list();
-
-            if caller == creator {
-                return true;
-            }
-            for key in moderator_list {
-                let moderator = key;
-                if caller == moderator {
-                    return true;
-                }
-            }
-            return false;
+            let is_permission = auth.has_permission(caller, contract_name, function_name);
+            return is_permission;
 
         }
+
 
 
 
@@ -175,8 +196,7 @@ mod vault {
 
             let caller = self.env().caller();
 
-
-             let can_operate = self.check_authority(caller);
+             let can_operate = self.check_authority(caller,"vault","add_vault_token");
 
 
             if can_operate == false {
@@ -208,7 +228,7 @@ mod vault {
         pub fn remove_vault_token(&mut self,erc_20_address: AccountId) -> bool  {
 
             let caller = self.env().caller();
-            let can_operate = self.check_authority(caller);
+            let can_operate = self.check_authority(caller,"vault","remove_vault_token");
 
             if can_operate == false {
                 return false;
@@ -318,7 +338,8 @@ mod vault {
 
 
                 let caller = self.env().caller();
-                let can_operate = self.check_authority(caller);
+                
+                let can_operate = self.check_authority(caller,"vault","withdraw");
 
                 if can_operate == false {
                     return false;
