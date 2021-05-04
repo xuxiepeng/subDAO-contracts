@@ -20,6 +20,7 @@ mod dao_manager {
     use vote_manager::VoteManager;
 //    use github::Github;
     use template_manager::DAOTemplate;
+    use auth::Auth;
 
     /// DAO component instances
     #[derive(scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout)]
@@ -33,6 +34,7 @@ mod dao_manager {
         org: Option<OrgManager>,
         vault: Option<VaultManager>,
         vote: Option<VoteManager>,
+        auth: Option<Auth>,
     //    github: Option<Github>,
     }
 
@@ -55,6 +57,8 @@ mod dao_manager {
         vault_addr: Option<AccountId>,
         // vote module contract's address
         vote_addr: Option<AccountId>,
+        // auth module contract's address
+        auth_addr: Option<AccountId>,
         // github module contract's address
         // github_addr: Option<AccountId>,
     }
@@ -87,6 +91,7 @@ mod dao_manager {
                     org: None,
                     vault: None,
                     vote: None,
+                    auth:None,
                //     github: None,
                 },
                 component_addrs: DAOComponentAddrs {
@@ -95,6 +100,7 @@ mod dao_manager {
                     org_addr: None,
                     vault_addr: None,
                     vote_addr: None,
+                    auth_addr: None,
                   //  github_addr: None,
                 },
             }
@@ -114,12 +120,14 @@ mod dao_manager {
             let org_code_hash = components_hash_map.get("ORG");
             let vault_code_hash = components_hash_map.get("VAULT");
             let vote_code_hash = components_hash_map.get("VOTE");
+            let auth_code_hash = components_hash_map.get("AUTH");
           //  let github_code_hash = components_hash_map.get("GITHUB");
             self._init_base(base_code_hash, base_name, base_logo, base_desc, version);
             self._init_erc20(erc20_code_hash, erc20_name, erc20_symbol, erc20_initial_supply, erc20_decimals, version);
             self._init_org(org_code_hash, version);
             self._init_vault(vault_code_hash, version);
             self._init_vote(vote_code_hash, version);
+            self._init_auth(auth_code_hash,version);
            // self._init_github(github_code_hash);
 
             self.init = true;
@@ -247,6 +255,31 @@ mod dao_manager {
             self.component_addrs.org_addr = Some(org_addr);
             true
         }
+
+
+        /// init auth
+        fn _init_auth(&mut self, auth_code_hash: Option<&Hash>, version: u32) -> bool {
+            if auth_code_hash.is_none() {
+                return true;
+            }
+            let auth_code_hash = auth_code_hash.unwrap().clone();
+            let total_balance = Self::env().balance();
+            // instance auth
+            let salt = version.to_le_bytes();
+            let auth_instance_params = Auth::new(Self::env().account_id())
+                .endowment(total_balance / 4)
+                .code_hash(auth_code_hash)
+                .salt_bytes(salt)
+                .params();
+            let auth_init_result = ink_env::instantiate_contract(&auth_instance_params);
+            let auth_addr = auth_init_result.expect("failed at instantiating the `Auth` contract");
+            let auth_instance = ink_env::call::FromAccountId::from_account_id(auth_addr);
+            self.components.org = Some(auth_instance);
+            self.component_addrs.auth_addr = Some(auth_addr);
+            true
+        }
+
+
 
         /// init vault
         fn _init_vault(&mut self, vault_code_hash: Option<&Hash>, version: u32) -> bool {
