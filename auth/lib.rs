@@ -38,7 +38,7 @@ mod auth {
     )]
     pub struct Action {
         action_id: ActionId,
-        action_title: String, //used for front end display
+        action_title: String,
         contract_name: String,
         function_name: String,
     }
@@ -66,7 +66,7 @@ mod auth {
         #[ink(message)]
         pub fn has_permission(& self, account_id: AccountId, contract_name: String, function_name: String)  -> bool {
             if let Some(action) = self.actions.get(&(contract_name, function_name)) {
-                if let Some(auth) = self.actions_auths.get(&(account_id, action.action_id)) {
+                if let Some(_) = self.actions_auths.get(&(account_id, action.action_id)) {
                     return true;
                 }            
             }
@@ -76,8 +76,14 @@ mod auth {
         #[ink(message)]
         pub fn grant_permission(& mut self, account_id: AccountId, contract_name: String, function_name: String) ->  bool {
             assert!(self.owner == self.env().caller());
-            if let Some(&action) = self.actions.get(&(contract_name, function_name)){
-                self.actions_auths.insert((account_id, action.action_id), action);
+            if let Some(action) = self.actions.get(&(contract_name, function_name)){
+                let a: Action = Action{
+                    action_id: action.action_id,
+                    action_title: action.action_title.clone(),
+                    contract_name: action.contract_name.clone(),
+                    function_name: action.function_name.clone(),
+                };
+                self.actions_auths.insert((account_id, action.action_id), a);
                 return true;
            }
            return false;
@@ -102,9 +108,9 @@ mod auth {
             self.action_id += 1;
             let action = Action{
                 action_id,
-                action_title,
-                contract_name,
-                function_name,
+                action_title: action_title.clone(),
+                contract_name: contract_name.clone(),
+                function_name: function_name.clone(),
             };
             self.actions.insert((contract_name, function_name), action);
             true
@@ -122,9 +128,15 @@ mod auth {
         pub fn show_actions_by_contract(& self, contract_name: String) -> Vec<Action> {
         
             let mut actions_vec: Vec<Action> = Vec::new();
-            for ((cname, fname), &val) in &self.actions {
+            for ((cname, _), val) in &self.actions {
                 if  *cname == contract_name {
-                    actions_vec.push(val);
+                    let v: Action = Action {
+                        action_id: val.action_id,
+                        action_title: val.action_title.clone(),
+                        contract_name: val.contract_name.clone(),
+                        function_name: val.function_name.clone(),
+                    };
+                    actions_vec.push(v);
                 }
             }
             actions_vec
@@ -134,9 +146,15 @@ mod auth {
         pub fn show_actions_by_user(& self, owner: AccountId) -> Vec<Action> {
         
             let mut actions_vec: Vec<Action> = Vec::new();
-            for ((account_id, action_id), &val) in &self.actions_auths {
+            for ((account_id, _), val) in &self.actions_auths {
                 if *account_id == owner {
-                    actions_vec.push(val)
+                    let v: Action = Action {
+                        action_id: val.action_id,
+                        action_title: val.action_title.clone(),
+                        contract_name: val.contract_name.clone(),
+                        function_name: val.function_name.clone(),
+                    };
+                    actions_vec.push(v);
                 }
             }
             actions_vec
