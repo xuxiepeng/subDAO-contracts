@@ -260,12 +260,6 @@ mod vote_manager {
         }
 
         #[ink(message)]
-        pub fn test_transfer(&mut self, erc20_address:AccountId, to_address:AccountId, value:u64) -> bool {
-            let result = self.vault.withdraw(erc20_address, to_address, value);
-            result 
-        }
-
-        #[ink(message)]
         pub fn vote(&mut self, vote_id: VoteId, support_choice: u32, voter: AccountId) -> bool {
             if !self.vote_exists(vote_id) {
                 return false;
