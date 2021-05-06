@@ -67,31 +67,31 @@ mod auth {
         pub fn has_permission(& self, account_id: AccountId, contract_name: String, function_name: String)  -> bool {
             if let Some(action) = self.actions.get(&(contract_name, function_name)) {
                 if let Some(auth) = self.actions_auths.get(&(account_id, action.action_id)) {
-                    true 
+                    return true;
                 }            
             }
            return false;
         }
 
         #[ink(message)]
-        pub fn grant_permission(& mut self, account_id: AccountId, contract_name: String, function_name: String) ->  Result<(), String> {
+        pub fn grant_permission(& mut self, account_id: AccountId, contract_name: String, function_name: String) ->  bool {
             assert!(self.owner == self.env().caller());
-            if let Some(action) = self.actions.get(&(contract_name, function_name)){
-                self.actions_auths.insert(&(account_id, action.action_id), action);
-                Ok(())
+            if let Some(&action) = self.actions.get(&(contract_name, function_name)){
+                self.actions_auths.insert((account_id, action.action_id), action);
+                return true;
            }
-           Err("grant permission failed".to_string())
+           return false;
         }
 
 
         #[ink(message)]
-        pub fn revoke_permission(& mut self,account_id: AccountId,contract_name: String, function_name: String) -> Result<(), String> {
+        pub fn revoke_permission(& mut self,account_id: AccountId,contract_name: String, function_name: String) -> bool {
             assert!(self.owner == self.env().caller());
             if let Some(action) = self.actions.get(&(contract_name, function_name)){
                 self.actions_auths.take(&(account_id, action.action_id));
-                Ok(())
+                return true;
            }
-           Err("remove permission failed".to_string())
+           return false;
         }
 
         
@@ -106,7 +106,7 @@ mod auth {
                 contract_name,
                 function_name,
             };
-            self.actions.insert(&(contract_name, function_name), action);
+            self.actions.insert((contract_name, function_name), action);
             true
         }
 
@@ -122,9 +122,9 @@ mod auth {
         pub fn show_actions_by_contract(& self, contract_name: String) -> Vec<Action> {
         
             let mut actions_vec: Vec<Action> = Vec::new();
-            for ((cname, fname), val) in &self.actions {
-                if  cname == contract_name {
-                    actions_vec.push(&val);
+            for ((cname, fname), &val) in &self.actions {
+                if  *cname == contract_name {
+                    actions_vec.push(val);
                 }
             }
             actions_vec
@@ -134,9 +134,9 @@ mod auth {
         pub fn show_actions_by_user(& self, owner: AccountId) -> Vec<Action> {
         
             let mut actions_vec: Vec<Action> = Vec::new();
-            for ((account_id, action_id), val) in &self.actions_auths {
-                if account_id == owner {
-                    actions_vec.push(&val)
+            for ((account_id, action_id), &val) in &self.actions_auths {
+                if *account_id == owner {
+                    actions_vec.push(val)
                 }
             }
             actions_vec
