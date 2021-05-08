@@ -172,15 +172,76 @@ mod auth {
         };
 
         #[ink::test]
+        fn test_register_action() {
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+            let mut auth = Auth::new(accounts.alice);
+            let r = auth.register_action("hello".to_string(), "world".to_string(), "access".to_string());
+            match r {
+                true => ink_env::debug_println("success"),
+                false => ink_env::debug_println("failed"),
+            }
+        }
+
+        #[ink::test]
         fn test_grant_permission() {
             let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
             let mut auth = Auth::new(accounts.alice);
+            auth.register_action("hello".to_string(), "world".to_string(), "access".to_string());
             let r = auth.grant_permission(accounts.bob, "hello".to_string(), "world".to_string());
             match r {
-                Ok(()) => ink_env::debug_println("success"),
-                _ => ink_env::debug_println("failed"),
+                true => ink_env::debug_println("grant success"),
+                false => ink_env::debug_println("grant failed"),
             }
         }
+
+        #[ink::test]
+        fn test_has_permission() {
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+            let mut auth = Auth::new(accounts.alice);
+            auth.register_action("hello".to_string(), "world".to_string(), "access".to_string());
+            auth.grant_permission(accounts.bob, "hello".to_string(), "world".to_string());
+            let r1 = auth.has_permission(accounts.alice, "hello".to_string(), "world".to_string());
+            match r1 {
+                false => ink_env::debug_println("except result"),
+                true => ink_env::debug_println("not except"),
+            }
+            let r2 = auth.has_permission(accounts.bob, "hello".to_string(), "world".to_string());
+            match r2 {
+                true => ink_env::debug_println("except result"),
+                false => ink_env::debug_println("not except"),
+            }
+        }
+
+        #[ink::test]
+        fn test_revoke_permission() {
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+            let mut auth = Auth::new(accounts.alice);
+            auth.register_action("hello".to_string(), "world".to_string(), "access".to_string());
+            auth.grant_permission(accounts.bob, "hello".to_string(), "world".to_string());
+            let r1 = auth.has_permission(accounts.bob, "hello".to_string(), "world".to_string());
+            match r1 {
+                true => ink_env::debug_println("except result"),
+                false => ink_env::debug_println("not except"),
+            }
+            auth.revoke_permission(accounts.bob, "hello".to_string(), "world".to_string());
+            let r2 = auth.has_permission(accounts.bob, "hello".to_string(), "world".to_string());
+            match r2 {
+                false => ink_env::debug_println("except result"),
+                true => ink_env::debug_println("not except"),
+            }
+        }
+
+        #[ink::test]
+        fn test_show_actions_by_contract() {
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+            let mut auth = Auth::new(accounts.alice);
+            auth.register_action("hello".to_string(), "world".to_string(), "access".to_string());
+            let result = auth.show_actions_by_contract("hello".to_string());
+
+            for r in result.iter() {
+                ink_env::debug_println(&r.action_title.to_string());
+            }
+        } 
     }
 
 }
