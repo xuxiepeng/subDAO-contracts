@@ -290,8 +290,9 @@ mod dao_manager {
             let total_balance = Self::env().balance();
             // instance org
             let org_addr = self.component_addrs.org_addr.unwrap();
+            let auth_addr = self.component_addrs.auth_addr.unwrap();
             let salt = version.to_le_bytes();
-            let vault_instance_params = VaultManager::new(org_addr)
+            let vault_instance_params = VaultManager::new(org_addr,auth_addr)
                 .endowment(total_balance / 4)
                 .code_hash(vault_code_hash)
                 .salt_bytes(salt)
