@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xc568cca368c36beb50a2801a81a299b06ef056cc38bf8adba4f757d3f87ab359",
+    "hash": "0xe0fce1ac27831d7a45aa912d97a4326bd07b27aa6f420c393206b598571ae63e",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },

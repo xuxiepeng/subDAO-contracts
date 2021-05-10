@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x55ab2125909354ae419a385e125176f519c3a434539eca92fecf2369ab9ce9dd",
+    "hash": "0xed0f9d4ea72cfe4775c81553b1d9cecbdcd20f2415cf2c4c276b9fd1eb9ab0df",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -591,16 +591,7 @@
                     }
                   },
                   "name": "vote"
-                }
-              ]
-            }
-          },
-          "name": "components"
-        },
-        {
-          "layout": {
-            "struct": {
-              "fields": [
+                },
                 {
                   "layout": {
                     "enum": {
@@ -610,9 +601,18 @@
                           "fields": [
                             {
                               "layout": {
-                                "cell": {
-                                  "key": "0x0e00000000000000000000000000000000000000000000000000000000000000",
-                                  "ty": 2
+                                "struct": {
+                                  "fields": [
+                                    {
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0e00000000000000000000000000000000000000000000000000000000000000",
+                                          "ty": 2
+                                        }
+                                      },
+                                      "name": "account_id"
+                                    }
+                                  ]
                                 }
                               },
                               "name": null
@@ -625,8 +625,17 @@
                       }
                     }
                   },
-                  "name": "base_addr"
-                },
+                  "name": "auth"
+                }
+              ]
+            }
+          },
+          "name": "components"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
                 {
                   "layout": {
                     "enum": {
@@ -651,7 +660,7 @@
                       }
                     }
                   },
-                  "name": "erc20_addr"
+                  "name": "base_addr"
                 },
                 {
                   "layout": {
@@ -677,7 +686,7 @@
                       }
                     }
                   },
-                  "name": "org_addr"
+                  "name": "erc20_addr"
                 },
                 {
                   "layout": {
@@ -703,7 +712,7 @@
                       }
                     }
                   },
-                  "name": "vault_addr"
+                  "name": "org_addr"
                 },
                 {
                   "layout": {
@@ -729,7 +738,59 @@
                       }
                     }
                   },
+                  "name": "vault_addr"
+                },
+                {
+                  "layout": {
+                    "enum": {
+                      "dispatchKey": "0x1200000000000000000000000000000000000000000000000000000000000000",
+                      "variants": {
+                        "0": {
+                          "fields": [
+                            {
+                              "layout": {
+                                "cell": {
+                                  "key": "0x1300000000000000000000000000000000000000000000000000000000000000",
+                                  "ty": 2
+                                }
+                              },
+                              "name": null
+                            }
+                          ]
+                        },
+                        "1": {
+                          "fields": []
+                        }
+                      }
+                    }
+                  },
                   "name": "vote_addr"
+                },
+                {
+                  "layout": {
+                    "enum": {
+                      "dispatchKey": "0x1300000000000000000000000000000000000000000000000000000000000000",
+                      "variants": {
+                        "0": {
+                          "fields": [
+                            {
+                              "layout": {
+                                "cell": {
+                                  "key": "0x1400000000000000000000000000000000000000000000000000000000000000",
+                                  "ty": 2
+                                }
+                              },
+                              "name": null
+                            }
+                          ]
+                        },
+                        "1": {
+                          "fields": []
+                        }
+                      }
+                    }
+                  },
+                  "name": "auth_addr"
                 }
               ]
             }
@@ -904,6 +965,11 @@
             },
             {
               "name": "vote_addr",
+              "type": 14,
+              "typeName": "Option<AccountId>"
+            },
+            {
+              "name": "auth_addr",
               "type": 14,
               "typeName": "Option<AccountId>"
             }

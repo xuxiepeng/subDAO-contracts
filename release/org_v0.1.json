@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x0ea411bbea1fe8bf2b9a462b532a027c1904cc04553d2da1a302e9faefc23c06",
+    "hash": "0xfb03d70f2fc346ae17ca636e188f84b2967715a84fb1b0a9f2ce5643c4410249",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -173,6 +173,22 @@
           "type": 4
         },
         "selector": "0x54fafbf6"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "get_dao_owner"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "AccountId"
+          ],
+          "type": 4
+        },
+        "selector": "0xbbed0433"
       },
       {
         "args": [],
@@ -409,6 +425,32 @@
           "type": 14
         },
         "selector": "0xe5ef22d5"
+      },
+      {
+        "args": [
+          {
+            "name": "new_owner",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "transfer_ownership"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 14
+        },
+        "selector": "0x107e33ea"
       }
     ]
   },
@@ -588,6 +630,15 @@
           "layout": {
             "cell": {
               "key": "0x0500000002000000000000000000000000000000000000000000000000000000",
+              "ty": 4
+            }
+          },
+          "name": "owner"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0600000002000000000000000000000000000000000000000000000000000000",
               "ty": 10
             }
           },

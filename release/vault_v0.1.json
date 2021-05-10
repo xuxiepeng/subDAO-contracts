@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x9af12252a0bd09fd3747b36ae6ba57a4349e2135772c946f437cece40efd775d",
+    "hash": "0x938b46bd44ac43a3be42475304bc4420c68812d7bc245e754de9820d9e002b9f",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -18,6 +18,15 @@
         "args": [
           {
             "name": "org_contract_address",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "auth_contract_address",
             "type": {
               "displayName": [
                 "AccountId"
@@ -186,6 +195,24 @@
                 "AccountId"
               ],
               "type": 4
+            }
+          },
+          {
+            "name": "contract_name",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 13
+            }
+          },
+          {
+            "name": "function_name",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 13
             }
           }
         ],
@@ -667,6 +694,15 @@
             }
           },
           "name": "vault_contract_address"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0800000003000000000000000000000000000000000000000000000000000000",
+              "ty": 4
+            }
+          },
+          "name": "auth_contract_address"
         }
       ]
     }
