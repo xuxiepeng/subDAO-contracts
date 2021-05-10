@@ -155,7 +155,7 @@ mod org {
         pub fn add_dao_moderator(&mut self,name:String,moderator: AccountId) -> bool  {
             let caller = self.env().caller();
 
-            if &caller != & self.creator {
+            if &caller != & self.owner {
                 return false;
             }
 
@@ -196,7 +196,7 @@ mod org {
 
             let caller = self.env().caller();
 
-            if &caller != & self.creator {
+            if &caller != & self.owner {
                 return false;
             }
 
