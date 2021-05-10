@@ -179,7 +179,7 @@ mod vault {
 
 
         #[ink(message)]
-        pub fn check_authority(&self, caller:AccountId,contract_name,function_name) -> bool {
+        pub fn check_authority(&self, caller:AccountId,contract_name: String, function_name: String) -> bool {
             //return true;
             let  auth = self.get_auth_by_address(self.auth_contract_address);
 
