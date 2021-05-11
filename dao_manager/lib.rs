@@ -71,7 +71,7 @@ mod dao_manager {
         init: bool,
         controller: AccountId,
         org_id: u64,
-        template: DAOTemplate,
+        template: Option<DAOTemplate>,
         components: DAOComponents,
         component_addrs: DAOComponentAddrs,
     }
@@ -79,12 +79,12 @@ mod dao_manager {
     impl DAOManager {
         /// Constructor that initializes the `bool` value to the given `init_value`.
         #[ink(constructor)]
-        pub fn new(controller: AccountId, org_id: u64, template: DAOTemplate) -> Self {
+        pub fn new(controller: AccountId, org_id: u64) -> Self {
             Self {
                 init: false,
                 controller,
                 org_id,
-                template,
+                template: None,
                 components: DAOComponents {
                     base: None,
                     erc20: None,
@@ -107,14 +107,22 @@ mod dao_manager {
         }
 
         #[ink(message)]
+        pub fn set_template(&mut self, template: DAOTemplate) -> bool {
+            assert_eq!(self.init, false);
+            self.template = Some(template);
+            true
+        }
+
+        #[ink(message)]
         pub fn init(&mut self, base_name: String, base_logo: String, base_desc: String,
                     erc20_name: String, erc20_symbol: String, erc20_initial_supply: u64, erc20_decimals: u8, version: u32) -> bool {
             assert_eq!(self.init, false);
+            assert_eq!(self.template.is_some(), true);
             let controller = self.env().caller();
             assert_eq!(controller == self.controller, true);
 
             // init components
-            let components_hash_map = self.template.components.clone();
+            let components_hash_map = self.template.as_ref().unwrap().components.clone();
             let base_code_hash = components_hash_map.get("BASE");
             let erc20_code_hash = components_hash_map.get("ERC20");
             let org_code_hash = components_hash_map.get("ORG");

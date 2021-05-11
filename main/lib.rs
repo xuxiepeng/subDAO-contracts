@@ -116,7 +116,7 @@ mod main {
             let template = self.query_template_by_index(index);
             let dao_manager_code_hash = template.dao_manager_code_hash;
             let salt = version.to_le_bytes();
-            let dao_instance_params = DAOManager::new(controller, self.instance_index, template)
+            let dao_instance_params = DAOManager::new(controller, self.instance_index)
                 .endowment(total_balance / 4)
                 .code_hash(dao_manager_code_hash)
                 .salt_bytes(salt)
@@ -124,6 +124,7 @@ mod main {
             let dao_init_result = ink_env::instantiate_contract(&dao_instance_params);
             let dao_addr = dao_init_result.expect("failed at instantiating the `DAO Instance` contract");
             let mut dao_instance: DAOManager = ink_env::call::FromAccountId::from_account_id(dao_addr);
+            dao_instance.set_template(template);
             self.env().emit_event(InstanceDAO {
                 index: self.instance_index,
                 owner: Some(controller),
