@@ -12,6 +12,7 @@ VAULT_MODULE=vault
 VOTE_MODULE=vote_manager
 TEMPLATE_MODULE=template_manager
 REDPACKET_MODULE=redpacket
+AUTH_MODULE=auth
 
 function build_module() {
     m_name=$1
@@ -44,3 +45,4 @@ build_module ${VOTE_MODULE}
 build_module ${DAO_MODULE}
 build_module ${MAIN_MODULE}
 build_module ${REDPACKET_MODULE}
+build_module ${AUTH_MODULE}
