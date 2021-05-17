@@ -164,7 +164,7 @@ mod vault {
 
             let  auth = self.get_auth_by_address(self.auth_contract_address);
             
-            let is_permission = auth.has_permission(caller,"vault".to_string(),"add_vault_token".to_string());
+            let is_permission = auth.has_permission(caller,String::from("vault"),String::from("add_vault_token"));
 
             if is_permission == false {
                 return false;
@@ -197,7 +197,7 @@ mod vault {
 
             let  auth = self.get_auth_by_address(self.auth_contract_address);
 
-            let is_permission = auth.has_permission(caller,"vault".to_string(),"remove_vault_token".to_string());
+            let is_permission = auth.has_permission(caller,String::from("vault"),String::from("remove_vault_token"));
 
             if is_permission == false {
                 return false;
@@ -317,7 +317,7 @@ mod vault {
 
                 let  auth = self.get_auth_by_address(self.auth_contract_address);
     
-                let is_permission = auth.has_permission(caller,"vault".to_string(),"withdraw".to_string());
+                let is_permission = auth.has_permission(caller,String::from("vault"),String::from("withdraw"));
     
                 if is_permission == false {
                     return false;
