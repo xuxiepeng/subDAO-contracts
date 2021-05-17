@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x70e06f2876748f2416fd44b2d18e2437989c17d969dd9e2258b658fd5f663e4a",
+    "hash": "0x53e9d38a8428eabab95b396698024d741da8f0f3f7862f0dc61052f8b3476881",
     "language": "ink! 3.0.0-rc1",
-    "compiler": "rustc 1.50.0-nightly"
+    "compiler": "rustc 1.53.0-nightly"
   },
   "contract": {
     "name": "org",
@@ -17,7 +17,7 @@
       {
         "args": [
           {
-            "name": "_creator",
+            "name": "_owner",
             "type": {
               "displayName": [
                 "AccountId"
@@ -163,7 +163,7 @@
         "docs": [],
         "mutates": false,
         "name": [
-          "get_dao_creator"
+          "get_dao_owner"
         ],
         "payable": false,
         "returnType": {
@@ -172,7 +172,7 @@
           ],
           "type": 4
         },
-        "selector": "0x29e1aeed"
+        "selector": "0x623dd5e6"
       },
       {
         "args": [],
@@ -409,6 +409,32 @@
           "type": 14
         },
         "selector": "0xd807454b"
+      },
+      {
+        "args": [
+          {
+            "name": "new_owner",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "transfer_ownership"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 14
+        },
+        "selector": "0x652486fd"
       }
     ]
   },
@@ -582,7 +608,7 @@
               "ty": 4
             }
           },
-          "name": "creator"
+          "name": "owner"
         },
         {
           "layout": {

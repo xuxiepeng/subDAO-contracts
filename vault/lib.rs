@@ -152,10 +152,10 @@ mod vault {
             //return true;
             let  org = self.get_orgmanager_by_address(self.org_contract_address);
 
-            let creator = org.get_dao_creator();
+            let owner = org.get_dao_owner();
             let moderator_list = org.get_dao_moderator_list();
 
-            if caller == creator {
+            if caller == owner {
                 return true;
             }
             for key in moderator_list {
@@ -277,7 +277,11 @@ mod vault {
 
                 let token_name = (&erc_20).name();
 
-                erc_20.transfer_from(from_address,to_address, value);
+                let transfer_result = erc_20.transfer_from(from_address,to_address, value);
+
+                if transfer_result == false {
+                    return false;
+                }
 
                 let transfer_id:u64 = (self.transfer_history.len()+1).into();
 
@@ -324,9 +328,7 @@ mod vault {
                     return false;
                 }
 
-
                 // let  balanceof =  self.get_balance_of(erc_20_address);
-
 
                 //let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
                 let mut erc_20 = self.get_erc20_by_address(erc_20_address);
@@ -334,9 +336,12 @@ mod vault {
                 let token_name = (&erc_20).name();
 
                 //erc_20.transfer_from(from_address,to_address, value);
-                erc_20.transfer(to_address, value);
 
+                let transfer_result  = erc_20.transfer(to_address, value);
 
+                if transfer_result == false {
+                    return false;
+                }
 
                 let transfer_id:u64 = (self.transfer_history.len()+1).into();
 
