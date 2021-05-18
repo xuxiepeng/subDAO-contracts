@@ -48,7 +48,7 @@ mod red_packet_manager {
         // is refund by creator
         is_refund: bool,
     }
-    
+
     #[ink(storage)]
     pub struct RedPacketManager {
         // contract creator
@@ -67,10 +67,6 @@ mod red_packet_manager {
         id: u64,
         #[ink(topic)]
         creator: AccountId,
-        #[ink(topic)]
-        token_type: u8,
-        #[ink(topic)]
-        total_tokens: u64,
     }
 
     impl RedPacketManager {
@@ -129,12 +125,10 @@ mod red_packet_manager {
                 is_refund: false,
             });
             // TODO emit event get trapped
-            // self.env().emit_event(CreatedRedPacket {
-            //     id: self.index,
-            //     creator: from,
-            //     token_type,
-            //     total_tokens,
-            // });
+            self.env().emit_event(CreatedRedPacket {
+                id: self.index,
+                creator: from,
+            });
             true
         }
 
