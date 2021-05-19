@@ -159,24 +159,6 @@ mod dao_manager {
             erc20.destroy_token_by_owner(from, value)
         }
 
-        #[ink(message)]
-        pub fn add_dao_moderator(&mut self, name: String, moderator: AccountId) -> bool {
-            let controller = self.env().caller();
-            assert_eq!(self.components.org.is_some(), true);
-            assert_eq!(controller == self.controller, true);
-            let org = self.components.org.as_mut().unwrap();
-            org.add_dao_moderator(name, moderator)
-        }
-
-        #[ink(message)]
-        pub fn remove_dao_moderator(&mut self, member: AccountId) -> bool {
-            let controller = self.env().caller();
-            assert_eq!(self.components.org.is_some(), true);
-            assert_eq!(controller == self.controller, true);
-            let org = self.components.org.as_mut().unwrap();
-            org.remove_dao_moderator(member)
-        }
-
         /// init base
         fn _init_base(&mut self, base_code_hash: Option<&Hash>,
                       base_name: String, base_logo: String, base_desc: String) -> bool {
@@ -230,7 +212,7 @@ mod dao_manager {
             let org_code_hash = org_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
             // instance org
-            let org_instance_params = OrgManager::new(Self::env().account_id(), self.org_id)
+            let org_instance_params = OrgManager::new(self.controller, self.org_id)
                 .endowment(total_balance / 4)
                 .code_hash(org_code_hash)
                 .params();
