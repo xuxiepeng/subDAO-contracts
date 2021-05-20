@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x5aedb05d3e85e61cfe0f81bada52758c471db31d1b5da56352e3260850344172",
+    "hash": "0x4e77af1ed842d7578582f13c9ee338825b1bb1681baf34bf8b74e1272af4106f",
     "language": "ink! 3.0.0-rc1",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -66,28 +66,6 @@
                 "AccountId"
               ],
               "type": 1
-            }
-          },
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "token_type",
-            "type": {
-              "displayName": [
-                "u8"
-              ],
-              "type": 3
-            }
-          },
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "total_tokens",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 4
             }
           }
         ],

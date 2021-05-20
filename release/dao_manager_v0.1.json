@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x3f0883d94a70a684d2c47454f76b7a2bdf878eef11e3931ada69c3b8cf5d7d32",
+    "hash": "0xf250f7d34fc048e992a2ff6fdda164d2ff1344f5248b7009471f1e52daa15b14",
     "language": "ink! 3.0.0-rc1",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -256,67 +256,6 @@
           "type": 1
         },
         "selector": "0x8b31777e"
-      },
-      {
-        "args": [
-          {
-            "name": "name",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 6
-            }
-          },
-          {
-            "name": "moderator",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 2
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "add_dao_moderator"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 1
-        },
-        "selector": "0x75b5bf28"
-      },
-      {
-        "args": [
-          {
-            "name": "member",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 2
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "remove_dao_moderator"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 1
-        },
-        "selector": "0xf555353e"
       }
     ]
   },
