@@ -122,6 +122,10 @@ mod dao_manager {
             self._init_vote(vote_code_hash);
             self._init_github(github_code_hash);
 
+            // transfer ownership
+            let mut org = self.components.org.as_ref().unwrap().clone();
+            org.transfer_ownership(self.controller);
+
             self.init = true;
             true
         }
@@ -212,7 +216,7 @@ mod dao_manager {
             let org_code_hash = org_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
             // instance org
-            let org_instance_params = OrgManager::new(self.controller, self.org_id)
+            let org_instance_params = OrgManager::new(Self::env().account_id(), self.org_id)
                 .endowment(total_balance / 4)
                 .code_hash(org_code_hash)
                 .params();
