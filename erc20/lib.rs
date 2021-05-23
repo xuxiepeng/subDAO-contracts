@@ -18,9 +18,9 @@ mod erc20 {
         symbol: String,
         total_supply: u64,
         decimals: u8,
+        owner: AccountId,
         balances: StorageHashMap<AccountId, u64>,
         allowances: StorageHashMap<(AccountId, AccountId), u64>,
-        owner: AccountId,
     }
 
     #[ink(event)]
@@ -47,8 +47,7 @@ mod erc20 {
         #[ink(constructor)]
         pub fn new(name: String, symbol: String, initial_supply: u64, decimals: u8, controller: AccountId) -> Self {
             let mut balances = StorageHashMap::new();
-            balances.insert(controller, initial_supply);
-            let instance = Self {
+            let mut instance = Self {
                 name: name,
                 symbol: symbol,
                 total_supply: initial_supply,
@@ -57,11 +56,7 @@ mod erc20 {
                 allowances: StorageHashMap::new(),
                 owner: controller,
             };
-            Self::env().emit_event(Transfer {
-                from: None,
-                to: Some(controller),
-                value: initial_supply,
-            });
+            instance._mint_token(controller, initial_supply);
             instance
         }
 
@@ -135,6 +130,17 @@ mod erc20 {
         }
 
         #[ink(message)]
+        pub fn transfer_owner(
+            &mut self,
+            to: AccountId,
+        ) -> bool {
+            let caller = self.env().caller();
+            assert_eq!(caller == self.owner, true);
+            self.owner = to;
+            true
+        }
+
+        #[ink(message)]
         pub fn mint_token_by_owner(
             &mut self,
             to: AccountId,
@@ -151,8 +157,7 @@ mod erc20 {
             from: AccountId,
             value: u64,
         ) -> bool {
-            let caller = self.env().caller();
-            assert_eq!(caller == self.owner, true);
+            assert_eq!(value > 0, true);
             self._destroy_token(from, value)
         }
 

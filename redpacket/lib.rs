@@ -67,10 +67,6 @@ mod red_packet_manager {
         id: u64,
         #[ink(topic)]
         creator: AccountId,
-        #[ink(topic)]
-        token_type: u8,
-        #[ink(topic)]
-        total_tokens: u64,
     }
 
     impl RedPacketManager {
@@ -89,16 +85,16 @@ mod red_packet_manager {
 
         #[ink(message)]
         pub fn create_red_packet(&mut self, token_type: u8, if_random: u8, total_number: u64,
-                                 end_time: u64, token_addr: AccountId, total_tokens: u64, password: Hash) -> bool {
+                                 end_time: u64, token_addr: AccountId, total_tokens: u64, password: Hash) -> u64 {
             let from = self.env().caller();
-            assert!(self.index + 1 > self.index, "cannot create red packet more");
-            assert!(token_type == 0 || token_type == 1, "wrong token type");
-            assert!(if_random == 0 || if_random == 1, "wrong token type");
+            // assert!(self.index + 1 > self.index, "cannot create red packet more");
+            // assert!(token_type == 0 || token_type == 1, "wrong token type");
+            // assert!(if_random == 0 || if_random == 1, "wrong token type");
 
             let start_time = self.env().block_timestamp();
             let contract_addr = self.env().account_id();
             self.index += 1;
-            assert!(start_time < end_time, "end time wrong");
+            // assert!(start_time < end_time, "end time wrong");
 
             let mut token_addr = token_addr;
             let claimed_number = 0;
@@ -129,13 +125,28 @@ mod red_packet_manager {
                 is_refund: false,
             });
             // TODO emit event get trapped
-            // self.env().emit_event(CreatedRedPacket {
-            //     id: self.index,
-            //     creator: from,
-            //     token_type,
-            //     total_tokens,
-            // });
+            self.env().emit_event(CreatedRedPacket {
+                id: self.index,
+                creator: from,
+            });
+            self.index
+        }
+
+        #[ink(message)]
+        pub fn transfer_token(&mut self, token_addr: AccountId, total_tokens: u64) -> bool {
+            let from = self.env().caller();
+            let contract_addr = self.env().account_id();
+            let mut token :Erc20 = ink_env::call::FromAccountId::from_account_id(token_addr);
+            assert!(token.transfer_from(from, contract_addr, total_tokens), "transfer_from token failed");
             true
+        }
+
+        #[ink(message)]
+        pub fn allowance_token(&mut self, token_addr: AccountId) -> u64 {
+            let from = self.env().caller();
+            let contract_addr = self.env().account_id();
+            let mut token :Erc20 = ink_env::call::FromAccountId::from_account_id(token_addr);
+            token.allowance(from, contract_addr)
         }
 
         #[ink(message)]
