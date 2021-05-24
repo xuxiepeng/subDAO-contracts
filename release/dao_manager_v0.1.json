@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x3ae9d7c86240b0cd5f965f8715f75f1d0536509dceedb0282220aecb7aad1f35",
+    "hash": "0x766b7347879622f2ce03f779f2862c6adfc0dad1f05eb255e7b9ce561bba51b8",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -17,7 +17,7 @@
       {
         "args": [
           {
-            "name": "controller",
+            "name": "owner",
             "type": {
               "displayName": [
                 "AccountId"
@@ -76,73 +76,10 @@
       {
         "args": [
           {
-            "name": "base_name",
+            "name": "params",
             "type": {
               "displayName": [
-                "String"
-              ],
-              "type": 6
-            }
-          },
-          {
-            "name": "base_logo",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 6
-            }
-          },
-          {
-            "name": "base_desc",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 6
-            }
-          },
-          {
-            "name": "erc20_name",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 6
-            }
-          },
-          {
-            "name": "erc20_symbol",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 6
-            }
-          },
-          {
-            "name": "erc20_initial_supply",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 5
-            }
-          },
-          {
-            "name": "erc20_decimals",
-            "type": {
-              "displayName": [
-                "u8"
-              ],
-              "type": 4
-            }
-          },
-          {
-            "name": "version",
-            "type": {
-              "displayName": [
-                "u32"
+                "DAOInitParams"
               ],
               "type": 12
             }
@@ -151,7 +88,7 @@
         "docs": [],
         "mutates": true,
         "name": [
-          "init"
+          "init_by_params"
         ],
         "payable": false,
         "returnType": {
@@ -160,7 +97,7 @@
           ],
           "type": 1
         },
-        "selector": "0x44d6441f"
+        "selector": "0x9345b6c5"
       },
       {
         "args": [],
@@ -174,175 +111,9 @@
           "displayName": [
             "DAOComponentAddrs"
           ],
-          "type": 13
+          "type": 22
         },
         "selector": "0x063f051b"
-      },
-      {
-        "args": [
-          {
-            "name": "to",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 2
-            }
-          },
-          {
-            "name": "value",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 5
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "transfer"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 1
-        },
-        "selector": "0x84a15da1"
-      },
-      {
-        "args": [
-          {
-            "name": "to",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 2
-            }
-          },
-          {
-            "name": "value",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 5
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "mint_token_by_owner"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 1
-        },
-        "selector": "0xa9b6f1b0"
-      },
-      {
-        "args": [
-          {
-            "name": "from",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 2
-            }
-          },
-          {
-            "name": "value",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 5
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "destroy_token_by_owner"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 1
-        },
-        "selector": "0x61143ff8"
-      },
-      {
-        "args": [
-          {
-            "name": "name",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 6
-            }
-          },
-          {
-            "name": "moderator",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 2
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "add_dao_moderator"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 1
-        },
-        "selector": "0xd9c6b562"
-      },
-      {
-        "args": [
-          {
-            "name": "member",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 2
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "remove_dao_moderator"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 1
-        },
-        "selector": "0xbbbbce3c"
       }
     ]
   },
@@ -365,7 +136,7 @@
               "ty": 2
             }
           },
-          "name": "controller"
+          "name": "owner"
         },
         {
           "layout": {
@@ -970,7 +741,195 @@
     },
     {
       "def": {
-        "primitive": "u32"
+        "composite": {
+          "fields": [
+            {
+              "name": "base",
+              "type": 13,
+              "typeName": "BaseParam"
+            },
+            {
+              "name": "erc20",
+              "type": 14,
+              "typeName": "ERC20Param"
+            },
+            {
+              "name": "erc20Transfers",
+              "type": 15,
+              "typeName": "BTreeMap<AccountId, u64>"
+            },
+            {
+              "name": "org",
+              "type": 18,
+              "typeName": "OrgParam"
+            }
+          ]
+        }
+      },
+      "path": [
+        "dao_manager",
+        "dao_manager",
+        "DAOInitParams"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "owner",
+              "type": 2,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "name",
+              "type": 6,
+              "typeName": "String"
+            },
+            {
+              "name": "logo",
+              "type": 6,
+              "typeName": "String"
+            },
+            {
+              "name": "desc",
+              "type": 6,
+              "typeName": "String"
+            }
+          ]
+        }
+      },
+      "path": [
+        "dao_manager",
+        "dao_manager",
+        "BaseParam"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "owner",
+              "type": 2,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "name",
+              "type": 6,
+              "typeName": "String"
+            },
+            {
+              "name": "symbol",
+              "type": 6,
+              "typeName": "String"
+            },
+            {
+              "name": "total_supply",
+              "type": 5,
+              "typeName": "u64"
+            },
+            {
+              "name": "decimals",
+              "type": 4,
+              "typeName": "u8"
+            }
+          ]
+        }
+      },
+      "path": [
+        "dao_manager",
+        "dao_manager",
+        "ERC20Param"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "type": 17,
+              "typeName": "[(K, V)]"
+            }
+          ]
+        }
+      },
+      "params": [
+        16
+      ],
+      "path": [
+        "BTreeMap"
+      ]
+    },
+    {
+      "def": {
+        "tuple": [
+          2,
+          5
+        ]
+      }
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 16
+        }
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "owner",
+              "type": 2,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "moderators",
+              "type": 19,
+              "typeName": "BTreeMap<String, AccountId>"
+            }
+          ]
+        }
+      },
+      "path": [
+        "dao_manager",
+        "dao_manager",
+        "OrgParam"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "type": 21,
+              "typeName": "[(K, V)]"
+            }
+          ]
+        }
+      },
+      "params": [
+        20
+      ],
+      "path": [
+        "BTreeMap"
+      ]
+    },
+    {
+      "def": {
+        "tuple": [
+          6,
+          2
+        ]
+      }
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 20
+        }
       }
     },
     {
@@ -979,32 +938,32 @@
           "fields": [
             {
               "name": "base_addr",
-              "type": 14,
+              "type": 23,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "erc20_addr",
-              "type": 14,
+              "type": 23,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "org_addr",
-              "type": 14,
+              "type": 23,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "vault_addr",
-              "type": 14,
+              "type": 23,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "vote_addr",
-              "type": 14,
+              "type": 23,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "auth_addr",
-              "type": 14,
+              "type": 23,
               "typeName": "Option<AccountId>"
             }
           ]

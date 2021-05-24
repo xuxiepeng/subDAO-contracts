@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xe0fce1ac27831d7a45aa912d97a4326bd07b27aa6f420c393206b598571ae63e",
+    "hash": "0x0dc5f24ae38d7f5864b98f8868b6794d45bfc0f12d8798f993facd985f40a955",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -66,28 +66,6 @@
                 "AccountId"
               ],
               "type": 1
-            }
-          },
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "token_type",
-            "type": {
-              "displayName": [
-                "u8"
-              ],
-              "type": 3
-            }
-          },
-          {
-            "docs": [],
-            "indexed": true,
-            "name": "total_tokens",
-            "type": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 4
             }
           }
         ],
@@ -170,11 +148,72 @@
         "payable": false,
         "returnType": {
           "displayName": [
+            "u64"
+          ],
+          "type": 4
+        },
+        "selector": "0x1c30b046"
+      },
+      {
+        "args": [
+          {
+            "name": "token_addr",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "name": "total_tokens",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "transfer_token"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
             "bool"
           ],
           "type": 15
         },
-        "selector": "0x1c30b046"
+        "selector": "0x051dcbf9"
+      },
+      {
+        "args": [
+          {
+            "name": "token_addr",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "allowance_token"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "u64"
+          ],
+          "type": 4
+        },
+        "selector": "0x5d462ef7"
       },
       {
         "args": [
