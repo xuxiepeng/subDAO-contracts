@@ -156,54 +156,19 @@ mod vault {
 
         }
 
-        // #[ink(message)]
-        // pub fn check_authority(&self, caller:AccountId) -> bool {
-        //     //return true;
-        //     let  org = self.get_orgmanager_by_address(self.org_contract_address);
-
-        //     let creator = org.get_dao_creator();
-        //     let moderator_list = org.get_dao_moderator_list();
-
-        //     if caller == creator {
-        //         return true;
-        //     }
-        //     for key in moderator_list {
-        //         let moderator = key;
-        //         if caller == moderator {
-        //             return true;
-        //         }
-        //     }
-        //     return false;
-
-        // }
-
-
-        #[ink(message)]
-        pub fn check_authority(&self, caller:AccountId,contract_name: String, function_name: String) -> bool {
-            //return true;
-            let  auth = self.get_auth_by_address(self.auth_contract_address);
-
-            let is_permission = auth.has_permission(caller, contract_name, function_name);
-            return is_permission;
-
-        }
-
-
-
 
         #[ink(message)]
         pub fn add_vault_token(&mut self,erc_20_address:AccountId) -> bool  {
 
             let caller = self.env().caller();
 
-          //  let can_operate = self.check_authority(caller,"vault".to_string(),"add_vault_token".to_string());
-            let can_operate = true;
+            let  auth = self.get_auth_by_address(self.auth_contract_address);
+            
+            let is_permission = auth.has_permission(caller,"vault".to_string(),"add_vault_token".to_string());
 
-
-            if can_operate == false {
+            if is_permission == false {
                 return false;
             }
-
 
             match self.tokens.insert(
                                      erc_20_address,self.vault_contract_address
@@ -229,11 +194,16 @@ mod vault {
         pub fn remove_vault_token(&mut self,erc_20_address: AccountId) -> bool  {
 
             let caller = self.env().caller();
-           // let can_operate = self.check_authority(caller,"vault".to_string(),"remove_vault_token".to_string());
-            let can_operate = true;
-            if can_operate == false {
+
+            let  auth = self.get_auth_by_address(self.auth_contract_address);
+
+            let is_permission = auth.has_permission(caller,"vault".to_string(),"remove_vault_token".to_string());
+
+            if is_permission == false {
                 return false;
             }
+
+
 
             match self.visible_tokens.take(&erc_20_address) {
                 None => { false}
@@ -298,7 +268,12 @@ mod vault {
 
                 let token_name = (&erc_20).name();
 
-                erc_20.transfer_from(from_address,to_address, value);
+                
+                let transfer_result = erc_20.transfer_from(from_address,to_address, value);
+
+                if transfer_result == false {
+                    return false;
+                }
 
                 let transfer_id:u64 = (self.transfer_history.len()+1).into();
 
@@ -339,12 +314,15 @@ mod vault {
 
 
                 let caller = self.env().caller();
-                
-               // let can_operate = self.check_authority(caller,"vault".to_string(),"withdraw".to_string());
-               let can_operate = true;
-                if can_operate == false {
+
+                let  auth = self.get_auth_by_address(self.auth_contract_address);
+    
+                let is_permission = auth.has_permission(caller,"vault".to_string(),"withdraw".to_string());
+    
+                if is_permission == false {
                     return false;
                 }
+
 
 
                 // let  balanceof =  self.get_balance_of(erc_20_address);
@@ -356,9 +334,12 @@ mod vault {
                 let token_name = (&erc_20).name();
 
                 //erc_20.transfer_from(from_address,to_address, value);
-                erc_20.transfer(to_address, value);
+                
+                let transfer_result  = erc_20.transfer(to_address, value);
 
-
+                if transfer_result == false {
+                    return false;
+                }
 
                 let transfer_id:u64 = (self.transfer_history.len()+1).into();
 

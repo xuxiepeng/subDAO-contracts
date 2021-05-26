@@ -19,7 +19,7 @@ mod org {
 
         moderators: StorageHashMap<AccountId, String>,
         members: StorageHashMap<AccountId, String>,
-        creator: AccountId,
+        applying_members: StorageHashMap<AccountId, String>,
         owner: AccountId,
         org_id:u64,
     }
@@ -69,23 +69,39 @@ mod org {
     }
 
 
+
+    #[ink(event)]
+    pub struct ApplyDAOMemberEvent {
+        #[ink(topic)]
+        member: AccountId,
+        #[ink(topic)]
+        org_id:u64,
+    }
+
+    #[ink(event)]
+    pub struct ApproveDAOMemberEvent {
+        #[ink(topic)]
+        member: AccountId,
+        #[ink(topic)]
+        org_id:u64,
+        #[ink(topic)]
+        approver: AccountId,
+    }
+
+
     impl OrgManager {
 
         #[ink(constructor)]
-        pub fn new(_creator: AccountId,org_id:u64) -> Self {
+        pub fn new(_owner: AccountId,org_id:u64) -> Self {
             Self {
-                creator: _creator,
                 org_id:org_id,
-                owner:_creator,
+                owner:_owner,
                 moderators: StorageHashMap::default(),
                 members: StorageHashMap::default(),
+                applying_members: StorageHashMap::default(),
             }
         }
 
-        #[ink(message)]
-        pub fn get_dao_creator(&self) -> AccountId {
-            self.creator
-        }
 
         #[ink(message)]
         pub fn get_dao_owner(&self) -> AccountId {
@@ -155,7 +171,8 @@ mod org {
         pub fn add_dao_moderator(&mut self,name:String,moderator: AccountId) -> bool  {
             let caller = self.env().caller();
 
-            if &caller != & self.owner {
+            
+            if caller != self.owner {
                 return false;
             }
 
@@ -196,7 +213,7 @@ mod org {
 
             let caller = self.env().caller();
 
-            if &caller != & self.owner {
+            if caller !=  self.owner {
                 return false;
             }
 
@@ -255,14 +272,82 @@ mod org {
             let caller = self.env().caller();
 
             // only owner can transfer the ownership of the org
-            if &caller != & self.owner {
+            if caller != self.owner {
                 return false;
             }
 
             self.owner = new_owner;
             return true;
         }
+        #[ink(message)]
+        pub fn apply_member(&mut self,name:String,member: AccountId) -> bool {
+            match self.applying_members.insert(member,name) {
+                Some(_) => { false},
+                None => {
+                    let org_id = self.org_id;
+                    self.env().emit_event(ApplyDAOMemberEvent{
+                        member,
+                        org_id,
+                    });
+                    true
+                }
+            }
+
+        }
+
+
+   
+        pub fn check_authority(&self, caller:AccountId) -> bool {
+
+                let moderator_list = self.get_dao_moderator_list();
+
+                if caller == self.owner {
+                    return true;
+                }
+                for key in moderator_list {
+                    let moderator = key;
+                    if caller == moderator {
+                        return true;
+                    }
+                }
+                return false;
+
+        }
+
+
+        #[ink(message)]
+        pub fn approve_member(&mut self,name:String,member: AccountId) -> bool {
+
+            let caller = self.env().caller();
+
+            let can_operate = self.check_authority(caller);
+
+            if can_operate == false {
+                return false;
+            }
+
+            if self.applying_members.contains_key(&member) {
+                let caller_new = self.env().caller();
+                self.add_dao_member(name,member);
+                self.applying_members.take(&member);
+                let org_id = self.org_id;
+
+                self.env().emit_event(ApproveDAOMemberEvent{
+                    member,
+                    org_id,
+                    approver:caller_new,
+                });
+
+                return true;
+            };
+            return false;
+
+        }
+
     }
+
+        
+    
 
 
     /// Unit tests

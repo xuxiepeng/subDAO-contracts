@@ -19,7 +19,6 @@ erc20 = { version = "0.1.0", path = "../erc20", default-features = false, featur
 org = { version = "0.1.0", path = "../org", default-features = false, features = ["ink-as-dependency"] }
 auth = { version = "0.1.0", path = "../auth", default-features = false, features = ["ink-as-dependency"] }
 
-
 [lib]
 name = "vault"
 path = "lib.rs"
