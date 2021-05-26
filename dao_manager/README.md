@@ -52,8 +52,37 @@ definition: pub fn new(controller: AccountId, org_id: u64, template: DAOTemplate
 init module with erc20 params and vote params.
 ```bash
 type: tx
-definition: pub fn init(&mut self, base_name: String, base_logo: String, base_desc: String,
-                    erc20_name: String, erc20_symbol: String, erc20_initial_supply: u64, erc20_decimals: u8) -> bool;
+definition: pub fn init_by_params(&mut self, params: DAOInitParams) -> bool;
+if you want init erc20, you must init vault;
+if you want init vote, you must init vault;
+if you want init vault, you must init org and auth;
+param description:
+{
+  "base": {
+    "owner": "5Fxxx",
+    "name": "test",
+    "logo": "xx",
+    "desc": "xx"
+  },
+  "erc20": {
+    "owner": "5Fxxx",
+    "name": "xx",
+    "symbol": "xx",
+    "totalSupply": 100,
+    "decimals": 0 
+  },
+  "erc20Transfers": {
+    "5Fxxx": 100,
+    "5Fxxx": 100
+  },
+  "org": {
+    "owner": "5Fxxx",
+    "moderators": {
+      "xxx": "5Fxxx",
+      "xxx": "5Fxxx"
+    }
+  }
+}
 ```
 
 ### query component addresses
@@ -61,41 +90,6 @@ query component addresses.
 ```bash
 type: query
 definition: pub fn query_component_addrs(&self) -> DAOComponentAddrs;
-```
-
-### transfer erc20 from owner
-transfer erc20 to other from owner.
-```bash
-type: tx
-definition: pub fn transfer(&mut self, to: AccountId, value: u64) -> bool;
-```
-
-### mint erc20 to account
-mint erc20 by owner to account.
-```bash
-type: tx
-definition: pub fn mint_token_by_owner(&mut self, to: AccountId, value: u64, ) -> bool;
-```
-
-### destroy erc20 to account
-destroy erc20 by owner to account.
-```bash
-type: tx
-definition: pub fn destroy_token_by_owner(&mut self, from: AccountId, value: u64) -> bool;
-```
-
-### add moderator to DAO
-add moderator by owner to DAO.
-```bash
-type: tx
-definition: pub fn add_dao_moderator(&mut self, name: String, moderator: AccountId) -> bool;
-```
-
-### remove moderator to DAO
-remove moderator by owner to DAO.
-```bash
-type: tx
-definition: pub fn remove_dao_moderator(&mut self, member: AccountId) -> bool;
 ```
 
 

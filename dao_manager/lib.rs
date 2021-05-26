@@ -198,8 +198,10 @@ mod dao_manager {
             // self._init_github(github_code_hash);
 
             // after init, handler some logic
-            let mut vault_instance = self.components.vault.as_ref().unwrap().clone();
-            vault_instance.add_vault_token(self.component_addrs.erc20_addr.unwrap());
+            if self.components.vault.is_some() && self.components.erc20.is_some() {
+                let mut vault_instance = self.components.vault.as_mut().unwrap();
+                vault_instance.add_vault_token(self.component_addrs.erc20_addr.unwrap());
+            }
 
             self.init = true;
             true
@@ -262,6 +264,7 @@ mod dao_manager {
                 erc20_instance.mint_token_by_owner(*to, *amount);
                 transfer += amount;
             }
+            assert!(self.components.vault.is_some(), "not init vault");
             erc20_instance.mint_token_by_owner(self.component_addrs.vault_addr.unwrap(), param.total_supply - transfer);
             erc20_instance.transfer_owner(param.owner);
 
@@ -331,6 +334,8 @@ mod dao_manager {
             let vault_code_hash = vault_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
             // instance org
+            assert!(self.components.org.is_some(), "not init org");
+            assert!(self.components.auth.is_some(), "not init auth");
             let org_addr = self.component_addrs.org_addr.unwrap();
             let auth_addr = self.component_addrs.auth_addr.unwrap();
             let salt = version.to_le_bytes();
@@ -355,6 +360,7 @@ mod dao_manager {
             let vote_code_hash = vote_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
             // instance org
+            assert!(self.components.vault.is_some(), "not init vault");
             let vault_addr = self.component_addrs.vault_addr.unwrap();
             let salt = version.to_le_bytes();
             let vote_instance_params = VoteManager::new(vault_addr)
