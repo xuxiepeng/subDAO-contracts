@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x766b7347879622f2ce03f779f2862c6adfc0dad1f05eb255e7b9ce561bba51b8",
+    "hash": "0xec1203b1642b364ac63c65b150bfca9da8db93057cda5e5d5c26febe8e37c2e3",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -74,6 +74,22 @@
         "selector": "0x441c77a1"
       },
       {
+        "args": [],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "get_balance"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "u128"
+          ],
+          "type": 12
+        },
+        "selector": "0xea817e65"
+      },
+      {
         "args": [
           {
             "name": "params",
@@ -81,7 +97,7 @@
               "displayName": [
                 "DAOInitParams"
               ],
-              "type": 12
+              "type": 13
             }
           }
         ],
@@ -111,7 +127,7 @@
           "displayName": [
             "DAOComponentAddrs"
           ],
-          "type": 22
+          "type": 23
         },
         "selector": "0x063f051b"
       }
@@ -741,26 +757,31 @@
     },
     {
       "def": {
+        "primitive": "u128"
+      }
+    },
+    {
+      "def": {
         "composite": {
           "fields": [
             {
               "name": "base",
-              "type": 13,
+              "type": 14,
               "typeName": "BaseParam"
             },
             {
               "name": "erc20",
-              "type": 14,
+              "type": 15,
               "typeName": "ERC20Param"
             },
             {
               "name": "erc20Transfers",
-              "type": 15,
+              "type": 16,
               "typeName": "BTreeMap<AccountId, u64>"
             },
             {
               "name": "org",
-              "type": 18,
+              "type": 19,
               "typeName": "OrgParam"
             }
           ]
@@ -848,14 +869,14 @@
         "composite": {
           "fields": [
             {
-              "type": 17,
+              "type": 18,
               "typeName": "[(K, V)]"
             }
           ]
         }
       },
       "params": [
-        16
+        17
       ],
       "path": [
         "BTreeMap"
@@ -872,7 +893,7 @@
     {
       "def": {
         "sequence": {
-          "type": 16
+          "type": 17
         }
       }
     },
@@ -887,7 +908,7 @@
             },
             {
               "name": "moderators",
-              "type": 19,
+              "type": 20,
               "typeName": "BTreeMap<String, AccountId>"
             }
           ]
@@ -904,14 +925,14 @@
         "composite": {
           "fields": [
             {
-              "type": 21,
+              "type": 22,
               "typeName": "[(K, V)]"
             }
           ]
         }
       },
       "params": [
-        20
+        21
       ],
       "path": [
         "BTreeMap"
@@ -928,7 +949,7 @@
     {
       "def": {
         "sequence": {
-          "type": 20
+          "type": 21
         }
       }
     },
@@ -938,32 +959,32 @@
           "fields": [
             {
               "name": "base_addr",
-              "type": 23,
+              "type": 24,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "erc20_addr",
-              "type": 23,
+              "type": 24,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "org_addr",
-              "type": 23,
+              "type": 24,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "vault_addr",
-              "type": 23,
+              "type": 24,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "vote_addr",
-              "type": 23,
+              "type": 24,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "auth_addr",
-              "type": 23,
+              "type": 24,
               "typeName": "Option<AccountId>"
             }
           ]

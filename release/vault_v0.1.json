@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xf019816ce3da047b795a43c40b9010208ed81bf6680652f726b1ae822b3e6c95",
+    "hash": "0x197d7c86f3093cddaf34310b69b041130e9a0dfaab06e6bba54c93c70e5da4c1",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -186,50 +186,6 @@
       }
     ],
     "messages": [
-      {
-        "args": [
-          {
-            "name": "caller",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          },
-          {
-            "name": "contract_name",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 13
-            }
-          },
-          {
-            "name": "function_name",
-            "type": {
-              "displayName": [
-                "String"
-              ],
-              "type": 13
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": false,
-        "name": [
-          "check_authority"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 14
-        },
-        "selector": "0x2e7c1f44"
-      },
       {
         "args": [
           {
