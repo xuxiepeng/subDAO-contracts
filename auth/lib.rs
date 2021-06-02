@@ -89,6 +89,16 @@ mod auth {
            return false;
         }
 
+        #[ink(message)]
+        pub fn transfer_owner(
+            &mut self,
+            to: AccountId,
+        ) -> bool {
+            assert!(self.owner == self.env().caller());
+            self.owner = to;
+            true
+        }
+
 
         #[ink(message)]
         pub fn revoke_permission(& mut self,account_id: AccountId,contract_name: String, function_name: String) -> bool {

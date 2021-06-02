@@ -82,6 +82,9 @@ param description:
       "xxx": "5Fxxx"
     }
   }
+  "auth": {
+    "owner": "5Fxxx",
+  }
 }
 ```
 

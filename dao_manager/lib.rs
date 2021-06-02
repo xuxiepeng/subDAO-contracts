@@ -109,6 +109,17 @@ mod dao_manager {
         moderators: BTreeMap<String, AccountId>,
     }
 
+    #[derive(
+    Debug, Clone, PartialEq, Eq, scale::Encode, scale::Decode, SpreadLayout, PackedLayout, Default
+    )]
+    #[cfg_attr(
+    feature = "std",
+    derive(::scale_info::TypeInfo, ::ink_storage::traits::StorageLayout)
+    )]
+    pub struct AuthParam {
+        owner: AccountId,
+    }
+
     /// DAO component instance addresses
     #[derive(
     Debug, Clone, PartialEq, Eq, scale::Encode, scale::Decode, SpreadLayout, PackedLayout, Default
@@ -122,6 +133,7 @@ mod dao_manager {
         erc20: ERC20Param,
         erc20Transfers: BTreeMap<AccountId, u64>,
         org: OrgParam,
+        auth: AuthParam,
     }
 
     /// Defines the storage of your contract.
@@ -199,21 +211,20 @@ mod dao_manager {
             let version = self.org_id as u32;
             self._init_base(base_code_hash, params.base, version);
             self._init_org(org_code_hash, params.org, version);
-            self._init_auth(auth_code_hash, version);
+            self._init_auth(auth_code_hash, params.auth, version);
             self._init_vault(vault_code_hash, version);
             self._init_vote(vote_code_hash, version);
             self._init_erc20(erc20_code_hash, params.erc20, params.erc20Transfers, version);
             // self._init_github(github_code_hash);
 
             // add vault token
-            self.after_init();
+            self._after_init_erc20(erc20_code_hash);
             self.init = true;
             true
         }
 
-        fn after_init(&mut self) {
-            let components_hash_map = self.template.as_ref().unwrap().components.clone();
-            if components_hash_map.get("ERC20").is_none() {
+        fn _after_init_erc20(&mut self, erc20_code_hash: Option<&Hash>) {
+            if erc20_code_hash.is_none() {
                 return;
             }
             let erc20_addr = self.component_addrs.erc20_addr.unwrap();
@@ -323,24 +334,35 @@ mod dao_manager {
 
 
         /// init auth
-        fn _init_auth(&mut self, auth_code_hash: Option<&Hash>, version: u32) -> bool {
+        fn _init_auth(&mut self, auth_code_hash: Option<&Hash>, auth: AuthParam, version: u32) -> bool {
             if auth_code_hash.is_none() {
                 return true;
             }
+            let dao_addr = Self::env().account_id();
             let auth_code_hash = auth_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
             assert!(total_balance > contract_init_balance, "not enough unit to instance contract");
             // instance auth
             let salt = version.to_le_bytes();
-            let auth_instance_params = Auth::new(Self::env().account_id())
+            let auth_instance_params = Auth::new(dao_addr)
                 .endowment(contract_init_balance)
                 .code_hash(auth_code_hash)
                 .salt_bytes(salt)
                 .params();
             let auth_init_result = ink_env::instantiate_contract(&auth_instance_params);
             let auth_addr = auth_init_result.expect("failed at instantiating the `Auth` contract");
-            let auth_instance = ink_env::call::FromAccountId::from_account_id(auth_addr);
-            self.components.org = Some(auth_instance);
+            let mut auth_instance: Auth = ink_env::call::FromAccountId::from_account_id(auth_addr);
+
+            // register inner action
+            auth_instance.register_action(String::from("vault"), String::from("add_vault_token"), String::from("vault.add_vault_token"));
+
+            // grant inner action
+            auth_instance.grant_permission(dao_addr, String::from("vault"), String::from("add_vault_token"));
+
+            // transfer owner
+            auth_instance.transfer_owner(auth.owner);
+
+            self.components.auth = Some(auth_instance);
             self.component_addrs.auth_addr = Some(auth_addr);
             true
         }
