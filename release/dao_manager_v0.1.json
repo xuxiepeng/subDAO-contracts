@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xec1203b1642b364ac63c65b150bfca9da8db93057cda5e5d5c26febe8e37c2e3",
+    "hash": "0x01b5373c201b2bde24eac76bfc7f9931bbc75a4ac28ea68c0028380d4d7afae6",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -127,7 +127,7 @@
           "displayName": [
             "DAOComponentAddrs"
           ],
-          "type": 23
+          "type": 24
         },
         "selector": "0x063f051b"
       }
@@ -783,6 +783,11 @@
               "name": "org",
               "type": 19,
               "typeName": "OrgParam"
+            },
+            {
+              "name": "auth",
+              "type": 23,
+              "typeName": "AuthParam"
             }
           ]
         }
@@ -958,33 +963,51 @@
         "composite": {
           "fields": [
             {
+              "name": "owner",
+              "type": 2,
+              "typeName": "AccountId"
+            }
+          ]
+        }
+      },
+      "path": [
+        "dao_manager",
+        "dao_manager",
+        "AuthParam"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
               "name": "base_addr",
-              "type": 24,
+              "type": 25,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "erc20_addr",
-              "type": 24,
+              "type": 25,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "org_addr",
-              "type": 24,
+              "type": 25,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "vault_addr",
-              "type": 24,
+              "type": 25,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "vote_addr",
-              "type": 24,
+              "type": 25,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "auth_addr",
-              "type": 24,
+              "type": 25,
               "typeName": "Option<AccountId>"
             }
           ]

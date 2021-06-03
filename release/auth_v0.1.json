@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x793bdf315e183d5f66ac18432fc35877d35eeaf2eea7b953c0ba7eab01140ca3",
+    "hash": "0x8aaeeaa19f6b20f8c489c084665b066c020df94703970b845bf2b28a91d7cc78",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -123,6 +123,32 @@
           "type": 14
         },
         "selector": "0x823ea2bd"
+      },
+      {
+        "args": [
+          {
+            "name": "to",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "transfer_owner"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 14
+        },
+        "selector": "0xb412fc0c"
       },
       {
         "args": [
