@@ -20,6 +20,8 @@ mod main {
     use dao_manager::DAOManager;
     use template_manager::TemplateManager;
     use template_manager::DAOTemplate;
+    const one_unit: u128 = 1_000_000_000_000;
+    const dao_init_balance: u128 = 10 * 1000 * 1_000_000_000_000;
 
     /// Indicates whether a transaction is already confirmed or needs further confirmations.
     #[derive(scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout)]
@@ -117,7 +119,7 @@ mod main {
             let dao_manager_code_hash = template.dao_manager_code_hash;
             let salt = version.to_le_bytes();
             let dao_instance_params = DAOManager::new(controller, self.instance_index)
-                .endowment(total_balance / 4)
+                .endowment(dao_init_balance)
                 .code_hash(dao_manager_code_hash)
                 .salt_bytes(salt)
                 .params();
@@ -157,8 +159,12 @@ mod main {
 
         #[ink(message)]
         pub fn list_dao_instances_by_owner(&mut self, owner: AccountId) -> Vec<DAOInstance> {
-            let id_list = self.instance_map_by_owner.get(&owner).unwrap();
+            let id_list_op = self.instance_map_by_owner.get(&owner);
             let mut dao_vec = Vec::new();
+            if id_list_op.is_none() {
+                return dao_vec;
+            }
+            let id_list = id_list_op.unwrap();
             let mut iter = id_list.into_iter();
             let mut item = iter.next();
             while item.is_some() {
