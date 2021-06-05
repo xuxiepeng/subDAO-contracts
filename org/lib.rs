@@ -166,6 +166,20 @@ mod org {
         }
 
 
+        #[ink(message)]
+        pub fn get_dao_apply_member_detail_list(&self) -> alloc::vec::Vec<(AccountId, String)> {
+            self.applying_members.keys();
+            let mut v:alloc::vec::Vec<(AccountId, String)> = alloc::vec::Vec::new();
+            for key in self.applying_members.keys() {
+
+                let value = self.applying_members.get(key).unwrap().clone();
+
+                v.push((*key,value))
+            }
+            v
+
+        }
+
 
         #[ink(message)]
         pub fn add_dao_moderator(&mut self,name:String,moderator: AccountId) -> bool  {
@@ -265,6 +279,32 @@ mod org {
             };
             return false;
         }
+
+
+        #[ink(message)]
+        pub fn who_am_i(&mut self) -> (bool,bool,bool)  {
+
+            let caller = self.env().caller();
+            let mut is_member = false;
+            let mut is_moderator = false;
+            let mut is_owner = false;
+
+            if self.members.contains_key(&caller) {
+                is_member =  true;
+            };
+
+            if self.moderators.contains_key(&caller) {
+                is_moderator =  true;
+            };
+            
+            if caller == self.owner {
+                is_owner = true;
+            }
+
+            return (is_member,is_moderator,is_owner)
+            
+        }
+
 
         #[ink(message)]
         pub fn transfer_ownership(&mut self,new_owner: AccountId) -> bool  {
