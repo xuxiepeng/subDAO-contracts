@@ -270,12 +270,13 @@ mod vote_manager {
                 }
                 // has voted
                 if let Some(choice_id) = self.voters.get(&(vote_id, voter)) {
-                    if *choice_id != support_choice {
-                        let choice_vec_index = vote.choice_index_lo + *choice_id;
-                        let choices = &mut self.choices;
-                        choices.get_mut(choice_vec_index).unwrap().yea -= 1;
-                        vote.support_num -= 1;
-                    }
+                    // if *choice_id != support_choice {
+                    //     let choice_vec_index = vote.choice_index_lo + *choice_id;
+                    //     let choices = &mut self.choices;
+                    //     choices.get_mut(choice_vec_index).unwrap().yea -= 1;
+                    //     vote.support_num -= 1;
+                    // }
+                    return false;
                 } 
                 let choices = &mut self.choices;
                 let choice_vec_index = vote.choice_index_lo + support_choice;
@@ -293,6 +294,12 @@ mod vote_manager {
             } else {
                 false
             }
+        }
+
+        #[ink(message)]
+        pub fn query_voter_vote_one(&self, vote_id: VoteId, voter: AccountId) -> bool {
+            assert!(self.vote_exists(vote_id));
+            return self.vote_has_been_voted(vote_id, voter);
         }
 
         #[ink(message)]
@@ -379,6 +386,14 @@ mod vote_manager {
 
         fn vote_exists(&self, vote_id: u64) -> bool {
             return vote_id < self.votes_length;
+        }
+
+        fn vote_has_been_voted(&self, vote_id: VoteId, voter: AccountId) -> bool {
+            let result = match self.voters.get(&(vote_id, voter)) {
+                None => false,
+                Some(_) => true, 
+            };
+            result
         }
 
         fn is_vote_open(&self, vote: &Vote) -> bool {
@@ -474,10 +489,12 @@ mod vote_manager {
 
         #[ink::test]
         fn new_vote_manager() {
-            // let accounts =
-            //     ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
-            //         .expect("Cannot get accounts");
-            let vote_manager = VoteManager::new();
+            let accounts =
+                ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
+                    .expect("Cannot get accounts");
+            // after update votemanager need an vault_address to be initialized.
+            // use alice address to replace here.
+            let vote_manager = VoteManager::new(accounts.alice);
 
             assert_eq!(vote_manager.votes_length, 0);
         }
@@ -485,7 +502,7 @@ mod vote_manager {
         #[ink::test]
         fn full_test() {
             let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
-            let mut vote_manager = VoteManager::new();
+            let mut vote_manager = VoteManager::new(accounts.alice);
             
             let r = vote_manager.new_vote("hello".to_string(), "hello world".to_string(), 100, 1, 0, "A|B|C".to_string());
             assert_eq!(r, 0);
@@ -513,5 +530,23 @@ mod vote_manager {
                 ink_env::debug_println( &debug_info );
             }
         }
+
+        #[ink::test]
+        fn vote_has_voted_test() {
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+            let mut vote_manager = VoteManager::new(accounts.alice);
+            
+            let r = vote_manager.new_vote("hello".to_string(), "hello world".to_string(), 100, 1, 0, "A|B|C".to_string());
+            assert_eq!(r, 0);
+
+            let has_voted = vote_manager.query_voter_vote_one(0, accounts.alice);
+            assert_eq!(has_voted, false);
+
+            vote_manager.vote(0, 2, accounts.alice);
+
+            let has_voted = vote_manager.query_voter_vote_one(0, accounts.alice);
+            assert_eq!(has_voted, true);
+
+        } 
     }
 }

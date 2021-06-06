@@ -62,6 +62,10 @@ execute a vote.
 
 mark status to executed.
 
+### query_voter_vote_one(vote_id: VoteId, voter: AccountId) -> bool
+
+query a voter has voted one vote.
+
 ### query_one_vote(vote_id: VoteId) -> DisplayVote
 
 query vote by vote_id
