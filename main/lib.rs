@@ -120,7 +120,7 @@ mod main {
             let dao_manager_code_hash = template.dao_manager_code_hash;
             // let salt = version.to_le_bytes();
             let dao_instance_params = DAOManager::new(controller, self.instance_index)
-                .endowment(dao_init_balance)
+                .endowment(total_balance / 4)
                 .code_hash(dao_manager_code_hash)
                 .salt_bytes(salt)
                 .params();
