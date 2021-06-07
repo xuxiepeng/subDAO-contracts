@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xa59c1af97e3b960d131660a4425afb74fdcd4d954312e368cafa5223abe6188a",
+    "hash": "0xeecdc9f6883a4cc8e5bea09de6ad76c85f8bd180e464e8ff07b7bf8a2fa917f7",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -359,6 +359,41 @@
           "type": 11
         },
         "selector": "0x083be260"
+      },
+      {
+        "args": [
+          {
+            "name": "vote_id",
+            "type": {
+              "displayName": [
+                "VoteId"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "voter",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "query_voter_vote_one"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 11
+        },
+        "selector": "0x1ff3f08f"
       },
       {
         "args": [

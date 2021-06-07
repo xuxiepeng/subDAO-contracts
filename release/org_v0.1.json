@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x7985564c038bd94f658fc68b6c45b4fccc3cf87f55593772e126b518c6df3789",
+    "hash": "0x072cc30eee622bf6e46151c525134b4e980f889ceae6c9665b6764e6d012820d",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -330,6 +330,24 @@
         "selector": "0xcf27bdd7"
       },
       {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "get_dao_apply_member_detail_list"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "alloc",
+            "vec",
+            "Vec"
+          ],
+          "type": 12
+        },
+        "selector": "0x2dafbbdc"
+      },
+      {
         "args": [
           {
             "name": "name",
@@ -476,6 +494,20 @@
           "type": 14
         },
         "selector": "0xe5ef22d5"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "who_am_i"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [],
+          "type": 15
+        },
+        "selector": "0x8fb9cb05"
       },
       {
         "args": [
@@ -1025,6 +1057,15 @@
     {
       "def": {
         "primitive": "bool"
+      }
+    },
+    {
+      "def": {
+        "tuple": [
+          14,
+          14,
+          14
+        ]
       }
     }
   ]
