@@ -192,7 +192,7 @@ mod dao_manager {
         }
 
         #[ink(message)]
-        pub fn  init_by_params(&mut self, params: DAOInitParams) -> bool {
+        pub fn  init_by_params(&mut self, params: DAOInitParams, salt: Vec<u8>) -> bool {
             assert_eq!(self.init, false);
             assert_eq!(self.template.is_some(), true);
             let owner = self.env().caller();
@@ -208,13 +208,13 @@ mod dao_manager {
             let auth_code_hash = components_hash_map.get("AUTH");
             //  let github_code_hash = components_hash_map.get("GITHUB");
 
-            let version = self.org_id as u32;
-            self._init_base(base_code_hash, params.base, version);
-            self._init_org(org_code_hash, params.org, version);
-            self._init_auth(auth_code_hash, params.auth, version);
-            self._init_vault(vault_code_hash, version);
-            self._init_vote(vote_code_hash, version);
-            self._init_erc20(erc20_code_hash, params.erc20, params.erc20Transfers, version);
+            // let version = self.org_id as u32;
+            self._init_base(base_code_hash, params.base, &salt);
+            self._init_org(org_code_hash, params.org, &salt);
+            self._init_auth(auth_code_hash, params.auth, &salt);
+            self._init_vault(vault_code_hash, &salt);
+            self._init_vote(vote_code_hash, &salt);
+            self._init_erc20(erc20_code_hash, params.erc20, params.erc20Transfers, &salt);
             // self._init_github(github_code_hash);
 
             // add vault token
@@ -240,7 +240,7 @@ mod dao_manager {
 
         /// init base
         fn _init_base(&mut self, base_code_hash: Option<&Hash>,
-                      param: BaseParam, version: u32) -> bool {
+                      param: BaseParam, salt: &Vec<u8>) -> bool {
             if base_code_hash.is_none() {
                 return true;
             }
@@ -248,7 +248,7 @@ mod dao_manager {
             let total_balance = Self::env().balance();
             assert!(total_balance > contract_init_balance, "not enough unit to instance contract");
             // instance base
-            let salt = version.to_le_bytes();
+            // let salt = version.to_le_bytes();
             let instance_params = Base::new()
                 .endowment(contract_init_balance)
                 .code_hash(base_code_hash)
@@ -267,7 +267,7 @@ mod dao_manager {
 
         /// init erc20
         fn _init_erc20(&mut self, erc20_code_hash: Option<&Hash>,
-                       param: ERC20Param, initTransfers: BTreeMap<AccountId, u64>, version: u32) -> bool {
+                       param: ERC20Param, initTransfers: BTreeMap<AccountId, u64>, salt: &Vec<u8>) -> bool {
             if erc20_code_hash.is_none() {
                 return true;
             }
@@ -276,7 +276,7 @@ mod dao_manager {
             assert!(total_balance > contract_init_balance, "not enough unit to instance contract");
             let vault_addr = self.component_addrs.vault_addr.unwrap();
             // instance erc20
-            let salt = version.to_le_bytes();
+            // let salt = version.to_le_bytes();
             let erc20_instance_params = Erc20::new(param.name, param.symbol,
                 0, param.decimals, Self::env().account_id())
                 .endowment(contract_init_balance)
@@ -303,7 +303,7 @@ mod dao_manager {
         }
 
         /// init org
-        fn _init_org(&mut self, org_code_hash: Option<&Hash>, param: OrgParam, version: u32) -> bool {
+        fn _init_org(&mut self, org_code_hash: Option<&Hash>, param: OrgParam, salt: &Vec<u8>) -> bool {
             if org_code_hash.is_none() {
                 return true;
             }
@@ -311,7 +311,7 @@ mod dao_manager {
             let total_balance = Self::env().balance();
             assert!(total_balance > contract_init_balance, "not enough unit to instance contract");
             // instance org
-            let salt = version.to_le_bytes();
+            // let salt = version.to_le_bytes();
             let org_instance_params = OrgManager::new(Self::env().account_id(), self.org_id)
                 .endowment(contract_init_balance)
                 .code_hash(org_code_hash)
@@ -334,7 +334,7 @@ mod dao_manager {
 
 
         /// init auth
-        fn _init_auth(&mut self, auth_code_hash: Option<&Hash>, auth: AuthParam, version: u32) -> bool {
+        fn _init_auth(&mut self, auth_code_hash: Option<&Hash>, auth: AuthParam, salt: &Vec<u8>) -> bool {
             if auth_code_hash.is_none() {
                 return true;
             }
@@ -343,7 +343,7 @@ mod dao_manager {
             let total_balance = Self::env().balance();
             assert!(total_balance > contract_init_balance, "not enough unit to instance contract");
             // instance auth
-            let salt = version.to_le_bytes();
+            // let salt = version.to_le_bytes();
             let auth_instance_params = Auth::new(dao_addr)
                 .endowment(contract_init_balance)
                 .code_hash(auth_code_hash)
@@ -369,7 +369,7 @@ mod dao_manager {
 
 
         /// init vault
-        fn _init_vault(&mut self, vault_code_hash: Option<&Hash>, version: u32) -> bool {
+        fn _init_vault(&mut self, vault_code_hash: Option<&Hash>, salt: &Vec<u8>) -> bool {
             if vault_code_hash.is_none() {
                 return true;
             }
@@ -379,7 +379,7 @@ mod dao_manager {
             // instance org
             let org_addr = self.component_addrs.org_addr.unwrap();
             let auth_addr = self.component_addrs.auth_addr.unwrap();
-            let salt = version.to_le_bytes();
+            // let salt = version.to_le_bytes();
             let vault_instance_params = VaultManager::new(org_addr, auth_addr)
                 .endowment(contract_init_balance)
                 .code_hash(vault_code_hash)
@@ -394,7 +394,7 @@ mod dao_manager {
         }
 
         /// init vote
-        fn _init_vote(&mut self, vote_code_hash: Option<&Hash>, version: u32) -> bool {
+        fn _init_vote(&mut self, vote_code_hash: Option<&Hash>, salt: &Vec<u8>) -> bool {
             if vote_code_hash.is_none() {
                 return true;
             }
@@ -403,7 +403,7 @@ mod dao_manager {
             assert!(total_balance > contract_init_balance, "not enough unit to instance contract");
             // instance org
             let vault_addr = self.component_addrs.vault_addr.unwrap();
-            let salt = version.to_le_bytes();
+            // let salt = version.to_le_bytes();
             let vote_instance_params = VoteManager::new(vault_addr)
                 .endowment(contract_init_balance)
                 .code_hash(vote_code_hash)

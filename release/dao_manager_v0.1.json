@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x01b5373c201b2bde24eac76bfc7f9931bbc75a4ac28ea68c0028380d4d7afae6",
+    "hash": "0x3484f4b285b49749d3ba37b6fcb0f2b3f84db7d1662e9c0c626527c7cd821d33",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -99,6 +99,15 @@
               ],
               "type": 13
             }
+          },
+          {
+            "name": "salt",
+            "type": {
+              "displayName": [
+                "Vec"
+              ],
+              "type": 24
+            }
           }
         ],
         "docs": [],
@@ -127,7 +136,7 @@
           "displayName": [
             "DAOComponentAddrs"
           ],
-          "type": 24
+          "type": 25
         },
         "selector": "0x063f051b"
       }
@@ -978,36 +987,43 @@
     },
     {
       "def": {
+        "sequence": {
+          "type": 4
+        }
+      }
+    },
+    {
+      "def": {
         "composite": {
           "fields": [
             {
               "name": "base_addr",
-              "type": 25,
+              "type": 26,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "erc20_addr",
-              "type": 25,
+              "type": 26,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "org_addr",
-              "type": 25,
+              "type": 26,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "vault_addr",
-              "type": 25,
+              "type": 26,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "vote_addr",
-              "type": 25,
+              "type": 26,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "auth_addr",
-              "type": 25,
+              "type": 26,
               "typeName": "Option<AccountId>"
             }
           ]
