@@ -21,6 +21,7 @@ mod main {
     use template_manager::TemplateManager;
     use template_manager::DAOTemplate;
     const one_unit: u128 = 1_000_000_000_000;
+    const template_init_balance: u128 = 1000 * 1_000_000_000_000;
     const dao_init_balance: u128 = 10 * 1000 * 1_000_000_000_000;
 
     /// Indicates whether a transaction is already confirmed or needs further confirmations.
@@ -76,7 +77,7 @@ mod main {
             // instance template_manager
             // let salt = version.to_le_bytes();
             let instance_params = TemplateManager::new(self.owner)
-                .endowment(total_balance / 4)
+                .endowment(template_init_balance)
                 .code_hash(template_code_hash)
                 .salt_bytes(&salt)
                 .params();
@@ -120,7 +121,7 @@ mod main {
             let dao_manager_code_hash = template.dao_manager_code_hash;
             // let salt = version.to_le_bytes();
             let dao_instance_params = DAOManager::new(controller, self.instance_index)
-                .endowment(total_balance / 4)
+                .endowment(dao_init_balance)
                 .code_hash(dao_manager_code_hash)
                 .salt_bytes(salt)
                 .params();
