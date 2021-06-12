@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xc555e84d56ef7bc854a52cc4386190df3a61a786949423d73b002cbed58e73d3",
+    "hash": "0x15df19f3daed95e376f57b9327a5539598fc5ac4b72e01687e04f9242872a494",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -246,6 +246,48 @@
         "docs": [],
         "mutates": false,
         "name": [
+          "get_can_free_add_member"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 11
+        },
+        "selector": "0x06de9c6f"
+      },
+      {
+        "args": [
+          {
+            "name": "can_free_add_member",
+            "type": {
+              "displayName": [
+                "bool"
+              ],
+              "type": 11
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "set_can_free_add_member"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 11
+        },
+        "selector": "0x6bbe10ae"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
           "get_orgid"
         ],
         "payable": false,
@@ -271,7 +313,7 @@
             "vec",
             "Vec"
           ],
-          "type": 11
+          "type": 12
         },
         "selector": "0x04f66148"
       },
@@ -289,7 +331,7 @@
             "vec",
             "Vec"
           ],
-          "type": 11
+          "type": 12
         },
         "selector": "0x667ee137"
       },
@@ -307,7 +349,7 @@
             "vec",
             "Vec"
           ],
-          "type": 12
+          "type": 13
         },
         "selector": "0x6f1e4d23"
       },
@@ -325,7 +367,7 @@
             "vec",
             "Vec"
           ],
-          "type": 12
+          "type": 13
         },
         "selector": "0xcf27bdd7"
       },
@@ -343,7 +385,7 @@
             "vec",
             "Vec"
           ],
-          "type": 12
+          "type": 13
         },
         "selector": "0x2dafbbdc"
       },
@@ -378,7 +420,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 14
+          "type": 11
         },
         "selector": "0xd9c6b562"
       },
@@ -413,7 +455,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 14
+          "type": 11
         },
         "selector": "0xabac9e06"
       },
@@ -439,7 +481,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 14
+          "type": 11
         },
         "selector": "0xbbbbce3c"
       },
@@ -465,7 +507,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 14
+          "type": 11
         },
         "selector": "0x5d57e605"
       },
@@ -491,7 +533,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 14
+          "type": 11
         },
         "selector": "0xe5ef22d5"
       },
@@ -531,7 +573,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 14
+          "type": 11
         },
         "selector": "0x107e33ea"
       },
@@ -566,7 +608,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 14
+          "type": 11
         },
         "selector": "0x97428833"
       },
@@ -601,7 +643,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 14
+          "type": 11
         },
         "selector": "0x1376d886"
       }
@@ -867,6 +909,15 @@
             }
           },
           "name": "org_id"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0800000003000000000000000000000000000000000000000000000000000000",
+              "ty": 11
+            }
+          },
+          "name": "can_free_add_member"
         }
       ]
     }
@@ -1034,6 +1085,11 @@
     },
     {
       "def": {
+        "primitive": "bool"
+      }
+    },
+    {
+      "def": {
         "sequence": {
           "type": 4
         }
@@ -1042,7 +1098,7 @@
     {
       "def": {
         "sequence": {
-          "type": 13
+          "type": 14
         }
       }
     },
@@ -1056,15 +1112,10 @@
     },
     {
       "def": {
-        "primitive": "bool"
-      }
-    },
-    {
-      "def": {
         "tuple": [
-          14,
-          14,
-          14
+          11,
+          11,
+          11
         ]
       }
     }
