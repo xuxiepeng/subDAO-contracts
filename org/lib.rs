@@ -117,7 +117,7 @@ mod org {
 
         #[ink(message)]
         pub fn set_can_free_add_member(&mut self,can_free_add_member:bool) -> bool {
-            self.can_free_add_member = can_free_add_member
+            self.can_free_add_member = can_free_add_member;
             self.can_free_add_member
         }
 
@@ -220,8 +220,8 @@ mod org {
         #[ink(message)]
         pub fn add_dao_member(&mut self,name:String,member: AccountId) -> bool {
 
-            if can_free_add_member == false {
-                false
+            if self.can_free_add_member == false {
+                return false
             }
 
             match self.members.insert(member,name) {
