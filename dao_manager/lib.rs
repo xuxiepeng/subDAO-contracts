@@ -25,7 +25,7 @@ mod dao_manager {
     use vote_manager::VoteManager;
 
     const one_unit: u128 = 1_000_000_000_000;
-    const contract_init_balance: u128 = 1000 * 1_000_000_000_000;
+    const contract_init_balance: u128 = 100 * 1000 * 1_000_000_000_000;
 
     /// DAO component instances
     #[derive(scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout)]

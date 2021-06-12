@@ -21,8 +21,8 @@ mod main {
     use template_manager::TemplateManager;
     use template_manager::DAOTemplate;
     const one_unit: u128 = 1_000_000_000_000;
-    const template_init_balance: u128 = 1000 * 1_000_000_000_000;
-    const dao_init_balance: u128 = 10 * 1000 * 1_000_000_000_000;
+    const template_init_balance: u128 = 100 * 1000 * 1_000_000_000_000;
+    const dao_init_balance: u128 = 1000 * 1000 * 1_000_000_000_000;
 
     /// Indicates whether a transaction is already confirmed or needs further confirmations.
     #[derive(scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout)]
