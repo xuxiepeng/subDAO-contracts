@@ -22,6 +22,7 @@ mod org {
         applying_members: StorageHashMap<AccountId, String>,
         owner: AccountId,
         org_id:u64,
+        can_free_add_member: bool,
     }
 
 
@@ -99,6 +100,7 @@ mod org {
                 moderators: StorageHashMap::default(),
                 members: StorageHashMap::default(),
                 applying_members: StorageHashMap::default(),
+                can_free_add_member: false,
             }
         }
 
@@ -107,6 +109,18 @@ mod org {
         pub fn get_dao_owner(&self) -> AccountId {
             self.owner
         }
+
+        #[ink(message)]
+        pub fn get_can_free_add_member(&self) -> bool {
+            self.can_free_add_member
+        }
+
+        #[ink(message)]
+        pub fn get_dao_owner(&self,can_free_add_member) -> bool {
+            self.can_free_add_member = can_free_add_member
+            self.can_free_add_member
+        }
+
 
         #[ink(message)]
         pub fn get_orgid(&self) -> u64 {
@@ -206,7 +220,9 @@ mod org {
         #[ink(message)]
         pub fn add_dao_member(&mut self,name:String,member: AccountId) -> bool {
 
-
+            if can_free_add_member == false {
+                false
+            }
 
             match self.members.insert(member,name) {
                 Some(_) => { false},
