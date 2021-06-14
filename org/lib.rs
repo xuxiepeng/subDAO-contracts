@@ -116,7 +116,7 @@ mod org {
         }
 
         #[ink(message)]
-        pub fn get_dao_owner(&self,can_free_add_member) -> bool {
+        pub fn set_can_free_add_member(&mut self,can_free_add_member:bool) -> bool {
             self.can_free_add_member = can_free_add_member
             self.can_free_add_member
         }
