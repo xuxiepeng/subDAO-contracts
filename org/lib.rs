@@ -23,6 +23,9 @@ mod org {
         owner: AccountId,
         org_id:u64,
         can_free_add_member: bool,
+        is_member: bool,
+        is_moderator:bool,
+        is_owner:bool,
     }
 
 
@@ -101,6 +104,9 @@ mod org {
                 members: StorageHashMap::default(),
                 applying_members: StorageHashMap::default(),
                 can_free_add_member: false,
+                is_member: false,
+                is_moderator:false,
+                is_owner:false,
             }
         }
 
@@ -238,6 +244,17 @@ mod org {
 
         }
 
+
+        #[ink(message)]
+        pub fn batch_add_dao_member(&mut self, members:BTreeMap<String, AccountId>) -> bool {
+            for (name, accountId) in members {
+                self.add_dao_member(name,account_id);
+            }
+            true
+            
+        }
+
+
         #[ink(message)]
         pub fn remove_dao_moderator(&mut self,member: AccountId) -> bool  {
 
@@ -301,23 +318,26 @@ mod org {
         pub fn who_am_i(&mut self) -> (bool,bool,bool)  {
 
             let caller = self.env().caller();
-            let mut is_member = false;
-            let mut is_moderator = false;
-            let mut is_owner = false;
-
+           
             if self.members.contains_key(&caller) {
-                is_member =  true;
-            };
-
-            if self.moderators.contains_key(&caller) {
-                is_moderator =  true;
-            };
-            
-            if caller == self.owner {
-                is_owner = true;
+                self.is_member =  true;
+            } else {
+                self.is_member =  false;
             }
 
-            return (is_member,is_moderator,is_owner)
+            if self.moderators.contains_key(&caller) {
+                self.is_moderator =  true;
+            } else {
+                self.is_moderator =  false;
+            }
+            
+            if caller == self.owner {
+                self.is_owner = true;
+            } else {
+                self.is_owner = false;
+            }
+
+            return (self.is_member,self.is_moderator,self.is_owner)
             
         }
 
