@@ -249,7 +249,7 @@ mod org {
         #[ink(message)]
         pub fn batch_add_dao_member(&mut self, members:BTreeMap<String, AccountId>) -> bool {
             for (name, accountId) in &members {
-                self.add_dao_member(name,accountId);
+                self.add_dao_member(*name,*accountId);
             }
             true
             
