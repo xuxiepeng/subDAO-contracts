@@ -7,6 +7,7 @@ pub use self::org::OrgManager;
 #[ink::contract]
 mod org {
     use alloc::string::String;
+    use ink_prelude::collections::BTreeMap;
 
     #[cfg(not(feature = "ink-as-dependency"))]
     use ink_storage::{
@@ -247,7 +248,7 @@ mod org {
 
         #[ink(message)]
         pub fn batch_add_dao_member(&mut self, members:BTreeMap<String, AccountId>) -> bool {
-            for (name, accountId) in members {
+            for (name, accountId) in &members {
                 self.add_dao_member(name,account_id);
             }
             true
