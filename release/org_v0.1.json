@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x15df19f3daed95e376f57b9327a5539598fc5ac4b72e01687e04f9242872a494",
+    "hash": "0x7bb88277300ebb8d3bd649ded749ce17651aea3d1911a7de1a8adb5c5db1eb34",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -462,6 +462,32 @@
       {
         "args": [
           {
+            "name": "members",
+            "type": {
+              "displayName": [
+                "BTreeMap"
+              ],
+              "type": 15
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "batch_add_dao_member"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 11
+        },
+        "selector": "0x826e3702"
+      },
+      {
+        "args": [
+          {
             "name": "member",
             "type": {
               "displayName": [
@@ -547,7 +573,7 @@
         "payable": false,
         "returnType": {
           "displayName": [],
-          "type": 15
+          "type": 18
         },
         "selector": "0x8fb9cb05"
       },
@@ -918,6 +944,33 @@
             }
           },
           "name": "can_free_add_member"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0900000003000000000000000000000000000000000000000000000000000000",
+              "ty": 11
+            }
+          },
+          "name": "is_member"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0a00000003000000000000000000000000000000000000000000000000000000",
+              "ty": 11
+            }
+          },
+          "name": "is_moderator"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0b00000003000000000000000000000000000000000000000000000000000000",
+              "ty": 11
+            }
+          },
+          "name": "is_owner"
         }
       ]
     }
@@ -1108,6 +1161,39 @@
           4,
           9
         ]
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "type": 17,
+              "typeName": "[(K, V)]"
+            }
+          ]
+        }
+      },
+      "params": [
+        16
+      ],
+      "path": [
+        "BTreeMap"
+      ]
+    },
+    {
+      "def": {
+        "tuple": [
+          9,
+          4
+        ]
+      }
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 16
+        }
       }
     },
     {
