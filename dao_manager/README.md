@@ -58,33 +58,33 @@ if you want init vote, you must init vault;
 if you want init vault, you must init org and auth;
 param description:
 {
-  "base": {
-    "owner": "5Fxxx",
-    "name": "test",
-    "logo": "xx",
-    "desc": "xx"
-  },
-  "erc20": {
-    "owner": "5Fxxx",
-    "name": "xx",
-    "symbol": "xx",
-    "totalSupply": 100,
-    "decimals": 0 
-  },
-  "erc20Transfers": {
-    "5Fxxx": 100,
-    "5Fxxx": 100
-  },
-  "org": {
-    "owner": "5Fxxx",
-    "moderators": {
-      "xxx": "5Fxxx",
-      "xxx": "5Fxxx"
+    "base": {
+        "owner": "5CZLWjNc7LGb6QfRie8YLMwULdcJif2HBUJ52TwaxpMyxPrF",
+        "name": "test",
+        "logo": "xx",
+        "desc": "xx"
+    },
+    "erc20": {
+        "owner": "5CZLWjNc7LGb6QfRie8YLMwULdcJif2HBUJ52TwaxpMyxPrF",
+        "name": "xx",
+        "symbol": "xx",
+        "totalSupply": 100,
+        "decimals": 0
+    },
+    "erc20Transfers": [
+        ["5CZLWjNc7LGb6QfRie8YLMwULdcJif2HBUJ52TwaxpMyxPrF", 100],
+        ["5CZLWjNc7LGb6QfRie8YLMwULdcJif2HBUJ52TwaxpMyxPrF", 100],
+    ],
+    "org": {
+        "owner": "5CZLWjNc7LGb6QfRie8YLMwULdcJif2HBUJ52TwaxpMyxPrF",
+        "moderators": [
+            ["xxx", "5CZLWjNc7LGb6QfRie8YLMwULdcJif2HBUJ52TwaxpMyxPrF"],
+            ["xxx", "5CZLWjNc7LGb6QfRie8YLMwULdcJif2HBUJ52TwaxpMyxPrF"]
+        ]
+    },
+    "auth": {
+        "owner": "5CZLWjNc7LGb6QfRie8YLMwULdcJif2HBUJ52TwaxpMyxPrF",
     }
-  }
-  "auth": {
-    "owner": "5Fxxx",
-  }
 }
 ```
 
