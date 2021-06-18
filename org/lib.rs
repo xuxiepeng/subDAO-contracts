@@ -246,6 +246,25 @@ mod org {
         }
 
 
+        
+        pub fn add_dao_member_private(&mut self,name:String,member: AccountId) -> bool {
+
+
+            match self.members.insert(member,name) {
+                Some(_) => { false},
+                None => {
+                    let org_id = self.org_id;
+                    self.env().emit_event(AddDAOMemberEvent{
+                        member,
+                        org_id,
+                    });
+                    true
+                }
+            }
+
+        }
+
+
         #[ink(message)]
         pub fn batch_add_dao_member(&mut self, members:BTreeMap<String, AccountId>) -> bool {
             for (name, accountId) in &members {
@@ -405,7 +424,7 @@ mod org {
 
             if self.applying_members.contains_key(&member) {
                 let caller_new = self.env().caller();
-                self.add_dao_member(name,member);
+                self.add_dao_member_private(name,member);
                 self.applying_members.take(&member);
                 let org_id = self.org_id;
 
