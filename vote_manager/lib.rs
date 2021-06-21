@@ -97,6 +97,9 @@ mod vote_manager {
         min_require_num: u64,
         support_num: u64,
         choices: String,
+        erc20_address: AccountId,
+        to_address: AccountId,
+        value: u64,
     }
 
 
@@ -368,7 +371,7 @@ mod vote_manager {
                 index += 1;
             }
             let choices_content = choices.join("|"); 
-            let vote = DisplayVote{
+            let display_vote = DisplayVote{
                 vote_id: vote.vote_id,
                 executed: vote.executed,
                 title: vote.title.clone(),
@@ -380,8 +383,11 @@ mod vote_manager {
                 min_require_num: vote.min_require_num,
                 support_num: vote.support_num,
                 choices: choices_content,
+                erc20_address: vote.erc20_address,
+                to_address: vote.to_address,
+                value: vote.value,
             };
-            vote
+            display_vote
         }
 
         fn vote_exists(&self, vote_id: u64) -> bool {
