@@ -333,6 +333,30 @@ mod org {
             return false;
         }
 
+        #[ink(message)]
+        pub fn resign_member(&mut self,member: AccountId) -> bool  {
+
+
+            if self.members.contains_key(&member) {
+                self.members.take(&member);
+                return true;
+            };
+
+            return false;
+        }
+
+
+        #[ink(message)]
+        pub fn resign_moderator(&mut self,moderator: AccountId) -> bool  {
+
+            if self.moderators.contains_key(&moderator) {
+                self.moderators.take(&moderator);
+                return true;
+            };
+            return false;
+        }
+
+
 
         #[ink(message)]
         pub fn who_am_i(&mut self) -> (bool,bool,bool)  {
