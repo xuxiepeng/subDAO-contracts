@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x82a54292e5c4784cc57bacfef5382d9b8ae78f023fbebbb1a0a16c46473821d4",
+    "hash": "0x8a3489c0095a3e9c8423d356186dab41ceecd212851142a4990ceb1d5fd92916",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -562,6 +562,58 @@
           "type": 11
         },
         "selector": "0xe5ef22d5"
+      },
+      {
+        "args": [
+          {
+            "name": "member",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "resign_member"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 11
+        },
+        "selector": "0x891623bb"
+      },
+      {
+        "args": [
+          {
+            "name": "moderator",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "resign_moderator"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 11
+        },
+        "selector": "0x41fa2bfc"
       },
       {
         "args": [],
