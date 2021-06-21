@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xf0d2833a45b140f45805366f150ca189f0bc9b6efdf95eefea8acb02d03579fc",
+    "hash": "0xdc5db66c7750172a057776543dac4e5c6c953b1ce3b8e69c97743540e85737c5",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -1141,6 +1141,21 @@
               "name": "choices",
               "type": 12,
               "typeName": "String"
+            },
+            {
+              "name": "erc20_address",
+              "type": 1,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "to_address",
+              "type": 1,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "value",
+              "type": 4,
+              "typeName": "u64"
             }
           ]
         }
