@@ -99,7 +99,6 @@ mod vote_manager {
         choices: String,
         erc20_address: AccountId,
         to_address: AccountId,
-        value: u64,
     }
 
 
@@ -385,7 +384,6 @@ mod vote_manager {
                 choices: choices_content,
                 erc20_address: vote.erc20_address,
                 to_address: vote.to_address,
-                value: vote.value,
             };
             display_vote
         }

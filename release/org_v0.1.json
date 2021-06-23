@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x8a3489c0095a3e9c8423d356186dab41ceecd212851142a4990ceb1d5fd92916",
+    "hash": "0x57a1ba46121a33dd78cb69d5c47c75aad53c64c03bccf8a0364c71eab8a7a61f",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -536,32 +536,6 @@
           "type": 11
         },
         "selector": "0x5d57e605"
-      },
-      {
-        "args": [
-          {
-            "name": "member",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 4
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "resign"
-        ],
-        "payable": false,
-        "returnType": {
-          "displayName": [
-            "bool"
-          ],
-          "type": 11
-        },
-        "selector": "0xe5ef22d5"
       },
       {
         "args": [

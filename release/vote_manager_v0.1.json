@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xdc5db66c7750172a057776543dac4e5c6c953b1ce3b8e69c97743540e85737c5",
+    "hash": "0xe6cf76c8d445f152f46e9e4ffb3ae2c99dd74a1d1870eaeb4fa4e13f61674e51",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -1151,11 +1151,6 @@
               "name": "to_address",
               "type": 1,
               "typeName": "AccountId"
-            },
-            {
-              "name": "value",
-              "type": 4,
-              "typeName": "u64"
             }
           ]
         }
