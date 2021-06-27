@@ -8,7 +8,7 @@ pub use self::vote_manager::VoteManager;
 mod vote_manager {
 
     use alloc::format;
-    use alloc::vec;
+    // use alloc::vec;
     use alloc::vec::Vec;
     use alloc::string::String;
     use vault::VaultManager;
@@ -99,6 +99,7 @@ mod vote_manager {
         choices: String,
         erc20_address: AccountId,
         to_address: AccountId,
+        transfer_value: u64,
     }
 
 
@@ -271,7 +272,7 @@ mod vote_manager {
                     return false;
                 }
                 // has voted
-                if let Some(choice_id) = self.voters.get(&(vote_id, voter)) {
+                if let Some(_choice_id) = self.voters.get(&(vote_id, voter)) {
                     // if *choice_id != support_choice {
                     //     let choice_vec_index = vote.choice_index_lo + *choice_id;
                     //     let choices = &mut self.choices;
@@ -384,6 +385,7 @@ mod vote_manager {
                 choices: choices_content,
                 erc20_address: vote.erc20_address,
                 to_address: vote.to_address,
+                transfer_value: vote.value,
             };
             display_vote
         }
