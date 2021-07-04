@@ -161,7 +161,7 @@ mod vote_manager {
         #[ink(message)]
         pub fn new_vote(&mut self, title: String, desc: String, vote_time: u64, support_require_num: u64, min_require_num: u64, choices: String) -> u64 {
             let caller = self.env().caller();
-            assert!(self.auth.has_permission(caller,String::from("vote"),String::from("vote.new")));
+            assert!(self.auth.has_permission(caller,String::from("vote"),String::from("new")));
             let vote_id = self.votes_length.clone();
             self.votes_length += 1;
             let start_date: u64 = self.env().block_timestamp();
@@ -208,7 +208,7 @@ mod vote_manager {
         #[ink(message)]
         pub fn new_vote_with_transfer(&mut self, title: String, desc: String, vote_time: u64, support_require_num: u64, min_require_num: u64, choices: String, erc20_address:AccountId, to_address:AccountId, value:u64) -> u64 {
             let caller = self.env().caller();
-            assert!(self.auth.has_permission(caller,String::from("vote"),String::from("vote.new")));
+            assert!(self.auth.has_permission(caller,String::from("vote"),String::from("new")));
             let vote_id = self.votes_length.clone();
             self.votes_length += 1;
             let start_date: u64 = self.env().block_timestamp();
@@ -276,7 +276,7 @@ mod vote_manager {
                 return false;
             }
             let caller = self.env().caller();
-            if !self.auth.has_permission(caller,String::from("vote"),String::from("vote.vote")) {
+            if !self.auth.has_permission(caller,String::from("vote"),String::from("vote")) {
                 return false;
             }
             if let Some(vote) = self.votes.get_mut(&vote_id) {
