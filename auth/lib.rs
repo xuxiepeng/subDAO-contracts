@@ -169,6 +169,11 @@ mod auth {
             }
             actions_vec
         }
+
+        #[ink(message)]
+        pub fn get_auth_owner(& self) -> AccountId {
+            return self.owner;
+        }
     }
 
     #[cfg(test)]
