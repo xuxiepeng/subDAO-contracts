@@ -18,6 +18,7 @@ scale-info = { version = "0.6.0", default-features = false, features = ["derive"
 funty="=1.1.0"
 
 vault = { version = "0.1.0", path = "../vault", default-features = false, features = ["ink-as-dependency"] }
+auth = { version = "0.1.0", path = "../auth", default-features = false, features = ["ink-as-dependency"] }
 
 [lib]
 name = "vote_manager"
@@ -40,5 +41,6 @@ std = [
     "scale-info/std",
 
     "vault/std",
+    "auth/std",
 ]
 ink-as-dependency = []

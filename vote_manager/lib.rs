@@ -12,6 +12,7 @@ mod vote_manager {
     use alloc::vec::Vec;
     use alloc::string::String;
     use vault::VaultManager;
+    use auth::Auth;
 
     use ink_storage::{
         collections::{
@@ -106,6 +107,7 @@ mod vote_manager {
     #[ink(storage)]
     pub struct VoteManager {
         vault: VaultManager,
+        auth: Auth,
         votes_length: u64,
         votes: StorageHashMap<VoteId, Vote>,
         voters: StorageHashMap<(VoteId, AccountId), ChoiceId>,
@@ -142,10 +144,12 @@ mod vote_manager {
     impl VoteManager {
 
         #[ink(constructor)]
-        pub fn new(vault_address: AccountId) -> Self {
+        pub fn new(vault_address: AccountId, auth_address: AccountId) -> Self {
             let vault_instance = ink_env::call::FromAccountId::from_account_id(vault_address);
+            let auth_instance = ink_env::call::FromAccountId::from_account_id(auth_address);
             Self { 
                 vault: vault_instance,
+                auth: auth_instance,
                 votes_length: 0,
                 votes: StorageHashMap::default(),
                 voters: StorageHashMap::default(),
@@ -156,6 +160,8 @@ mod vote_manager {
 
         #[ink(message)]
         pub fn new_vote(&mut self, title: String, desc: String, vote_time: u64, support_require_num: u64, min_require_num: u64, choices: String) -> u64 {
+            let caller = self.env().caller();
+            assert!(self.auth.has_permission(caller,String::from("vote"),String::from("new")));
             let vote_id = self.votes_length.clone();
             self.votes_length += 1;
             let start_date: u64 = self.env().block_timestamp();
@@ -201,6 +207,8 @@ mod vote_manager {
 
         #[ink(message)]
         pub fn new_vote_with_transfer(&mut self, title: String, desc: String, vote_time: u64, support_require_num: u64, min_require_num: u64, choices: String, erc20_address:AccountId, to_address:AccountId, value:u64) -> u64 {
+            let caller = self.env().caller();
+            assert!(self.auth.has_permission(caller,String::from("vote"),String::from("new")));
             let vote_id = self.votes_length.clone();
             self.votes_length += 1;
             let start_date: u64 = self.env().block_timestamp();
@@ -265,6 +273,10 @@ mod vote_manager {
         #[ink(message)]
         pub fn vote(&mut self, vote_id: VoteId, support_choice: u32, voter: AccountId) -> bool {
             if !self.vote_exists(vote_id) {
+                return false;
+            }
+            let caller = self.env().caller();
+            if !self.auth.has_permission(caller,String::from("vote"),String::from("vote")) {
                 return false;
             }
             if let Some(vote) = self.votes.get_mut(&vote_id) {

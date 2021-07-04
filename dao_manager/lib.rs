@@ -403,8 +403,9 @@ mod dao_manager {
             assert!(total_balance > contract_init_balance, "not enough unit to instance contract");
             // instance org
             let vault_addr = self.component_addrs.vault_addr.unwrap();
+            let auth_addr = self.component_addrs.auth_addr.unwrap();
             // let salt = version.to_le_bytes();
-            let vote_instance_params = VoteManager::new(vault_addr)
+            let vote_instance_params = VoteManager::new(vault_addr, auth_addr)
                 .endowment(contract_init_balance)
                 .code_hash(vote_code_hash)
                 .salt_bytes(salt)
