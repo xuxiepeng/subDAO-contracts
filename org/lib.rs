@@ -317,21 +317,21 @@ mod org {
         }
 
 
-        #[ink(message)]
-        pub fn resign(&mut self,member: AccountId) -> bool  {
+        // #[ink(message)]
+        // pub fn resign(&mut self,member: AccountId) -> bool  {
 
 
-            if self.members.contains_key(&member) {
-                self.members.take(&member);
-                return true;
-            };
+        //     if self.members.contains_key(&member) {
+        //         self.members.take(&member);
+        //         return true;
+        //     };
 
-            if self.moderators.contains_key(&member) {
-                self.moderators.take(&member);
-                return true;
-            };
-            return false;
-        }
+        //     if self.moderators.contains_key(&member) {
+        //         self.moderators.take(&member);
+        //         return true;
+        //     };
+        //     return false;
+        // }
 
         #[ink(message)]
         pub fn resign_member(&mut self,member: AccountId) -> bool  {
