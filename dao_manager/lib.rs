@@ -415,6 +415,13 @@ mod dao_manager {
             let vote_instance = ink_env::call::FromAccountId::from_account_id(vote_addr);
             self.components.vote = Some(vote_instance);
             self.component_addrs.vote_addr = Some(vote_addr);
+
+            let mut auth_instance: Auth = ink_env::call::FromAccountId::from_account_id(auth_addr);
+            // register inner action
+            auth_instance.register_action(String::from("vault"), String::from("withdraw"), String::from("vault.withdraw"));
+            // grant inner action
+            auth_instance.grant_permission(vote_addr, String::from("vault"), String::from("withdraw"))
+
             true
         }
 
