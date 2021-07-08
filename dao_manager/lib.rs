@@ -420,7 +420,7 @@ mod dao_manager {
             // register inner action
             auth_instance.register_action(String::from("vault"), String::from("withdraw"), String::from("vault.withdraw"));
             // grant inner action
-            auth_instance.grant_permission(vote_addr, String::from("vault"), String::from("withdraw"))
+            auth_instance.grant_permission(vote_addr, String::from("vault"), String::from("withdraw"));
 
             true
         }
