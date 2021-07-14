@@ -367,6 +367,8 @@ mod dao_manager {
 
             // register inner action
             auth_instance.register_action(String::from("vault"), String::from("add_vault_token"), String::from("vault.add_vault_token"));
+            auth_instance.register_action(String::from("vote"), String::from("new"), String::from("Create Voting"));
+            auth_instance.register_action(String::from("vote"), String::from("vote"), String::from("Vote"));
 
             // grant inner action
             auth_instance.grant_permission(dao_addr, String::from("vault"), String::from("add_vault_token"));
