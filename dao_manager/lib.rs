@@ -369,6 +369,8 @@ mod dao_manager {
             auth_instance.register_action(String::from("vault"), String::from("add_vault_token"), String::from("vault.add_vault_token"));
             auth_instance.register_action(String::from("vote"), String::from("new"), String::from("Create Voting"));
             auth_instance.register_action(String::from("vote"), String::from("vote"), String::from("Vote"));
+            auth_instance.register_action(String::from("auth"), String::from("grant"), String::from("Grant/Revoke Permission"));
+            auth_instance.register_action(String::from("auth"), String::from("register"), String::from("Register/Cancel Action"));
 
             // grant inner action
             auth_instance.grant_permission(dao_addr, String::from("vault"), String::from("add_vault_token"));
