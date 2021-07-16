@@ -324,7 +324,9 @@ mod dao_manager {
             assert!(total_balance > contract_init_balance, "not enough unit to instance contract");
             // instance org
             // let salt = version.to_le_bytes();
-            let org_instance_params = OrgManager::new(Self::env().account_id(), self.org_id)
+            let auth_addr = self.component_addrs.auth_addr.unwrap();
+
+            let org_instance_params = OrgManager::new(Self::env().account_id(), self.org_id, auth_addr)
                 .endowment(contract_init_balance)
                 .code_hash(org_code_hash)
                 .salt_bytes(salt)
