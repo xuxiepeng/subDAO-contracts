@@ -343,6 +343,7 @@ mod dao_manager {
 
             self.components.org = Some(org_instance);
             self.component_addrs.org_addr = Some(org_addr);
+            auth_instance.grant_permission(org_addr, String::from("auth"), String::from("grant"));
             true
         }
 
