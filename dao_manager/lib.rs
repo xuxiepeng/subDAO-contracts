@@ -34,12 +34,12 @@ mod dao_manager {
     derive(scale_info::TypeInfo, ink_storage::traits::StorageLayout)
     )]
     pub struct DAOComponents {
-        base: Option<Base>,
-        erc20: Option<Erc20>,
-        org: Option<OrgManager>,
-        vault: Option<VaultManager>,
-        vote: Option<VoteManager>,
-        auth: Option<Auth>,
+        pub base: Option<Base>,
+        pub erc20: Option<Erc20>,
+        pub org: Option<OrgManager>,
+        pub vault: Option<VaultManager>,
+        pub vote: Option<VoteManager>,
+        pub auth: Option<Auth>,
         //    github: Option<Github>,
     }
 
@@ -53,17 +53,17 @@ mod dao_manager {
     )]
     pub struct DAOComponentAddrs {
         // base module contract's address
-        base_addr: Option<AccountId>,
+        pub base_addr: Option<AccountId>,
         // erc20 module contract's address
-        erc20_addr: Option<AccountId>,
+        pub erc20_addr: Option<AccountId>,
         // org module contract's address
-        org_addr: Option<AccountId>,
+        pub org_addr: Option<AccountId>,
         // vault module contract's address
-        vault_addr: Option<AccountId>,
+        pub vault_addr: Option<AccountId>,
         // vote module contract's address
-        vote_addr: Option<AccountId>,
+        pub vote_addr: Option<AccountId>,
         // auth module contract's address
-        auth_addr: Option<AccountId>,
+        pub auth_addr: Option<AccountId>,
         // github module contract's address
         // github_addr: Option<AccountId>,
     }
@@ -141,12 +141,12 @@ mod dao_manager {
     /// to add new static storage fields to your contract.
     #[ink(storage)]
     pub struct DAOManager {
-        init: bool,
-        owner: AccountId,
-        org_id: u64,
-        template: Option<DAOTemplate>,
-        components: DAOComponents,
-        component_addrs: DAOComponentAddrs,
+        pub init: bool,
+        pub owner: AccountId,
+        pub org_id: u64,
+        pub template: Option<DAOTemplate>,
+        pub components: DAOComponents,
+        pub component_addrs: DAOComponentAddrs,
     }
 
     impl DAOManager {
