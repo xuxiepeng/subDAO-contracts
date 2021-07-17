@@ -210,8 +210,8 @@ mod dao_manager {
 
             // let version = self.org_id as u32;
             self._init_base(base_code_hash, params.base, &salt);
-            self._init_org(org_code_hash, params.org, &salt);
             self._init_auth(auth_code_hash, params.auth.clone(), &salt);
+            self._init_org(org_code_hash, params.org, &salt);
             self._init_vault(vault_code_hash, &salt);
             self._init_vote(vote_code_hash, &salt);
             self._init_erc20(erc20_code_hash, params.erc20, params.erc20Transfers, &salt);
