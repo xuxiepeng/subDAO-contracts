@@ -243,14 +243,15 @@ mod org {
         #[ink(message)]
         pub fn add_dao_member(&mut self,name:String,member: AccountId) -> bool {
 
+            let caller = self.env().caller();
+
             if self.can_free_add_member == false {
                 return false
             }
 
-
             let  mut auth_instance = self.get_auth_by_address(self.auth_contract_address);
             assert!(auth_instance.has_permission(caller, String::from("auth"),String::from("grant")));
-            auth_instance.grant_permission(moderator, String::from("vote"), String::from("vote"));
+            auth_instance.grant_permission(member, String::from("vote"), String::from("vote"));
 
             match self.members.insert(member,name) {
                 Some(_) => { false},
@@ -270,10 +271,10 @@ mod org {
         
         pub fn add_dao_member_private(&mut self,name:String,member: AccountId) -> bool {
 
-
+            let caller = self.env().caller();
             let  mut auth_instance = self.get_auth_by_address(self.auth_contract_address);
             assert!(auth_instance.has_permission(caller, String::from("auth"),String::from("grant")));
-            auth_instance.grant_permission(moderator, String::from("vote"), String::from("vote"));
+            auth_instance.grant_permission(member, String::from("vote"), String::from("vote"));
 
             match self.members.insert(member,name) {
                 Some(_) => { false},
