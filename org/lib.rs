@@ -223,7 +223,7 @@ mod org {
 
 
             let  mut auth_instance = self.get_auth_by_address(self.auth_contract_address);
-            assert!(auth_instance.has_permission(caller, String::from("auth"),String::from("grant")));
+            assert!(self.owner == caller || self._has_permission(caller, String::from("auth"),String::from("grant")));
             auth_instance.grant_permission(moderator, String::from("vote"), String::from("new"));
             auth_instance.grant_permission(moderator, String::from("vote"), String::from("vote"));
 
