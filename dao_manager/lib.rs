@@ -336,7 +336,7 @@ mod dao_manager {
             let mut org_instance: OrgManager = ink_env::call::FromAccountId::from_account_id(org_addr);
 
             // add dao owner as moderator
-            org_instance.add_dao_moderator(String::from("DaoManager Owner"), self.owner);
+            org_instance.add_dao_moderator(String::from("Dao Owner"), param.owner);
             // add moderator
             for (name, accountId) in &param.moderators {
                 org_instance.add_dao_moderator(name.clone(), *accountId);
