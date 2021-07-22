@@ -335,6 +335,8 @@ mod dao_manager {
             let org_addr = org_init_result.expect("failed at instantiating the `Org` contract");
             let mut org_instance: OrgManager = ink_env::call::FromAccountId::from_account_id(org_addr);
 
+            // add dao owner as moderator
+            org_instance.add_dao_moderator(String::from("DaoManager Owner"), self.owner);
             // add moderator
             for (name, accountId) in &param.moderators {
                 org_instance.add_dao_moderator(name.clone(), *accountId);
