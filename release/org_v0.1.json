@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x77b8dfedff0c5ff8b9067d239ec12a7dffa45b8cd147d0cdd64c46d926eb0afb",
+    "hash": "0xdbc81e081e9f7bb19b9a9e145445dd52ac03cee2e75916434042c95b8fc2c61b",
     "language": "ink! 3.0.0-rc3",
     "compiler": "rustc 1.53.0-nightly"
   },
@@ -432,6 +432,41 @@
           "type": 11
         },
         "selector": "0xd9c6b562"
+      },
+      {
+        "args": [
+          {
+            "name": "name",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 9
+            }
+          },
+          {
+            "name": "moderator",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "add_dao_moderator_without_grant"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "bool"
+          ],
+          "type": 11
+        },
+        "selector": "0x53a2fd7b"
       },
       {
         "args": [
