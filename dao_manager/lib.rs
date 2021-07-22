@@ -335,18 +335,24 @@ mod dao_manager {
             let org_addr = org_init_result.expect("failed at instantiating the `Org` contract");
             let mut org_instance: OrgManager = ink_env::call::FromAccountId::from_account_id(org_addr);
 
+            let mut auth_instance: Auth = ink_env::call::FromAccountId::from_account_id(auth_addr);
+            auth_instance.grant_permission(org_addr, String::from("auth"), String::from("grant"));
+
             // add dao owner as moderator
-            org_instance.add_dao_moderator(String::from("Dao Owner"), param.owner);
+            org_instance.add_dao_moderator_without_grant(String::from("Dao Owner"), param.owner);
+            auth_instance.grant_permission(param.owner, String::from("vote"), String::from("new"));
+            auth_instance.grant_permission(param.owner, String::from("vote"), String::from("vote"));
+
             // add moderator
             for (name, accountId) in &param.moderators {
-                org_instance.add_dao_moderator(name.clone(), *accountId);
+                org_instance.add_dao_moderator_without_grant(name.clone(), *accountId);
+                auth_instance.grant_permission(*accountId, String::from("vote"), String::from("new"));
+                auth_instance.grant_permission(*accountId, String::from("vote"), String::from("vote"));
             }
             org_instance.transfer_ownership(param.owner);
 
             self.components.org = Some(org_instance);
             self.component_addrs.org_addr = Some(org_addr);
-            let mut auth_instance: Auth = ink_env::call::FromAccountId::from_account_id(auth_addr);
-            auth_instance.grant_permission(org_addr, String::from("auth"), String::from("grant"));
             true
         }
 

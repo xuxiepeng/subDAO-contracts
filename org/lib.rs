@@ -240,6 +240,28 @@ mod org {
             }
         }
 
+
+        #[ink(message)]
+        pub fn add_dao_moderator_without_grant(&mut self,name:String,moderator: AccountId) -> bool  {
+            let caller = self.env().caller();
+
+
+            if caller != self.owner {
+                return false;
+            }
+
+            match self.moderators.insert(moderator,name) {
+                Some(_) => { false},
+                None => {
+                    let org_id = self.org_id;
+                    self.env().emit_event(AddDAOModeratorEvent{
+                        moderator,
+                        org_id,});
+                    true
+                }
+            }
+        }
+
         #[ink(message)]
         pub fn add_dao_member(&mut self,name:String,member: AccountId) -> bool {
 
