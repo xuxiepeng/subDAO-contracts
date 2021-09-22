@@ -17,9 +17,16 @@ As a pre-requisite for the tool you need to install the [binaryen](https://githu
 binaryen version **must be >=99**.
 
 ### cargo-contract
-Please **use version 0.11**!  
+Please **use version 0.14**!  
+```bash
+cargo install cargo-contract --vers ^0.14 --force --locked
 ```
-cargo install cargo-contract --vers ^0.11 --force --locked
+And update rust.
+```bash
+rustup default stable
+rustup update
+rustup update nightly
+rustup target add wasm32-unknown-unknown --toolchain nightly
 ```
 
 ## compile contracts

@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x8643ef7ab5d72d28f7e250d80cdfa205021c83e2341f3a72ef3284c1d5d1f531",
-    "language": "ink! 3.0.0-rc3",
-    "compiler": "rustc 1.53.0-nightly"
+    "hash": "0xb084dd41fdac3f0ad976ab47040bab1287de1dea6a70a05ca744d98137e2dcba",
+    "language": "ink! 3.0.0-rc5",
+    "compiler": "rustc 1.57.0-nightly"
   },
   "contract": {
     "name": "main",
@@ -298,6 +298,32 @@
           "type": 24
         },
         "selector": "0x21743714"
+      },
+      {
+        "args": [
+          {
+            "name": "user",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "list_dao_instances_by_account"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Vec"
+          ],
+          "type": 24
+        },
+        "selector": "0x620120f8"
       }
     ]
   },

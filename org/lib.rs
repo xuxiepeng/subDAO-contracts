@@ -435,6 +435,28 @@ mod org {
             
         }
 
+        #[ink(message)]
+        pub fn check_role_by_account(&self, user: AccountId) -> (bool,bool,bool)  {
+
+            let mut is_member = false;
+            let mut is_moderator = false;
+            let mut is_owner = false;
+            if self.members.contains_key(&user) {
+                is_member =  true;
+            }
+
+            if self.moderators.contains_key(&user) {
+                is_moderator =  true;
+            }
+
+            if user == self.owner {
+                is_owner = true;
+            }
+
+            return (is_member, is_moderator, is_owner)
+
+        }
+
 
         #[ink(message)]
         pub fn transfer_ownership(&mut self,new_owner: AccountId) -> bool  {

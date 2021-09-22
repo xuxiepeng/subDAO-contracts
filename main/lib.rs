@@ -72,7 +72,7 @@ mod main {
             instance
         }
         #[ink(message)]
-        pub fn  init (&mut self, template_code_hash: Hash, salt: Vec<u8>) -> bool 
+        pub fn  init (&mut self, template_code_hash: Hash, salt: Vec<u8>) -> bool
         {
             let total_balance = Self::env().balance();
             // instance template_manager
@@ -181,6 +181,30 @@ mod main {
             while temp.is_some() {
                 let dao: DAOInstance = Main::fillOrgOwner(temp.unwrap().clone());
                 if owner == dao.owner {
+                    dao_vec.push(dao);
+                }
+                temp = iter.next();
+            }
+            dao_vec
+        }
+
+        #[ink(message)]
+        pub fn list_dao_instances_by_account(&mut self, user: AccountId) -> Vec<DAOInstance> {
+
+            let mut dao_vec = Vec::new();
+            let mut iter = self.instance_map.values();
+            let mut temp = iter.next();
+            while temp.is_some() {
+                let dao = temp.unwrap().clone();
+                let org_addr_op = dao.dao_manager.query_component_addrs().org_addr;
+                if org_addr_op.is_none() {
+                    temp = iter.next();
+                    continue
+                }
+                let org_addr: AccountId = org_addr_op.unwrap();
+                let org_instance: OrgManager = ink_env::call::FromAccountId::from_account_id(org_addr);
+                let (is_member, is_moderator, is_owner) = org_instance.check_role_by_account(user);
+                if is_member || is_moderator || is_owner {
                     dao_vec.push(dao);
                 }
                 temp = iter.next();
