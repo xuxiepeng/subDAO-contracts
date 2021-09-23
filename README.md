@@ -37,6 +37,8 @@ cargo +nightly contract build
 
 ### all contracts
 ```
+git submodule init
+git submodule update
 ./build.sh
 ```
 the ABI, wasm, and contract files are copied in `./release` dir.
