@@ -1,5 +1,5 @@
 # subDAO-contracts
-contracts for subDAO, using [ink! 3.0.0.0-rc3](https://github.com/paritytech/ink/tree/v3.0.0-rc3).
+contracts for subDAO, using [ink! 3.0.0.0-rc5](https://github.com/paritytech/ink/tree/v3.0.0-rc5).
 
 ## install cargo-contract
 reference [here](https://substrate.dev/substrate-contracts-workshop/#/0/setup).
