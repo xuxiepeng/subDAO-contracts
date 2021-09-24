@@ -11,7 +11,7 @@ rustup default stable
 rustup update
 rustup update nightly
 rustup component add rust-src --toolchain nightly
-rustup target add wasm32-unknown-unknown --toolchain stable
+rustup target add wasm32-unknown-unknown --toolchain nightly
 ```
 
 ### binaryen
