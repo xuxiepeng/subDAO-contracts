@@ -1,5 +1,5 @@
 # subDAO-contracts
-contracts for subDAO, using [ink! 3.0.0.0-rc5](https://github.com/paritytech/ink/tree/v3.0.0-rc5).
+contracts for subDAO, using [ink! 3.0.0.0-rc4](https://github.com/paritytech/ink/tree/v3.0.0-rc4).
 
 ## install cargo-contract
 reference [here](https://substrate.dev/substrate-contracts-workshop/#/0/setup).
@@ -7,6 +7,9 @@ reference [here](https://substrate.dev/substrate-contracts-workshop/#/0/setup).
 ### rust
 
 ```
+rustup default stable
+rustup update
+rustup update nightly
 rustup component add rust-src --toolchain nightly
 rustup target add wasm32-unknown-unknown --toolchain stable
 ```
@@ -16,17 +19,16 @@ As a pre-requisite for the tool you need to install the [binaryen](https://githu
 
 binaryen version **must be >=99**.
 
-### cargo-contract
-Please **use version 0.14**!  
+### update submodule
 ```bash
-cargo install cargo-contract --vers ^0.14 --force --locked
+git submodule init
+git submodule update
 ```
-And update rust.
+
+### cargo-contract
+Please **use version 0.11**!  
 ```bash
-rustup default stable
-rustup update
-rustup update nightly
-rustup target add wasm32-unknown-unknown --toolchain nightly
+cargo install cargo-contract --vers ^0.11 --force --locked
 ```
 
 ## compile contracts
@@ -37,8 +39,6 @@ cargo +nightly contract build
 
 ### all contracts
 ```
-git submodule init
-git submodule update
 ./build.sh
 ```
 the ABI, wasm, and contract files are copied in `./release` dir.
