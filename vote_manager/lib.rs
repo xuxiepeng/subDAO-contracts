@@ -371,10 +371,10 @@ mod vote_manager {
         use ink_lang as ink;
 
         use super::*;
-        use ink_env::{
-            call,
-            test,
-        };
+        // use ink_env::{
+        //     call,
+        //     test,
+        // };
 
         #[ink::test]
         fn test_split() {
@@ -417,16 +417,36 @@ mod vote_manager {
             assert_eq!(vote_manager.votes_length, 0);
         }
 
-        // #[ink::test]
-        // fn new_vote() {
-        //     let accounts =
-        //         ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
-        //             .expect("Cannot get accounts");
-        //     let vote_manager = VoteManager::new();
+        #[ink::test]
+        fn full_test() {
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+            let mut vote_manager = VoteManager::new();
             
-        //     let r = vote_manager.new_vote("hello".to_string(), "hello world".to_string(), 100, 1, 0, "A,B,C,D".to_string());
-        //     assert_eq!(r, 0);
+            let r = vote_manager.new_vote("hello".to_string(), "hello world".to_string(), 100, 1, 0, "A|B|C".to_string());
+            assert_eq!(r, 0);
 
-        // }
+            let vec1 = vote_manager.query_all_vote();
+            for elem in vec1.iter() {
+                let debug_info = format!("choice id: {}", &elem.choices);
+                ink_env::debug_println( &debug_info );
+            }
+
+            vote_manager.vote(0, 2, accounts.alice);
+
+            let vec2 = vote_manager.query_all_vote();
+            for elem in vec2.iter() {
+                let debug_info = format!("choice id: {}", &elem.choices);
+                ink_env::debug_println( &debug_info );
+            }
+
+
+            vote_manager.vote(0, 1, accounts.alice);
+
+            let vec3 = vote_manager.query_all_vote();
+            for elem in vec3.iter() {
+                let debug_info = format!("choice id: {}", &elem.choices);
+                ink_env::debug_println( &debug_info );
+            }
+        }
     }
 }
