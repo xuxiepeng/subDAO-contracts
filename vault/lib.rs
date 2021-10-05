@@ -37,9 +37,20 @@ mod vault {
         transfer_time:u64,
     }
 
-
-
-
+    // Token info for query purpose.
+    #[derive(
+        Debug, Clone, PartialEq, Eq, scale::Encode, scale::Decode, SpreadLayout, PackedLayout,Default
+        )]
+        #[cfg_attr(
+        feature = "std",
+        derive(::scale_info::TypeInfo, ::ink_storage::traits::StorageLayout)
+        )]
+    pub struct TokenInfo {
+        erc20: AccountId,
+        symbol: String,
+        name: String,
+        balance: u64,
+    }
 
     #[ink(storage)]
     pub struct VaultManager {
@@ -160,9 +171,9 @@ mod vault {
         #[ink(message)]
         pub fn add_vault_token(&mut self,erc_20_address:AccountId) -> bool  {
 
-            let caller = self.env().caller();
+            let _caller = self.env().caller();
 
-            let  auth = self.get_auth_by_address(self.auth_contract_address);
+            let  _auth = self.get_auth_by_address(self.auth_contract_address);
             
             // let is_permission = auth.has_permission(caller,String::from("vault"),String::from("add_vault_token"));
             let is_permission = true;
@@ -194,9 +205,9 @@ mod vault {
         #[ink(message)]
         pub fn remove_vault_token(&mut self,erc_20_address: AccountId) -> bool  {
 
-            let caller = self.env().caller();
+            let _caller = self.env().caller();
 
-            let  auth = self.get_auth_by_address(self.auth_contract_address);
+            let _auth = self.get_auth_by_address(self.auth_contract_address);
 
             //let is_permission = auth.has_permission(caller,String::from("vault"),String::from("remove_vault_token"));
             let is_permission = true;
@@ -252,6 +263,24 @@ mod vault {
             } else{
                 0
             }
+        }
+
+        #[ink(message)]
+        pub fn get_balance(&self) -> ink_prelude::vec::Vec<TokenInfo> {
+
+            self.visible_tokens.keys();
+            let mut v:ink_prelude::vec::Vec<TokenInfo> = ink_prelude::vec::Vec::new();
+            for address in self.visible_tokens.keys() {
+
+                let  erc20_instance: Erc20 = ink_env::call::FromAccountId::from_account_id(*address);
+                v.push(TokenInfo{
+                    erc20: *address,
+                    symbol: erc20_instance.symbol(),
+                    name: erc20_instance.name(),
+                    balance: erc20_instance.balance_of(self.vault_contract_address),
+                })
+            }
+            v
         }
 
 
@@ -315,9 +344,9 @@ mod vault {
             if self.visible_tokens.contains_key(&erc_20_address) {
 
 
-                let caller = self.env().caller();
+                let _caller = self.env().caller();
 
-                let  auth = self.get_auth_by_address(self.auth_contract_address);
+                let _auth = self.get_auth_by_address(self.auth_contract_address);
     
                 // let is_permission = auth.has_permission(caller,String::from("vault"),String::from("withdraw"));
                 let is_permission = true;
