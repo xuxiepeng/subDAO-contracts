@@ -19,6 +19,7 @@ mod main {
     // use ink_prelude::string::String;
     use dao_manager::DAOManager;
     use org::OrgManager;
+    use base::Base;
     use template_manager::TemplateManager;
     use template_manager::DAOTemplate;
     const one_unit: u128 = 1_000_000_000_000;
@@ -34,6 +35,10 @@ mod main {
     pub struct DAOInstance {
         id: u64,
         owner: AccountId,
+        size: u64,
+        name: String,
+        logo: String,
+        desc: String,
         dao_manager: DAOManager,
         dao_manager_addr: AccountId,
     }
@@ -141,6 +146,10 @@ mod main {
             self.instance_map.insert(self.instance_index, DAOInstance {
                 id: self.instance_index,
                 owner: controller,
+                size: 0,
+                name: String::from(""),
+                logo: String::from(""),
+                desc: String::from(""),
                 dao_manager: dao_instance,
                 dao_manager_addr: dao_addr,
             });
@@ -154,14 +163,14 @@ mod main {
             let mut iter = self.instance_map.values();
             let mut temp = iter.next();
             while temp.is_some() {
-                let dao = Main::fill_org_owner(temp.unwrap().clone());
+                let dao = Main::fill_dao_details(temp.unwrap().clone());
                 dao_vec.push(dao);
                 temp = iter.next();
             }
             dao_vec
         }
 
-        fn fill_org_owner(mut dao: DAOInstance) -> DAOInstance {
+        fn fill_dao_details(mut dao: DAOInstance) -> DAOInstance {
             let org_addr_op = dao.dao_manager.query_component_addrs().org_addr;
             if org_addr_op.is_none() {
                 return dao
@@ -169,6 +178,18 @@ mod main {
             let org_addr: AccountId = org_addr_op.unwrap();
             let org_instance: OrgManager = ink_env::call::FromAccountId::from_account_id(org_addr);
             dao.owner = org_instance.get_dao_owner();
+            dao.size = org_instance.get_dao_size();
+
+            let base_addr_op = dao.dao_manager.query_component_addrs().base_addr;
+            if base_addr_op.is_none() {
+                return dao
+            }
+            let base_addr: AccountId = base_addr_op.unwrap();
+            let base_instance: Base = ink_env::call::FromAccountId::from_account_id(base_addr);
+            dao.name = base_instance.get_name();
+            dao.logo = base_instance.get_logo();
+            dao.desc = base_instance.get_desc();
+            
             dao
         }
 
@@ -179,7 +200,7 @@ mod main {
             let mut iter = self.instance_map.values();
             let mut temp = iter.next();
             while temp.is_some() {
-                let dao: DAOInstance = Main::fill_org_owner(temp.unwrap().clone());
+                let dao: DAOInstance = Main::fill_dao_details(temp.unwrap().clone());
                 if owner == dao.owner {
                     dao_vec.push(dao);
                 }

@@ -17,6 +17,7 @@ scale-info = { version = "0.6.0", default-features = false, features = ["derive"
 
 erc20 = { version = "0.1.0", path = "../erc20", default-features = false, features = ["ink-as-dependency"] }
 org = { version = "0.1.0", path = "../org", default-features = false, features = ["ink-as-dependency"] }
+base = { version = "0.1.0", path = "../base", default-features = false, features = ["ink-as-dependency"] }
 dao_manager = { version = "0.1.0", path = "../dao_manager", default-features = false, features = ["ink-as-dependency"] }
 template_manager = { version = "0.1.0", path = "../template_manager", default-features = false, features = ["ink-as-dependency"] }
 
