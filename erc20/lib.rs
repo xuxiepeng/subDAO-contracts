@@ -64,7 +64,8 @@ mod erc20 {
             let mut instance = Self {
                 name: name,
                 symbol: symbol,
-                total_supply: initial_supply,
+                // total_supply: initial_supply,
+                total_supply: 0,
                 decimals,
                 balances,
                 allowances: StorageHashMap::new(),
