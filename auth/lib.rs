@@ -189,10 +189,10 @@ mod auth {
         use ink_lang as ink;
 
         use super::*;
-        use ink_env::{
-            call,
-            test,
-        };
+        // use ink_env::{
+        //     call,
+        //     test,
+        // };
 
         #[ink::test]
         fn test_register_action() {
