@@ -154,14 +154,14 @@ mod main {
             let mut iter = self.instance_map.values();
             let mut temp = iter.next();
             while temp.is_some() {
-                let dao = Main::fillOrgOwner(temp.unwrap().clone());
+                let dao = Main::fill_org_owner(temp.unwrap().clone());
                 dao_vec.push(dao);
                 temp = iter.next();
             }
             dao_vec
         }
 
-        fn fillOrgOwner(mut dao: DAOInstance) -> DAOInstance {
+        fn fill_org_owner(mut dao: DAOInstance) -> DAOInstance {
             let org_addr_op = dao.dao_manager.query_component_addrs().org_addr;
             if org_addr_op.is_none() {
                 return dao
@@ -179,7 +179,7 @@ mod main {
             let mut iter = self.instance_map.values();
             let mut temp = iter.next();
             while temp.is_some() {
-                let dao: DAOInstance = Main::fillOrgOwner(temp.unwrap().clone());
+                let dao: DAOInstance = Main::fill_org_owner(temp.unwrap().clone());
                 if owner == dao.owner {
                     dao_vec.push(dao);
                 }
