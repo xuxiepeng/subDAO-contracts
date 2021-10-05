@@ -24,8 +24,8 @@ mod dao_manager {
     use vault::VaultManager;
     use vote_manager::VoteManager;
 
-    const one_unit: u128 = 1_000_000_000_000;
-    const contract_init_balance: u128 = 100 * 1000 * 1_000_000_000_000;
+    const ONE_UNIT: u128 = 1_000_000_000_000;
+    const CONTRACT_INIT_BALANCE: u128 = 100 * 1000 * 1_000_000_000_000;
 
     /// DAO component instances
     #[derive(scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout)]
@@ -258,11 +258,11 @@ mod dao_manager {
             }
             let base_code_hash = base_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
-            assert!(total_balance > contract_init_balance, "not enough unit to instance contract");
+            assert!(total_balance > CONTRACT_INIT_BALANCE, "not enough unit to instance contract");
             // instance base
             // let salt = version.to_le_bytes();
             let instance_params = Base::new()
-                .endowment(contract_init_balance)
+                .endowment(CONTRACT_INIT_BALANCE)
                 .code_hash(base_code_hash)
                 .salt_bytes(salt)
                 .params();
@@ -285,13 +285,13 @@ mod dao_manager {
             }
             let erc20_code_hash = erc20_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
-            assert!(total_balance > contract_init_balance, "not enough unit to instance contract");
+            assert!(total_balance > CONTRACT_INIT_BALANCE, "not enough unit to instance contract");
             let vault_addr = self.component_addrs.vault_addr.unwrap();
             // instance erc20
             // let salt = version.to_le_bytes();
             let erc20_instance_params = Erc20::new(param.name, param.symbol,
                 0, param.decimals, Self::env().account_id())
-                .endowment(contract_init_balance)
+                .endowment(CONTRACT_INIT_BALANCE)
                 .code_hash(erc20_code_hash)
                 .salt_bytes(salt)
                 .params();
@@ -321,13 +321,13 @@ mod dao_manager {
             }
             let org_code_hash = org_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
-            assert!(total_balance > contract_init_balance, "not enough unit to instance contract");
+            assert!(total_balance > CONTRACT_INIT_BALANCE, "not enough unit to instance contract");
             // instance org
             // let salt = version.to_le_bytes();
             let auth_addr = self.component_addrs.auth_addr.unwrap();
 
             let org_instance_params = OrgManager::new(Self::env().account_id(), self.org_id, auth_addr)
-                .endowment(contract_init_balance)
+                .endowment(CONTRACT_INIT_BALANCE)
                 .code_hash(org_code_hash)
                 .salt_bytes(salt)
                 .params();
@@ -365,11 +365,11 @@ mod dao_manager {
             let dao_addr = Self::env().account_id();
             let auth_code_hash = auth_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
-            assert!(total_balance > contract_init_balance, "not enough unit to instance contract");
+            assert!(total_balance > CONTRACT_INIT_BALANCE, "not enough unit to instance contract");
             // instance auth
             // let salt = version.to_le_bytes();
             let auth_instance_params = Auth::new(dao_addr)
-                .endowment(contract_init_balance)
+                .endowment(CONTRACT_INIT_BALANCE)
                 .code_hash(auth_code_hash)
                 .salt_bytes(salt)
                 .params();
@@ -400,13 +400,13 @@ mod dao_manager {
             }
             let vault_code_hash = vault_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
-            assert!(total_balance > contract_init_balance, "not enough unit to instance contract");
+            assert!(total_balance > CONTRACT_INIT_BALANCE, "not enough unit to instance contract");
             // instance org
             let org_addr = self.component_addrs.org_addr.unwrap();
             let auth_addr = self.component_addrs.auth_addr.unwrap();
             // let salt = version.to_le_bytes();
             let vault_instance_params = VaultManager::new(org_addr, auth_addr)
-                .endowment(contract_init_balance)
+                .endowment(CONTRACT_INIT_BALANCE)
                 .code_hash(vault_code_hash)
                 .salt_bytes(salt)
                 .params();
@@ -425,13 +425,13 @@ mod dao_manager {
             }
             let vote_code_hash = vote_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
-            assert!(total_balance > contract_init_balance, "not enough unit to instance contract");
+            assert!(total_balance > CONTRACT_INIT_BALANCE, "not enough unit to instance contract");
             // instance org
             let vault_addr = self.component_addrs.vault_addr.unwrap();
             let auth_addr = self.component_addrs.auth_addr.unwrap();
             // let salt = version.to_le_bytes();
             let vote_instance_params = VoteManager::new(vault_addr, auth_addr)
-                .endowment(contract_init_balance)
+                .endowment(CONTRACT_INIT_BALANCE)
                 .code_hash(vote_code_hash)
                 .salt_bytes(salt)
                 .params();
