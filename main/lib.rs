@@ -22,9 +22,9 @@ mod main {
     use base::Base;
     use template_manager::TemplateManager;
     use template_manager::DAOTemplate;
-    const one_unit: u128 = 1_000_000_000_000;
-    const template_init_balance: u128 = 100 * 1000 * 1_000_000_000_000;
-    const dao_init_balance: u128 = 1000 * 1000 * 1_000_000_000_000;
+    // const ONE_UNIT: u128 = 1_000_000_000_000;
+    const TEMPLATE_INIT_BALANCE: u128 = 100 * 1000 * 1_000_000_000_000;
+    const DAO_INIT_BALANCE: u128 = 1000 * 1000 * 1_000_000_000_000;
 
     /// Indicates whether a transaction is already confirmed or needs further confirmations.
     #[derive(scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout)]
@@ -32,6 +32,9 @@ mod main {
     feature = "std",
     derive(scale_info::TypeInfo, ink_storage::traits::StorageLayout)
     )]
+
+    #[derive(Debug)]
+
     pub struct DAOInstance {
         id: u64,
         owner: AccountId,
@@ -79,11 +82,11 @@ mod main {
         #[ink(message)]
         pub fn  init (&mut self, template_code_hash: Hash, salt: Vec<u8>) -> bool
         {
-            let total_balance = Self::env().balance();
+            // let total_balance = Self::env().balance();
             // instance template_manager
             // let salt = version.to_le_bytes();
             let instance_params = TemplateManager::new(self.owner)
-                .endowment(template_init_balance)
+                .endowment(TEMPLATE_INIT_BALANCE)
                 .code_hash(template_code_hash)
                 .salt_bytes(&salt)
                 .params();
@@ -119,7 +122,7 @@ mod main {
         #[ink(message)]
         pub fn instance_by_template(&mut self, index: u64, controller: AccountId, salt: Vec<u8>) -> bool {
             assert_eq!(self.instance_index + 1 > self.instance_index, true);
-            let total_balance = Self::env().balance();
+            // let total_balance = Self::env().balance();
             // assert_eq!(total_balance >= 20, true);
 
             // instance dao_manager
@@ -127,7 +130,7 @@ mod main {
             let dao_manager_code_hash = template.dao_manager_code_hash;
             // let salt = version.to_le_bytes();
             let dao_instance_params = DAOManager::new(controller, self.instance_index)
-                .endowment(dao_init_balance)
+                .endowment(DAO_INIT_BALANCE)
                 .code_hash(dao_manager_code_hash)
                 .salt_bytes(salt)
                 .params();
