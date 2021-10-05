@@ -269,7 +269,7 @@ mod dao_manager {
             let init_result = ink_env::instantiate_contract(&instance_params);
             let contract_addr = init_result.expect("failed at instantiating the `Base` contract");
             let mut contract_instance: Base = ink_env::call::FromAccountId::from_account_id(contract_addr);
-            contract_instance.init_base(self.env().caller(), param.name, param.logo, param.desc);
+            contract_instance.init_base(param.name, param.logo, param.desc);
 
             self.components.base = Some(contract_instance);
             self.component_addrs.base_addr = Some(contract_addr);
