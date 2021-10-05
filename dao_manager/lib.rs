@@ -190,6 +190,10 @@ mod dao_manager {
             let total_balance = Self::env().balance();
             return total_balance;
         }
+        #[ink(message)]
+        pub fn  get_owner(&mut self) -> AccountId {
+            self.owner
+        }
 
         #[ink(message)]
         pub fn  init_by_params(&mut self, params: DAOInitParams, salt: Vec<u8>) -> bool {

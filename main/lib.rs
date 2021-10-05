@@ -173,6 +173,22 @@ mod main {
             dao_vec
         }
 
+        #[ink(message)]
+        pub fn list_dao_info(&mut self, dao_addr:AccountId) -> DAOInstance {
+            let dao_instance: DAOManager = ink_env::call::FromAccountId::from_account_id(dao_addr);
+            let dao = Main::fill_dao_details(DAOInstance {
+                id: self.instance_index,
+                owner: Default::default(),
+                size: 0,
+                name: String::from(""),
+                logo: String::from(""),
+                desc: String::from(""),
+                dao_manager: dao_instance,
+                dao_manager_addr: dao_addr,
+            });
+            dao
+        }
+
         fn fill_dao_details(mut dao: DAOInstance) -> DAOInstance {
             let org_addr_op = dao.dao_manager.query_component_addrs().org_addr;
             if org_addr_op.is_none() {
