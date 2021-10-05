@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x5341cbf922cbb32c34bbbad1773a7b7cf8ad2f1fb4df3f4e7d26e735d1abc060",
+    "hash": "0xd11018a5f26c1b2d3feb055ff8464eecf775da2203f73aa3c76093560a6fb5d5",
     "language": "ink! 3.0.0-rc4",
     "compiler": "rustc 1.55.0-nightly"
   },
@@ -88,6 +88,22 @@
           "type": 12
         },
         "selector": "0xea817e65"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "get_owner"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "AccountId"
+          ],
+          "type": 2
+        },
+        "selector": "0x07fcd0b1"
       },
       {
         "args": [

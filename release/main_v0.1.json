@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x55307b7f02145680201d265148ef54fe6d8cc40478d571a83bce47c6a1d172d3",
+    "hash": "0x61fe88fc77940e46f8dd1ced5c238fe81b2bd21ab76d92964b4b9b106961de7a",
     "language": "ink! 3.0.0-rc4",
     "compiler": "rustc 1.55.0-nightly"
   },
@@ -272,6 +272,32 @@
           "type": 24
         },
         "selector": "0x1baed2cd"
+      },
+      {
+        "args": [
+          {
+            "name": "dao_addr",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "list_dao_info"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "DAOInstance"
+          ],
+          "type": 10
+        },
+        "selector": "0x72766226"
       },
       {
         "args": [
