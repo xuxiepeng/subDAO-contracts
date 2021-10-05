@@ -395,21 +395,11 @@ mod vault {
     mod tests {
         /// Imports all the definitions from the outer scope so we can use them here.
         use super::*;
-        use ink_env::{
-            call,
-            test,
-        };
+        // use ink_env::{
+        //     call,
+        //     test,
+        // };
         use ink_lang as ink;
-
-        #[ink::test]
-        fn new_vault_works() {
-            let accounts =
-                ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
-                    .expect("Cannot get accounts");
-            // Create a new contract instance.
-            let mut vault_manager = VaultManager::new(1);
-            assert_eq!(vault_manager.org_id, 1);
-        }
 
         #[ink::test]
         fn add_token_works() {
@@ -417,9 +407,9 @@ mod vault {
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
             // Create a new contract instance.
-            let mut vault_manager = VaultManager::new(1);
-            let eth_name = String::from("eth");
-            vault_manager.add_vault_token(eth_name,accounts.bob);
+            // FIXME: using alice instead of auth, please be caution!!
+            let mut vault_manager = VaultManager::new(accounts.alice, accounts.alice);
+            vault_manager.add_vault_token(accounts.bob);
             assert_eq!(vault_manager.tokens.len(), 1);
         }
 
@@ -430,9 +420,9 @@ mod vault {
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
             // Create a new contract instance.
-            let mut vault_manager = VaultManager::new(1);
-            let eth_name = String::from("eth");
-            vault_manager.add_vault_token(eth_name,accounts.bob);
+            // FIXME: using alice instead of auth, please be caution!!
+            let mut vault_manager = VaultManager::new(accounts.alice, accounts.alice);
+            vault_manager.add_vault_token(accounts.bob);
             vault_manager.remove_vault_token(accounts.bob);
             assert_eq!(vault_manager.tokens.len(), 1);
             assert_eq!(vault_manager.visible_tokens.len(), 0);
@@ -445,11 +435,10 @@ mod vault {
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
             // Create a new contract instance.
-            let mut vault_manager = VaultManager::new(1);
-            let eth_name = String::from("eth");
-            vault_manager.add_vault_token(eth_name,accounts.bob);
-            let dot_name = String::from("dot");
-            vault_manager.add_vault_token(dot_name,accounts.alice);
+            // FIXME: using alice instead of auth, please be caution!!
+            let mut vault_manager = VaultManager::new(accounts.alice, accounts.alice);
+            vault_manager.add_vault_token(accounts.bob);
+            vault_manager.add_vault_token(accounts.alice);
             assert_eq!(vault_manager.get_token_list().len(), 2);
         }
 
@@ -460,9 +449,9 @@ mod vault {
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
             // Create a new contract instance.
-            let mut vault_manager = VaultManager::new(1);
-            let eth_name = String::from("eth");
-            vault_manager.add_vault_token(eth_name,accounts.bob);
+            // FIXME: using alice instead of auth, please be caution!!
+            let mut vault_manager = VaultManager::new(accounts.alice, accounts.alice);
+            vault_manager.add_vault_token(accounts.bob);
             assert_eq!(vault_manager.get_balance_of(accounts.bob), 0);
         }
 
@@ -474,9 +463,9 @@ mod vault {
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
             // Create a new contract instance.
-            let mut vault_manager = VaultManager::new(1);
-            let eth_name = String::from("eth");
-            vault_manager.add_vault_token(eth_name,accounts.bob);
+            // FIXME: using alice instead of auth, please be caution!!
+            let mut vault_manager = VaultManager::new(accounts.alice, accounts.alice);
+            vault_manager.add_vault_token(accounts.bob);
             vault_manager.deposit(accounts.bob,accounts.alice,100);
             assert_eq!(vault_manager.get_balance_of(accounts.bob),100);
 
@@ -489,9 +478,9 @@ mod vault {
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
             // Create a new contract instance.
-            let mut vault_manager = VaultManager::new(1);
-            let eth_name = String::from("eth");
-            vault_manager.add_vault_token(eth_name,accounts.bob);
+            // FIXME: using alice instead of auth, please be caution!!
+            let mut vault_manager = VaultManager::new(accounts.alice, accounts.alice);
+            vault_manager.add_vault_token(accounts.bob);
             vault_manager.deposit(accounts.bob,accounts.eve,1000);
             vault_manager.withdraw(accounts.bob,accounts.alice,100);
             assert_eq!(vault_manager.get_balance_of(accounts.bob),900);
@@ -505,9 +494,9 @@ mod vault {
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
             // Create a new contract instance.
-            let mut vault_manager = VaultManager::new(1);
-            let eth_name = String::from("eth");
-            vault_manager.add_vault_token(eth_name,accounts.bob);
+            // FIXME: using alice instead of auth, please be caution!!
+            let mut vault_manager = VaultManager::new(accounts.alice, accounts.alice);
+            vault_manager.add_vault_token(accounts.bob);
             vault_manager.deposit(accounts.bob,accounts.eve,1000);
             vault_manager.withdraw(accounts.bob,accounts.alice,100);
             assert_eq!(vault_manager.get_transfer_history().len(),2);
