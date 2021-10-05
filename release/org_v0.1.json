@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xaeb7c1150effb759549d99925ce6ea72be9a6d6527227c42b5e0cf76bebcc403",
+    "hash": "0xe5f27d098d912f0d27875e27b0b4db6f957578b12c0f4c27b3328ccde92a582e",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.57.0-nightly"
+    "compiler": "rustc 1.55.0-nightly"
   },
   "contract": {
     "name": "org",
@@ -307,6 +307,22 @@
           "type": 10
         },
         "selector": "0xfab40e7a"
+      },
+      {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "get_dao_size"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "u64"
+          ],
+          "type": 10
+        },
+        "selector": "0x55083c6e"
       },
       {
         "args": [],

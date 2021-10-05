@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x5081b8e6a39158133d9e51f90f0ab8598766936422c750dea242a85f285d0211",
+    "hash": "0xda88244ace8ac96e0250fe792a77378400abf05a53eaaeceaada8c3fc0f973f5",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.57.0-nightly"
+    "compiler": "rustc 1.55.0-nightly"
   },
   "contract": {
     "name": "vault",
@@ -283,6 +283,24 @@
         "selector": "0x1c18fd00"
       },
       {
+        "args": [],
+        "docs": [],
+        "mutates": false,
+        "name": [
+          "get_balance"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink_prelude",
+            "vec",
+            "Vec"
+          ],
+          "type": 16
+        },
+        "selector": "0xea817e65"
+      },
+      {
         "args": [
           {
             "name": "erc_20_address",
@@ -384,7 +402,7 @@
             "vec",
             "Vec"
           ],
-          "type": 16
+          "type": 18
         },
         "selector": "0x7c9f68dd"
       }
@@ -945,6 +963,46 @@
           "type": 4
         }
       }
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 17
+        }
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "erc20",
+              "type": 4,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "symbol",
+              "type": 13,
+              "typeName": "String"
+            },
+            {
+              "name": "name",
+              "type": 13,
+              "typeName": "String"
+            },
+            {
+              "name": "balance",
+              "type": 10,
+              "typeName": "u64"
+            }
+          ]
+        }
+      },
+      "path": [
+        "vault",
+        "vault",
+        "TokenInfo"
+      ]
     },
     {
       "def": {

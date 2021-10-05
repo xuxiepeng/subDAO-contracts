@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x16e010e9aa803319881c1f271ea69ddaf2215ead67d443f2cb2c2246b0211ab6",
+    "hash": "0x55307b7f02145680201d265148ef54fe6d8cc40478d571a83bce47c6a1d172d3",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.57.0-nightly"
+    "compiler": "rustc 1.55.0-nightly"
   },
   "contract": {
     "name": "main",
@@ -84,7 +84,7 @@
               "displayName": [
                 "Hash"
               ],
-              "type": 15
+              "type": 16
             }
           },
           {
@@ -93,7 +93,7 @@
               "displayName": [
                 "Vec"
               ],
-              "type": 16
+              "type": 17
             }
           }
         ],
@@ -107,7 +107,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 17
+          "type": 18
         },
         "selector": "0x44d6441f"
       },
@@ -119,7 +119,7 @@
               "displayName": [
                 "String"
               ],
-              "type": 18
+              "type": 11
             }
           },
           {
@@ -128,7 +128,7 @@
               "displayName": [
                 "Hash"
               ],
-              "type": 15
+              "type": 16
             }
           },
           {
@@ -151,7 +151,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 17
+          "type": 18
         },
         "selector": "0xc39c7d18"
       },
@@ -239,7 +239,7 @@
               "displayName": [
                 "Vec"
               ],
-              "type": 16
+              "type": 17
             }
           }
         ],
@@ -253,7 +253,7 @@
           "displayName": [
             "bool"
           ],
-          "type": 17
+          "type": 18
         },
         "selector": "0xb332bcd1"
       },
@@ -526,7 +526,7 @@
                                       "layout": {
                                         "cell": {
                                           "key": "0x0700000002000000000000000000000000000000000000000000000000000000",
-                                          "ty": 12
+                                          "ty": 13
                                         }
                                       },
                                       "len": 4294967295,
@@ -551,7 +551,7 @@
                       "layout": {
                         "cell": {
                           "key": "0x0800000002000000000000000000000000000000000000000000000000000000",
-                          "ty": 13
+                          "ty": 14
                         }
                       },
                       "offset": "0x0700000002000000000000000000000000000000000000000000000000000000",
@@ -743,8 +743,28 @@
               "typeName": "AccountId"
             },
             {
-              "name": "dao_manager",
+              "name": "size",
+              "type": 4,
+              "typeName": "u64"
+            },
+            {
+              "name": "name",
               "type": 11,
+              "typeName": "String"
+            },
+            {
+              "name": "logo",
+              "type": 11,
+              "typeName": "String"
+            },
+            {
+              "name": "desc",
+              "type": 11,
+              "typeName": "String"
+            },
+            {
+              "name": "dao_manager",
+              "type": 12,
               "typeName": "DAOManager"
             },
             {
@@ -760,6 +780,11 @@
         "main",
         "DAOInstance"
       ]
+    },
+    {
+      "def": {
+        "primitive": "str"
+      }
     },
     {
       "def": {
@@ -820,7 +845,7 @@
           "fields": [
             {
               "name": "value",
-              "type": 14,
+              "type": 15,
               "typeName": "V"
             },
             {
@@ -832,7 +857,7 @@
         }
       },
       "params": [
-        14
+        15
       ],
       "path": [
         "ink_storage",
@@ -879,11 +904,6 @@
     },
     {
       "def": {
-        "primitive": "str"
-      }
-    },
-    {
-      "def": {
         "composite": {
           "fields": [
             {
@@ -903,8 +923,8 @@
     {
       "def": {
         "tuple": [
-          18,
-          15
+          11,
+          16
         ]
       }
     },
@@ -938,12 +958,12 @@
             },
             {
               "name": "name",
-              "type": 18,
+              "type": 11,
               "typeName": "String"
             },
             {
               "name": "dao_manager_code_hash",
-              "type": 15,
+              "type": 16,
               "typeName": "Hash"
             },
             {

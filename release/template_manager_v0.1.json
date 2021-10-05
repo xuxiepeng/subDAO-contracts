@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x86807881a9b538a91336941f6d74ac0a31aa09e46e06b419e9816f92aaec1f59",
+    "hash": "0x8aa52a27dca4d208c08c425384a47cd7a12d1caecd4a361b2e6d7b163eddde7e",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.57.0-nightly"
+    "compiler": "rustc 1.55.0-nightly"
   },
   "contract": {
     "name": "template_manager",

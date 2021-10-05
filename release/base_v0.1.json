@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x68e27ad971c129a6473307d6f83998554e2a0c4ab548f3aaa898c8bc9cb66936",
+    "hash": "0x973c0f3310161ddf4eb3f3d8a572628d09878b1845a8f5a591aa76d5cc7eee1e",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.57.0-nightly"
+    "compiler": "rustc 1.55.0-nightly"
   },
   "contract": {
     "name": "base",
@@ -185,32 +185,11 @@
         "selector": "0x26277d2b"
       },
       {
-        "args": [
-          {
-            "name": "owner",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 1
-            }
-          }
-        ],
-        "docs": [],
-        "mutates": true,
-        "name": [
-          "set_owner"
-        ],
-        "payable": false,
-        "returnType": null,
-        "selector": "0x367facd6"
-      },
-      {
         "args": [],
         "docs": [],
         "mutates": false,
         "name": [
-          "get_owner"
+          "get_creator"
         ],
         "payable": false,
         "returnType": {
@@ -219,7 +198,7 @@
           ],
           "type": 1
         },
-        "selector": "0x07fcd0b1"
+        "selector": "0xf08dfa6e"
       },
       {
         "args": [],
@@ -249,7 +228,7 @@
               "ty": 1
             }
           },
-          "name": "owner"
+          "name": "creator"
         },
         {
           "layout": {
@@ -322,7 +301,7 @@
         "composite": {
           "fields": [
             {
-              "name": "owner",
+              "name": "creator",
               "type": 1,
               "typeName": "AccountId"
             },
