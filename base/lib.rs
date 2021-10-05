@@ -131,7 +131,7 @@ mod base {
             base.set_name("SubDAO".to_string());
 
             let dbg_msg = format!("name is {}", base.get_name());
-            ink_env::debug_println( &dbg_msg );
+            ink_env::debug_println!("{}", &dbg_msg );
 
             assert_eq!(base.get_name(), "SubDAO");
         }
@@ -143,7 +143,7 @@ mod base {
             base.set_logo("https://example.com/logo.jpg".to_string());
 
             let dbg_msg = format!("logo is {}", base.get_logo());
-            ink_env::debug_println( &dbg_msg );
+            ink_env::debug_println!("{}", &dbg_msg );
 
             assert_eq!(base.get_logo(), "https://example.com/logo.jpg");
         }
@@ -155,7 +155,7 @@ mod base {
             base.set_desc("This is the one to rule all!".to_string());
 
             let dbg_msg = format!("name is {}", base.get_desc());
-            ink_env::debug_println( &dbg_msg );
+            ink_env::debug_println!("{}", &dbg_msg );
 
             assert_eq!(base.get_desc(), "This is the one to rule all!");
         }
@@ -197,7 +197,7 @@ mod base {
             base.init_base("SubDAO".to_string(), "http://example.com/logo.jpg".to_string(), "This is the one to rule all!".to_string());
 
             let dbg_msg = format!("name is {}", base.get_name());
-            ink_env::debug_println( &dbg_msg );
+            ink_env::debug_println!("{}", &dbg_msg );
 
             assert_eq!(base.get_name(), "SubDAO");
             assert_eq!(base.get_logo(), "http://example.com/logo.jpg");
@@ -209,7 +209,7 @@ mod base {
         #[ink::test]
         fn test_meanless() {
             let dbg_msg = format!("name is eth");
-            ink_env::debug_println( &dbg_msg );
+            ink_env::debug_println!("{}", &dbg_msg );
 
             let eth_name = String::from("eth");
             assert_eq!(eth_name.clone(), "eth");
