@@ -19,6 +19,7 @@ mod base {
     )]
     pub struct DisplayBase {
         owner: AccountId,
+        creator: AccountId,
         name: String,
         logo: String,
         desc: String,
@@ -27,6 +28,7 @@ mod base {
     #[ink(storage)]
     pub struct Base {
         owner: AccountId,
+        creator: AccountId,
         name: String,
         logo: String,
         desc: String,
@@ -41,6 +43,7 @@ mod base {
                 logo: String::default(),
                 desc: String::default(),
                 owner: Default::default(),
+                creator: Default::default(),
             }
         }
 
@@ -50,14 +53,14 @@ mod base {
         }
 
         #[ink(message)]
-        pub fn init_base(&mut self, name: String, logo: String, desc: String) {
+        pub fn init_base(&mut self, owner: AccountId, name: String, logo: String, desc: String) {
             self.set_name(name);
             self.set_logo(logo);
             self.set_desc(desc);
-            // self.set_owner(owner);
+            self.set_owner(owner);
 
             let caller = self.env().caller();
-            self.set_owner(caller);
+            self._set_creator(caller);
         }
 
         #[ink(message)]
@@ -105,10 +108,25 @@ mod base {
             self.owner
         }
 
+        pub fn _set_creator(&mut self, creator: AccountId) {
+
+            let caller = self.env().caller();
+
+            if self.creator == AccountId::default() || caller == self.creator {
+                self.creator = creator;
+            }
+        }
+
+        #[ink(message)]
+        pub fn get_creator(&self) -> AccountId {
+            self.creator
+        }
+
         #[ink(message)]
         pub fn get_base(&self) -> DisplayBase {
             DisplayBase {
                 owner: self.owner,
+                creator: self.creator,
                 name: self.name.clone(),
                 logo: self.logo.clone(),
                 desc: self.desc.clone(),
@@ -168,6 +186,12 @@ mod base {
             let mut base = Base::default();
 
             base.set_owner(accounts.alice);
+            
+            let mut dbg_msg = format!("owner is {:?}", base.get_owner());
+            ink_env::debug_println!("{}", &dbg_msg);
+
+            dbg_msg = format!("owner is {:?}", accounts.alice);
+            ink_env::debug_println!("{}", &dbg_msg );
 
             assert_eq!(base.get_owner(), accounts.alice);
         }
@@ -181,9 +205,17 @@ mod base {
 
             base.set_owner(accounts.alice);
 
+            let mut dbg_msg = format!("before owner is {:?}", base.get_owner());
+            ink_env::debug_println!("{}", &dbg_msg);
+
             assert_eq!(base.get_owner(), accounts.alice);
 
             base.set_owner(accounts.bob);
+
+            
+
+            dbg_msg = format!("after owner is {:?}", base.get_owner());
+            ink_env::debug_println!("{}", &dbg_msg );
 
             assert_eq!(base.get_owner(), accounts.bob);
         }
@@ -192,9 +224,11 @@ mod base {
         #[ink::test]
         fn test_all() {
 
+            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+
             let mut base = Base::default();
 
-            base.init_base("SubDAO".to_string(), "http://example.com/logo.jpg".to_string(), "This is the one to rule all!".to_string());
+            base.init_base(accounts.bob, "SubDAO".to_string(), "http://example.com/logo.jpg".to_string(), "This is the one to rule all!".to_string());
 
             let dbg_msg = format!("name is {}", base.get_name());
             ink_env::debug_println!("{}", &dbg_msg );
