@@ -480,9 +480,9 @@ mod vote_manager {
 
             let choices = "A,B,C".to_string();
             let split = choices.split(",");
-            ink_env::debug_println("hello");
+            ink_env::debug_println!("{}","hello");
             for s in split {
-                ink_env::debug_println(&s);
+                ink_env::debug_println!("{}",&s);
             }
         }
 
@@ -494,7 +494,7 @@ mod vote_manager {
             let length = i + vec.len() as u32;
             assert!(length == 4);
             for s in vec{
-                ink_env::debug_println(&s);
+                ink_env::debug_println!("{}",&s);
             }
         }
 
@@ -503,7 +503,7 @@ mod vote_manager {
             let choice: u64 = 3;
             let support: u64 = 5;
             let t : u64 = choice * 1000 / support; 
-            ink_env::debug_println(t.to_string().as_str());
+            ink_env::debug_println!("{}",t.to_string().as_str());
         }
 
         #[ink::test]
@@ -513,7 +513,7 @@ mod vote_manager {
                     .expect("Cannot get accounts");
             // after update votemanager need an vault_address to be initialized.
             // use alice address to replace here.
-            let vote_manager = VoteManager::new(accounts.alice);
+            let vote_manager = VoteManager::new(accounts.alice, accounts.alice);
 
             assert_eq!(vote_manager.votes_length, 0);
         }
@@ -521,7 +521,7 @@ mod vote_manager {
         #[ink::test]
         fn full_test() {
             let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
-            let mut vote_manager = VoteManager::new(accounts.alice);
+            let mut vote_manager = VoteManager::new(accounts.alice, accounts.alice);
             
             let r = vote_manager.new_vote("hello".to_string(), "hello world".to_string(), 100, 1, 0, "A|B|C".to_string());
             assert_eq!(r, 0);
@@ -529,7 +529,7 @@ mod vote_manager {
             let vec1 = vote_manager.query_all_vote();
             for elem in vec1.iter() {
                 let debug_info = format!("choice id: {}", &elem.choices);
-                ink_env::debug_println( &debug_info );
+                ink_env::debug_println!("{}", &debug_info );
             }
 
             vote_manager.vote(0, 2, accounts.alice);
@@ -537,7 +537,7 @@ mod vote_manager {
             let vec2 = vote_manager.query_all_vote();
             for elem in vec2.iter() {
                 let debug_info = format!("choice id: {}", &elem.choices);
-                ink_env::debug_println( &debug_info );
+                ink_env::debug_println!("{}", &debug_info );
             }
 
 
@@ -546,14 +546,14 @@ mod vote_manager {
             let vec3 = vote_manager.query_all_vote();
             for elem in vec3.iter() {
                 let debug_info = format!("choice id: {}", &elem.choices);
-                ink_env::debug_println( &debug_info );
+                ink_env::debug_println!("{}", &debug_info );
             }
         }
 
         #[ink::test]
         fn vote_has_voted_test() {
             let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
-            let mut vote_manager = VoteManager::new(accounts.alice);
+            let mut vote_manager = VoteManager::new(accounts.alice, accounts.alice);
             
             let r = vote_manager.new_vote("hello".to_string(), "hello world".to_string(), 100, 1, 0, "A|B|C".to_string());
             assert_eq!(r, 0);
