@@ -15,7 +15,7 @@ mod dao_manager {
     use ink_prelude::vec::Vec;
     use ink_prelude::collections::BTreeMap;
     use ink_storage::{
-        collections::HashMap as StorageHashMap,
+        // collections::HashMap as StorageHashMap,
         traits::{PackedLayout, SpreadLayout},
     };
     use org::OrgManager;
@@ -24,11 +24,11 @@ mod dao_manager {
     use vault::VaultManager;
     use vote_manager::VoteManager;
 
-    const ONE_UNIT: u128 = 1_000_000_000_000;
+    // const ONE_UNIT: u128 = 1_000_000_000_000;
     const CONTRACT_INIT_BALANCE: u128 = 100 * 1000 * 1_000_000_000_000;
 
     /// DAO component instances
-    #[derive(scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout)]
+    #[derive(Debug, scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout)]
     #[cfg_attr(
     feature = "std",
     derive(scale_info::TypeInfo, ink_storage::traits::StorageLayout)
@@ -289,7 +289,7 @@ mod dao_manager {
             let erc20_code_hash = erc20_code_hash.unwrap().clone();
             let total_balance = Self::env().balance();
             assert!(total_balance > CONTRACT_INIT_BALANCE, "not enough unit to instance contract");
-            let vault_addr = self.component_addrs.vault_addr.unwrap();
+            // let vault_addr = self.component_addrs.vault_addr.unwrap();
             let erc20_instance_params = Erc20::new(param.name, param.symbol,
                 0, param.decimals, Self::env().account_id())
                 .endowment(CONTRACT_INIT_BALANCE)
@@ -338,10 +338,10 @@ mod dao_manager {
             auth_instance.grant_permission(param.owner, String::from("vote"), String::from("vote"));
 
             // add moderator
-            for (name, accountId) in &param.moderators {
-                org_instance.add_dao_moderator_without_grant(name.clone(), *accountId);
-                auth_instance.grant_permission(*accountId, String::from("vote"), String::from("new"));
-                auth_instance.grant_permission(*accountId, String::from("vote"), String::from("vote"));
+            for (name, account_id) in &param.moderators {
+                org_instance.add_dao_moderator_without_grant(name.clone(), *account_id);
+                auth_instance.grant_permission(*account_id, String::from("vote"), String::from("new"));
+                auth_instance.grant_permission(*account_id, String::from("vote"), String::from("vote"));
             }
             org_instance.transfer_ownership(param.owner);
 
@@ -406,7 +406,7 @@ mod dao_manager {
                 .params();
             let vault_init_result = ink_env::instantiate_contract(&vault_instance_params);
             let vault_addr = vault_init_result.expect("failed at instantiating the `Org` contract");
-            let mut vault_instance: VaultManager = ink_env::call::FromAccountId::from_account_id(vault_addr);
+            let vault_instance: VaultManager = ink_env::call::FromAccountId::from_account_id(vault_addr);
             self.components.vault = Some(vault_instance);
             self.component_addrs.vault_addr = Some(vault_addr);
             true
