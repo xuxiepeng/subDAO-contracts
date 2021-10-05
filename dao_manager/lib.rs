@@ -131,7 +131,6 @@ mod dao_manager {
     pub struct DAOInitParams {
         base: BaseParam,
         erc20: ERC20Param,
-        erc20Transfers: BTreeMap<AccountId, u64>,
         org: OrgParam,
         auth: AuthParam,
     }
@@ -218,7 +217,7 @@ mod dao_manager {
             self._init_org(org_code_hash, params.org, &salt);
             self._init_vault(vault_code_hash, &salt);
             self._init_vote(vote_code_hash, &salt);
-            self._init_erc20(erc20_code_hash, params.erc20, params.erc20Transfers, &salt);
+            self._init_erc20(erc20_code_hash, params.erc20, &salt);
             // self._init_github(github_code_hash);
 
             // add vault token
@@ -283,7 +282,7 @@ mod dao_manager {
 
         /// init erc20
         fn _init_erc20(&mut self, erc20_code_hash: Option<&Hash>,
-                       param: ERC20Param, initTransfers: BTreeMap<AccountId, u64>, salt: &Vec<u8>) -> bool {
+            param: ERC20Param, salt: &Vec<u8>) -> bool {
             if erc20_code_hash.is_none() {
                 return true;
             }
@@ -291,8 +290,6 @@ mod dao_manager {
             let total_balance = Self::env().balance();
             assert!(total_balance > CONTRACT_INIT_BALANCE, "not enough unit to instance contract");
             let vault_addr = self.component_addrs.vault_addr.unwrap();
-            // instance erc20
-            // let salt = version.to_le_bytes();
             let erc20_instance_params = Erc20::new(param.name, param.symbol,
                 0, param.decimals, Self::env().account_id())
                 .endowment(CONTRACT_INIT_BALANCE)
@@ -303,14 +300,7 @@ mod dao_manager {
             let erc20_addr = erc20_init_result.expect("failed at instantiating the `Erc20` contract");
             let mut erc20_instance: Erc20 = ink_env::call::FromAccountId::from_account_id(erc20_addr);
 
-            // transfer tokens
-            let mut transfer = 0;
-            for (to, amount) in &initTransfers {
-                erc20_instance.mint_token_by_owner(*to, *amount);
-                transfer += amount;
-            }
-
-            erc20_instance.mint_token_by_owner(vault_addr, param.total_supply - transfer);
+            erc20_instance.mint_token_by_owner(param.owner, param.total_supply);
             erc20_instance.transfer_owner(param.owner);
 
             self.components.erc20 = Some(erc20_instance);
