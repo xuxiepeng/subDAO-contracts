@@ -226,7 +226,7 @@ mod org {
 
         }
 
-
+        // FIXME: this implementation is incorrect when the added one is already a member of the dao.
         #[ink(message)]
         pub fn add_dao_moderator(&mut self,name:String,moderator: AccountId) -> bool  {
             let caller = self.env().caller();
@@ -278,6 +278,7 @@ mod org {
             }
         }
 
+        // FIXME: this implementation is incorrect when the added one is already a moderator of the dao.
         #[ink(message)]
         pub fn add_dao_member(&mut self,name:String,member: AccountId) -> bool {
 
@@ -364,6 +365,7 @@ mod org {
 
         }
 
+        // FIXME: This implementation is incorrect!!! Need re-factor this part, only moderators can remove members
         #[ink(message)]
         pub fn remove_dao_member(&mut self, member: AccountId) -> bool  {
 
@@ -482,6 +484,13 @@ mod org {
             // only owner can transfer the ownership of the org
             if caller != self.owner {
                 return false;
+            }
+
+            if self.members.contains_key(&new_owner) {
+                self.remove_dao_member(new_owner);
+                self.add_dao_moderator(self.members.get(&new_owner).unwrap().clone(), new_owner);
+            } else if !self.moderators.contains_key(&caller) {
+                    return false;
             }
 
             self.owner = new_owner;

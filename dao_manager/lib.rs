@@ -332,18 +332,28 @@ mod dao_manager {
             let mut auth_instance: Auth = ink_env::call::FromAccountId::from_account_id(auth_addr);
             auth_instance.grant_permission(org_addr, String::from("auth"), String::from("grant"));
 
-            // add dao owner as moderator
-            org_instance.add_dao_moderator_without_grant(String::from("Owner"), param.owner);
-            auth_instance.grant_permission(param.owner, String::from("vote"), String::from("new"));
-            auth_instance.grant_permission(param.owner, String::from("vote"), String::from("vote"));
-
             // add moderator
             for (name, account_id) in &param.moderators {
-                org_instance.add_dao_moderator_without_grant(name.clone(), *account_id);
-                auth_instance.grant_permission(*account_id, String::from("vote"), String::from("new"));
-                auth_instance.grant_permission(*account_id, String::from("vote"), String::from("vote"));
+                org_instance.add_dao_moderator(name.clone(), *account_id);
             }
+
+            // set dao owner
             org_instance.transfer_ownership(param.owner);
+            
+
+            // // add dao owner as moderator
+            // // org_instance.add_dao_moderator_without_grant(String::from("Owner"), param.owner);
+            // org_instance.add_dao_moderator_without_grant(String::from("Creator"), param.owner);// FIXME: use creator as the default name for the original owner
+            // auth_instance.grant_permission(param.owner, String::from("vote"), String::from("new"));
+            // auth_instance.grant_permission(param.owner, String::from("vote"), String::from("vote"));
+
+            // // add moderator
+            // for (name, account_id) in &param.moderators {
+            //     org_instance.add_dao_moderator_without_grant(name.clone(), *account_id);
+            //     auth_instance.grant_permission(*account_id, String::from("vote"), String::from("new"));
+            //     auth_instance.grant_permission(*account_id, String::from("vote"), String::from("vote"));
+            // }
+            // org_instance.transfer_ownership(param.owner);
 
             self.components.org = Some(org_instance);
             self.component_addrs.org_addr = Some(org_addr);
