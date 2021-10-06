@@ -19,7 +19,7 @@ mod template_manager {
     };
 
     /// Indicates whether a transaction is already confirmed or needs further confirmations.
-    #[derive(scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout)]
+    #[derive(Debug, scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout)]
     #[cfg_attr(
     feature = "std",
     derive(scale_info::TypeInfo, ink_storage::traits::StorageLayout)
