@@ -333,7 +333,7 @@ mod dao_manager {
             auth_instance.grant_permission(org_addr, String::from("auth"), String::from("grant"));
 
             // add dao owner as moderator
-            org_instance.add_dao_moderator_without_grant(String::from("Dao Owner"), param.owner);
+            org_instance.add_dao_moderator_without_grant(String::from("Owner"), param.owner);
             auth_instance.grant_permission(param.owner, String::from("vote"), String::from("new"));
             auth_instance.grant_permission(param.owner, String::from("vote"), String::from("vote"));
 
