@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xd11018a5f26c1b2d3feb055ff8464eecf775da2203f73aa3c76093560a6fb5d5",
+    "hash": "0xa0cced2946abeebb38bf8d81cbbc81fccd70585bea2d3b8990bf51eec52ae406",
     "language": "ink! 3.0.0-rc4",
     "compiler": "rustc 1.55.0-nightly"
   },
@@ -122,7 +122,7 @@
               "displayName": [
                 "Vec"
               ],
-              "type": 24
+              "type": 21
             }
           }
         ],
@@ -152,7 +152,7 @@
           "displayName": [
             "DAOComponentAddrs"
           ],
-          "type": 25
+          "type": 22
         },
         "selector": "0x063f051b"
       }
@@ -800,18 +800,13 @@
               "typeName": "ERC20Param"
             },
             {
-              "name": "erc20Transfers",
-              "type": 16,
-              "typeName": "BTreeMap<AccountId, u64>"
-            },
-            {
               "name": "org",
-              "type": 19,
+              "type": 16,
               "typeName": "OrgParam"
             },
             {
               "name": "auth",
-              "type": 23,
+              "type": 20,
               "typeName": "AuthParam"
             }
           ]
@@ -899,46 +894,13 @@
         "composite": {
           "fields": [
             {
-              "type": 18,
-              "typeName": "[(K, V)]"
-            }
-          ]
-        }
-      },
-      "params": [
-        17
-      ],
-      "path": [
-        "BTreeMap"
-      ]
-    },
-    {
-      "def": {
-        "tuple": [
-          2,
-          5
-        ]
-      }
-    },
-    {
-      "def": {
-        "sequence": {
-          "type": 17
-        }
-      }
-    },
-    {
-      "def": {
-        "composite": {
-          "fields": [
-            {
               "name": "owner",
               "type": 2,
               "typeName": "AccountId"
             },
             {
               "name": "moderators",
-              "type": 20,
+              "type": 17,
               "typeName": "BTreeMap<String, AccountId>"
             }
           ]
@@ -955,14 +917,14 @@
         "composite": {
           "fields": [
             {
-              "type": 22,
+              "type": 19,
               "typeName": "[(K, V)]"
             }
           ]
         }
       },
       "params": [
-        21
+        18
       ],
       "path": [
         "BTreeMap"
@@ -979,7 +941,7 @@
     {
       "def": {
         "sequence": {
-          "type": 21
+          "type": 18
         }
       }
     },
@@ -1014,32 +976,32 @@
           "fields": [
             {
               "name": "base_addr",
-              "type": 26,
+              "type": 23,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "erc20_addr",
-              "type": 26,
+              "type": 23,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "org_addr",
-              "type": 26,
+              "type": 23,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "vault_addr",
-              "type": 26,
+              "type": 23,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "vote_addr",
-              "type": 26,
+              "type": 23,
               "typeName": "Option<AccountId>"
             },
             {
               "name": "auth_addr",
-              "type": 26,
+              "type": 23,
               "typeName": "Option<AccountId>"
             }
           ]
