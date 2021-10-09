@@ -86,6 +86,28 @@ mod bind_address_manager {
             true
         }
 
+        #[ink(message)]
+        pub fn my_eth_address(&mut self) -> String {
+            
+            let caller = self.env().caller();
+            if self.address_map.contains_key(&caller) {
+                return self.address_map.get(&caller).unwrap().clone();
+            }
+
+            String::from("")
+        }
+
+        #[ink(message)]
+        pub fn is_bind(&mut self, address: AccountId) -> bool {
+            self.address_map.contains_key(&address)
+        }
+
+        #[ink(message)]
+        pub fn is_me_bind(&mut self) -> bool {
+            let caller = self.env().caller();
+            self.address_map.contains_key(&caller)
+        }
+
         fn cal_pages(&self, page:u64, size:u64, total: u64) -> (u64, u64, u64) {
             let start = page * size;
             let mut end = start + size;
