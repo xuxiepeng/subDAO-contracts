@@ -19,6 +19,7 @@ funty="=1.1.0"
 
 vault = { version = "0.1.0", path = "../vault", default-features = false, features = ["ink-as-dependency"] }
 auth = { version = "0.1.0", path = "../auth", default-features = false, features = ["ink-as-dependency"] }
+erc20 = { version = "0.1.0", path = "../erc20", default-features = false, features = ["ink-as-dependency"] }
 
 [lib]
 name = "vote_manager"

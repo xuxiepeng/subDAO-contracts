@@ -1147,6 +1147,7 @@ name = "vote_manager"
 version = "0.1.0"
 dependencies = [
  "auth",
+ "erc20",
  "funty",
  "ink_env",
  "ink_lang",

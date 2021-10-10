@@ -7,6 +7,8 @@ pub use self::vote_manager::VoteManager;
 #[ink::contract]
 mod vote_manager {
 
+    use erc20::Erc20;
+
     use alloc::format;
     // use alloc::vec;
     use alloc::vec::Vec;
@@ -99,6 +101,9 @@ mod vote_manager {
         support_num: u64,
         choices: String,
         erc20_address: AccountId,
+        erc20_symbol:String,
+        erc20_name: String,
+        erc20_balance: u64,
         to_address: AccountId,
         transfer_value: u64,
     }
@@ -383,6 +388,10 @@ mod vote_manager {
                 }
                 index += 1;
             }
+
+
+            let erc20_instance: Erc20 = ink_env::call::FromAccountId::from_account_id(vote.erc20_address);
+
             let choices_content = choices.join("|"); 
             let display_vote = DisplayVote{
                 vote_id: vote.vote_id,
@@ -397,6 +406,9 @@ mod vote_manager {
                 support_num: vote.support_num,
                 choices: choices_content,
                 erc20_address: vote.erc20_address,
+                erc20_symbol: erc20_instance.symbol(),
+                erc20_name: erc20_instance.name(),
+                erc20_balance: erc20_instance.balance_of(ink_lang::ToAccountId::to_account_id(&self.vault)),
                 to_address: vote.to_address,
                 transfer_value: vote.value,
             };
