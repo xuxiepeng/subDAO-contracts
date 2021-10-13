@@ -413,6 +413,7 @@ mod vault {
                 temp_vec.push(temp.unwrap().clone());
                 temp = iter.next();
             }
+            temp_vec.reverse();
             temp_vec
         }
 
