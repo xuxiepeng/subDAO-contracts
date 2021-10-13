@@ -235,7 +235,7 @@ mod main {
             let mut iter = self.instance_map.values();
             let mut temp = iter.next();
             while temp.is_some() {
-                let dao = temp.unwrap().clone();
+                let dao: DAOInstance = Main::fill_dao_details(temp.unwrap().clone());
                 let org_addr_op = dao.dao_manager.query_component_addrs().org_addr;
                 if org_addr_op.is_none() {
                     temp = iter.next();
