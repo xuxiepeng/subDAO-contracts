@@ -338,6 +338,7 @@ mod vote_manager {
                 let vote = self.convert_vote_to_displayvote(&vote);
                 v.push(vote);
             }
+            v.reverse();
             return v;
         }
 
@@ -350,6 +351,7 @@ mod vote_manager {
                     v.push(vote);
                 }
             }
+            v.reverse();
             return v;
         }
 
@@ -362,6 +364,7 @@ mod vote_manager {
                     v.push(vote);
                 }
             }
+            v.reverse();
             return v;
         }
 
@@ -374,6 +377,7 @@ mod vote_manager {
                     v.push(vote);
                 }
             }
+            v.reverse();
             return v;
         }
  
