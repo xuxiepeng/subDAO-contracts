@@ -263,10 +263,15 @@ mod vote_manager {
             assert!(self.vote_exists(vote_id));
             let vote = self.votes.get(&vote_id).unwrap(); 
             if self.can_execute(&vote) {
+                let mut result = true;
                 let mut vote = self.votes.get_mut(&vote_id).unwrap(); 
-                vote.executed = true;
-                let result = self.vault.withdraw(vote.erc20_address, vote.to_address, vote.value);
-                assert!(result);
+                if vote.need_trigger {
+                    result = self.vault.withdraw(vote.erc20_address, vote.to_address, vote.value);
+                    assert!(result);
+                }
+                if result {
+                    vote.executed = true;
+                }
                 self.env().emit_event(ExecuteVote{
                     vote_id,
                 });
@@ -346,7 +351,7 @@ mod vote_manager {
         pub fn query_history_vote(&self) -> alloc::vec::Vec<DisplayVote> {
             let mut v: alloc::vec::Vec<DisplayVote> = alloc::vec::Vec::new();
             for (_, val) in &self.votes {
-                if !self.is_vote_need_trigger(&val) || self.is_vote_executed(&val) {
+                if !self.is_vote_open(&val) && self.is_vote_executed(&val) {
                     let vote = self.convert_vote_to_displayvote(&val);
                     v.push(vote);
                 }
@@ -452,9 +457,9 @@ mod vote_manager {
         }
 
         fn can_execute(&self, vote: &Vote) -> bool {
-            if !vote.need_trigger {
-                return false;
-            }
+            // if !vote.need_trigger {
+            //     return false;
+            // }
             if vote.executed {
                 return false;
             }
