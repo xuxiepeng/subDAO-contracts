@@ -1,15 +1,15 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x6f5e361f665d18e1ce574c72a393705b686cb72a87a808d5825f8089526dfd1a",
+    "hash": "0x807faf162616d213e876aaf35a3c807f865e25b4fb98b6bd418b2186d35c0fe3",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.55.0-nightly"
+    "compiler": "rustc 1.57.0-nightly"
   },
   "contract": {
     "name": "erc20",
     "version": "0.1.0",
     "authors": [
-      "[your_name] <[your_email]>"
+      "SubDAO Labs <subdao.lab@gmail.com>"
     ]
   },
   "spec": {

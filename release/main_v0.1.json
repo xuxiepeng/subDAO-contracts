@@ -1,15 +1,15 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x5f57896d65b17675a498024d16b84eccdbd5aac7c907279c402e2efccf7ffa4c",
+    "hash": "0xc75799e6556dbcce2728a61d09207fd4c3cc8e4c251e7a3f381bc347f646a02b",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.55.0-nightly"
+    "compiler": "rustc 1.57.0-nightly"
   },
   "contract": {
     "name": "main",
     "version": "0.1.0",
     "authors": [
-      "[your_name] <[your_email]>"
+      "SubDAO Labs <subdao.lab@gmail.com>"
     ]
   },
   "spec": {

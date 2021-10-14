@@ -1,15 +1,15 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x3e5d28a903257515b70206157864d5cb528b791b78aa3a1873a48cfada4065ef",
+    "hash": "0x6e561282ee1f9fbf8b548dc206a8c958cddb9aa10c43206f85cbff362584e815",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.55.0-nightly"
+    "compiler": "rustc 1.57.0-nightly"
   },
   "contract": {
     "name": "vote_manager",
     "version": "0.1.0",
     "authors": [
-      "[your_name] <[your_email]>"
+      "SubDAO Labs <subdao.lab@gmail.com>"
     ]
   },
   "spec": {
@@ -1173,6 +1173,21 @@
               "name": "erc20_address",
               "type": 1,
               "typeName": "AccountId"
+            },
+            {
+              "name": "erc20_symbol",
+              "type": 12,
+              "typeName": "String"
+            },
+            {
+              "name": "erc20_name",
+              "type": 12,
+              "typeName": "String"
+            },
+            {
+              "name": "erc20_balance",
+              "type": 4,
+              "typeName": "u64"
             },
             {
               "name": "to_address",

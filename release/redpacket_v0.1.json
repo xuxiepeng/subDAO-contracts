@@ -1,15 +1,15 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xac9c5b530a8096c4bef6f052f1d66df3bc441208407b089f0dd81adfd7d0f213",
+    "hash": "0x97f55c1a0b8d121cdb9760da2f54ed7ea92ea520a99ea026e789176be6bd1dee",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.55.0-nightly"
+    "compiler": "rustc 1.57.0-nightly"
   },
   "contract": {
     "name": "redpacket",
     "version": "0.1.0",
     "authors": [
-      "[your_name] <[your_email]>"
+      "SubDAO Labs <subdao.lab@gmail.com>"
     ]
   },
   "spec": {
