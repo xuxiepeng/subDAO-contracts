@@ -75,6 +75,7 @@ mod vote_manager {
         value: u64,
         choice_index_lo: u32,
         choice_index_ho: u32,
+        status: u32,
     }
 
     #[derive(scale::Encode, scale::Decode, SpreadLayout, PackedLayout)]
@@ -106,6 +107,7 @@ mod vote_manager {
         erc20_balance: u64,
         to_address: AccountId,
         transfer_value: u64,
+        status: u32,  //0 : open status, 1 : success , 2 : Failure support_num < min_req, 3 : Failure transfer token failure.
     }
 
 
@@ -187,6 +189,7 @@ mod vote_manager {
                 value: 0,
                 choice_index_lo: self.choices_num,
                 choice_index_ho: self.choices_num + vec.len() as u32,
+                status: 0,
             };
             let choices_len = vec.len() as u32;
             if choices_len == 0 {
@@ -234,6 +237,7 @@ mod vote_manager {
                 value,
                 choice_index_lo: self.choices_num,
                 choice_index_ho: self.choices_num + vec.len() as u32,
+                status: 0,
             };
             let choices_len = vec.len() as u32;
             if choices_len == 0 {
@@ -261,24 +265,47 @@ mod vote_manager {
         #[ink(message)]
         pub fn execute(&mut self, vote_id: VoteId) -> bool {
             assert!(self.vote_exists(vote_id));
-            let vote = self.votes.get(&vote_id).unwrap(); 
-            if self.can_execute(&vote) {
-                let mut result = true;
-                let mut vote = self.votes.get_mut(&vote_id).unwrap(); 
-                if vote.need_trigger {
-                    result = self.vault.withdraw(vote.erc20_address, vote.to_address, vote.value);
-                    assert!(result);
+
+            let mut result = true;
+            let current_time = self.env().block_timestamp();
+
+            if let Some(vote) = self.votes.get_mut(&vote_id) {
+
+                if ( current_time < vote.start_date + vote.vote_time || vote.executed) && vote.status != 3 {
+                    return true;
                 }
-                if result {
-                    vote.executed = true;
+
+                vote.executed = true;
+    
+                if vote.support_num < vote.min_require_num  || vote.support_num == 0 {
+                    vote.status = 2;
+                    return false;
                 }
+
+                let mut index = 0;
+                let choices = &self.choices;
+                for choice in choices.iter() {
+                    if index >= vote.choice_index_lo && index < vote.choice_index_ho {
+                        if choice.yea >= vote.support_require_num {
+                            vote.status = 1;
+                            if vote.need_trigger {
+                                result = self.vault.withdraw(vote.erc20_address, vote.to_address, vote.value);
+                                if !result {
+                                    vote.status = 3;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    index += 1;
+                }
+    
                 self.env().emit_event(ExecuteVote{
                     vote_id,
                 });
-                result
-            } else {
-                true
             }
+
+            result
         }
 
         #[ink(message)]
@@ -351,7 +378,7 @@ mod vote_manager {
         pub fn query_history_vote(&self) -> alloc::vec::Vec<DisplayVote> {
             let mut v: alloc::vec::Vec<DisplayVote> = alloc::vec::Vec::new();
             for (_, val) in &self.votes {
-                if !self.is_vote_open(&val) && self.is_vote_executed(&val) {
+                if !self.is_vote_open(&val) && self.is_vote_executed(&val) && val.status != 3 {
                     let vote = self.convert_vote_to_displayvote(&val);
                     v.push(vote);
                 }
@@ -420,6 +447,7 @@ mod vote_manager {
                 erc20_balance: erc20_instance.balance_of(ink_lang::ToAccountId::to_account_id(&self.vault)),
                 to_address: vote.to_address,
                 transfer_value: vote.value,
+                status: vote.status,
             };
             display_vote
         }
@@ -441,7 +469,7 @@ mod vote_manager {
         }
 
         fn is_vote_wait(&self, vote: &Vote) -> bool {
-            return self.env().block_timestamp() > vote.start_date + vote.vote_time && vote.need_trigger && !vote.executed;
+            return self.env().block_timestamp() > vote.start_date + vote.vote_time && vote.need_trigger && (!vote.executed || (vote.executed && vote.status == 3));
         }
 
         fn is_vote_executed(&self, vote: &Vote) -> bool {
@@ -454,35 +482,6 @@ mod vote_manager {
 
         fn is_vote_finished(&self, vote: &Vote) -> bool {
             return self.env().block_timestamp() < vote.start_date + vote.vote_time;
-        }
-
-        fn can_execute(&self, vote: &Vote) -> bool {
-            // if !vote.need_trigger {
-            //     return false;
-            // }
-            if vote.executed {
-                return false;
-            }
-            if self.is_vote_open(&vote) {
-                return false;
-            }
-            if vote.support_num < vote.min_require_num {
-                return false;
-            }
-            if vote.support_num == 0 {
-                return false;
-            }
-            let mut index = 0;
-            let choices = &self.choices;
-            for choice in choices.iter() {
-                if index >= vote.choice_index_lo && index < vote.choice_index_ho {
-                    if choice.yea >= vote.support_require_num {
-                        return true;
-                    }
-                }
-                index += 1;
-            }
-            return false;
         }
     }
 
