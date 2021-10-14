@@ -490,7 +490,7 @@ mod org {
             if self.members.contains_key(&new_owner) {
                 self.remove_dao_member(new_owner);
                 self.add_dao_moderator(self.members.get(&new_owner).unwrap().clone(), new_owner);
-            } else if !self.moderators.contains_key(&caller) {
+            } else if !self.moderators.contains_key(&new_owner) {
                     return false;
             }
 
