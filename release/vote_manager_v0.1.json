@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xa817cdb160b9175f6ff4b82df6e7d8074c48818ee1021d9518dc903d5d1a0673",
+    "hash": "0x8b898866e0d92325396a318db2d708ac891494fcff102ec923b4c7e9048b819a",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.55.0-nightly"
+    "compiler": "rustc 1.57.0-nightly"
   },
   "contract": {
     "name": "vote_manager",
@@ -992,6 +992,11 @@
               "name": "choice_index_ho",
               "type": 6,
               "typeName": "u32"
+            },
+            {
+              "name": "status",
+              "type": 6,
+              "typeName": "u32"
             }
           ]
         }
@@ -1198,6 +1203,11 @@
               "name": "transfer_value",
               "type": 4,
               "typeName": "u64"
+            },
+            {
+              "name": "status",
+              "type": 6,
+              "typeName": "u32"
             }
           ]
         }
