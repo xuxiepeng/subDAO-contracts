@@ -283,9 +283,12 @@ mod org {
         #[ink(message)]
         pub fn add_dao_member(&mut self,name:String,member: AccountId) -> bool {
 
-            let caller = self.env().caller();
 
-            if self.can_free_add_member == false {
+            let (_is_member, is_moderator, is_owner) = self.who_am_i();
+
+            // let caller = self.env().caller();
+
+            if self.can_free_add_member == false && !is_moderator && !is_owner {
                 return false
             }
 
@@ -488,8 +491,8 @@ mod org {
             }
 
             if self.members.contains_key(&new_owner) {
-                self.remove_dao_member(new_owner);
                 self.add_dao_moderator(self.members.get(&new_owner).unwrap().clone(), new_owner);
+                self.remove_dao_member(new_owner);
             } else if !self.moderators.contains_key(&new_owner) {
                     return false;
             }
