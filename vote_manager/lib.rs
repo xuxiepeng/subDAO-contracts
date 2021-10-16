@@ -428,6 +428,14 @@ mod vote_manager {
 
             let erc20_instance: Erc20 = ink_env::call::FromAccountId::from_account_id(vote.erc20_address);
 
+            let (_erc20_symbol, _erc20_name, _erc20_balance) = if vote.need_trigger {
+                ( erc20_instance.symbol(), 
+                  erc20_instance.name(), 
+                  erc20_instance.balance_of(ink_lang::ToAccountId::to_account_id(&self.vault)))
+            }else{
+                (String::from(""),String::from(""), 0)
+            };
+
             let choices_content = choices.join("|"); 
             let display_vote = DisplayVote{
                 vote_id: vote.vote_id,
@@ -442,9 +450,9 @@ mod vote_manager {
                 support_num: vote.support_num,
                 choices: choices_content,
                 erc20_address: vote.erc20_address,
-                erc20_symbol: erc20_instance.symbol(),
-                erc20_name: erc20_instance.name(),
-                erc20_balance: erc20_instance.balance_of(ink_lang::ToAccountId::to_account_id(&self.vault)),
+                erc20_symbol: _erc20_symbol,
+                erc20_name: _erc20_name,
+                erc20_balance: _erc20_balance,
                 to_address: vote.to_address,
                 transfer_value: vote.value,
                 status: vote.status,
