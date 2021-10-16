@@ -477,7 +477,21 @@ mod vote_manager {
         }
 
         fn is_vote_wait(&self, vote: &Vote) -> bool {
-            return self.env().block_timestamp() > vote.start_date + vote.vote_time && vote.need_trigger && (!vote.executed || (vote.executed && vote.status == 3));
+            let mut result = false;
+            if self.env().block_timestamp() > vote.start_date + vote.vote_time {
+
+                if !vote.executed{
+                    result = true;
+                }else{
+                    if vote.need_trigger{
+                        if vote.status == 3 {
+                            result = true;
+                        }    
+                    }
+                }   
+            }
+            return result;
+            // return self.env().block_timestamp() > vote.start_date + vote.vote_time && vote.need_trigger && (!vote.executed || (vote.executed && vote.status == 3));
         }
 
         fn is_vote_executed(&self, vote: &Vote) -> bool {
