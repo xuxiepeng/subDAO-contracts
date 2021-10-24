@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x769b6c25e844251c7533646227862594b95f993afed46638c35f04fb0b594309",
+    "hash": "0x146de3d114cde5741aee036e3352c0196b4681549612639507143c6cda1ea2ac",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.55.0-nightly"
+    "compiler": "rustc 1.57.0-nightly"
   },
   "contract": {
     "name": "main",
@@ -56,7 +56,7 @@
               "displayName": [
                 "Option"
               ],
-              "type": 25
+              "type": 26
             }
           },
           {
@@ -258,7 +258,26 @@
         "selector": "0xb332bcd1"
       },
       {
-        "args": [],
+        "args": [
+          {
+            "name": "page",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "size",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          }
+        ],
         "docs": [],
         "mutates": true,
         "name": [
@@ -267,7 +286,7 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "Vec"
+            "PageResult"
           ],
           "type": 24
         },
@@ -309,6 +328,24 @@
               ],
               "type": 1
             }
+          },
+          {
+            "name": "page",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "size",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
           }
         ],
         "docs": [],
@@ -319,7 +356,7 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "Vec"
+            "PageResult"
           ],
           "type": 24
         },
@@ -335,6 +372,24 @@
               ],
               "type": 1
             }
+          },
+          {
+            "name": "page",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "size",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
           }
         ],
         "docs": [],
@@ -345,7 +400,7 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "Vec"
+            "PageResult"
           ],
           "type": 24
         },
@@ -1004,6 +1059,57 @@
         "template_manager",
         "template_manager",
         "DAOTemplate"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "success",
+              "type": 18,
+              "typeName": "bool"
+            },
+            {
+              "name": "err",
+              "type": 11,
+              "typeName": "String"
+            },
+            {
+              "name": "total",
+              "type": 4,
+              "typeName": "u64"
+            },
+            {
+              "name": "pages",
+              "type": 4,
+              "typeName": "u64"
+            },
+            {
+              "name": "page",
+              "type": 4,
+              "typeName": "u64"
+            },
+            {
+              "name": "size",
+              "type": 4,
+              "typeName": "u64"
+            },
+            {
+              "name": "data",
+              "type": 25,
+              "typeName": "Vec<T>"
+            }
+          ]
+        }
+      },
+      "params": [
+        10
+      ],
+      "path": [
+        "main",
+        "main",
+        "PageResult"
       ]
     },
     {

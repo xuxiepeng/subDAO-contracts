@@ -66,6 +66,21 @@ mod main {
         dao_addr: AccountId,
     }
 
+    #[derive(Debug, scale::Encode, scale::Decode, Clone, )]
+    #[cfg_attr(
+    feature = "std",
+    derive(scale_info::TypeInfo, )
+    )]
+    pub struct PageResult<T> {
+        pub success: bool,
+        pub err: String,
+        pub total: u64,
+        pub pages: u64,
+        pub page: u64,
+        pub size: u64,
+        pub data: Vec<T>,
+    }
+
     impl Main {
         #[ink(constructor)]
         pub fn new(controller: AccountId) -> Self {
@@ -102,6 +117,20 @@ mod main {
         #[ink(message)]
         pub fn add_template(&mut self, name: String, dao_manager_code_hash: Hash, components: BTreeMap<String, Hash>) -> bool {
             self.template.as_mut().unwrap().add_template(name, dao_manager_code_hash, components)
+        }
+
+        fn cal_pages(&self, page:u64, size:u64, total: u64) -> (u64, u64, u64) {
+            let start = page * size;
+            let mut end = start + size;
+            if end > total {
+                end = total
+            }
+            assert!(size <= 0 || start >= total || start < end, "wrong params");
+            let mut pages = total / size;
+            if total % size > 0 {
+                pages += 1;
+            }
+            (start, end, pages)
         }
 
         #[ink(message)]
@@ -161,16 +190,36 @@ mod main {
         }
 
         #[ink(message)]
-        pub fn list_dao_instances(&mut self) -> Vec<DAOInstance> {
-            let mut dao_vec = Vec::new();
+        pub fn list_dao_instances(&mut self, page:u64, size:u64) -> PageResult<DAOInstance> {
+            let total = self.instance_map.len() as u64;
+            let (start, end, pages) = self.cal_pages(page, size, total);
+
+            let mut total_dao_vec = Vec::new();
             let mut iter = self.instance_map.values();
             let mut temp = iter.next();
             while temp.is_some() {
                 let dao = Main::fill_dao_details(temp.unwrap().clone());
-                dao_vec.push(dao);
+                total_dao_vec.push(dao);
                 temp = iter.next();
             }
-            dao_vec
+
+            let mut dao_vec = Vec::new();
+            for i in start..end {
+                let opt = total_dao_vec.get(i as usize);
+                if let Some(s) = opt {
+                    dao_vec.push(s.clone());
+                }
+            }
+
+            return PageResult{
+                success: true,
+                err: String::from("success"),
+                total,
+                pages,
+                page: page,
+                size: size,
+                data: dao_vec,
+            }
         }
 
         #[ink(message)]
@@ -213,25 +262,48 @@ mod main {
         }
 
         #[ink(message)]
-        pub fn list_dao_instances_by_owner(&mut self, owner: AccountId) -> Vec<DAOInstance> {
+        pub fn list_dao_instances_by_owner(&mut self, owner: AccountId, page:u64, size:u64) -> PageResult<DAOInstance> {
 
-            let mut dao_vec = Vec::new();
+            let total = self.instance_map.len() as u64;
+            let (start, end, pages) = self.cal_pages(page, size, total);
+
+            let mut total_dao_vec = Vec::new();
             let mut iter = self.instance_map.values();
             let mut temp = iter.next();
             while temp.is_some() {
                 let dao: DAOInstance = Main::fill_dao_details(temp.unwrap().clone());
                 if owner == dao.owner {
-                    dao_vec.push(dao);
+                    total_dao_vec.push(dao);
                 }
                 temp = iter.next();
             }
-            dao_vec
+
+            let mut dao_vec = Vec::new();
+            for i in start..end {
+                let opt = total_dao_vec.get(i as usize);
+                if let Some(s) = opt {
+                    dao_vec.push(s.clone());
+                }
+            }
+
+            return PageResult{
+                success: true,
+                err: String::from("success"),
+                total,
+                pages,
+                page: page,
+                size: size,
+                data: dao_vec,
+            }
         }
 
         #[ink(message)]
-        pub fn list_dao_instances_by_account(&mut self, user: AccountId) -> Vec<DAOInstance> {
+        pub fn list_dao_instances_by_account(&mut self, user: AccountId, page:u64, size:u64) -> PageResult<DAOInstance> {
 
-            let mut dao_vec = Vec::new();
+            let total = self.instance_map.len() as u64;
+            let (start, end, pages) = self.cal_pages(page, size, total);
+
+            let mut total_dao_vec = Vec::new();
             let mut iter = self.instance_map.values();
             let mut temp = iter.next();
             while temp.is_some() {
@@ -245,11 +317,28 @@ mod main {
                 let org_instance: OrgManager = ink_env::call::FromAccountId::from_account_id(org_addr);
                 let (is_member, is_moderator, is_owner) = org_instance.check_role_by_account(user);
                 if is_member || is_moderator || is_owner {
-                    dao_vec.push(dao);
+                    total_dao_vec.push(dao);
                 }
                 temp = iter.next();
             }
-            dao_vec
+
+            let mut dao_vec = Vec::new();
+            for i in start..end {
+                let opt = total_dao_vec.get(i as usize);
+                if let Some(s) = opt {
+                    dao_vec.push(s.clone());
+                }
+            }
+
+            return PageResult{
+                success: true,
+                err: String::from("success"),
+                total,
+                pages,
+                page: page,
+                size: size,
+                data: dao_vec,
+            }
         }
     }
 }
