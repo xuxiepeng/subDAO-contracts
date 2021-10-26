@@ -238,6 +238,7 @@ mod vault {
             for key in self.visible_tokens.keys() {
                 v.push(*key)
             }
+            v.push(AccountId::from([0xee; 32]));
             v
         }
 
@@ -246,6 +247,10 @@ mod vault {
         #[ink(message)]
         pub fn get_balance_of(&self,erc_20_address: AccountId) -> u64 {
 
+            if erc_20_address == AccountId::from([0xee; 32]) {
+                let value = self.env().balance() as u64;
+                return value;
+            }
             if self.tokens.contains_key(&erc_20_address) {
 
                // let mut erc_20 = self.get_erc20_by_address(*erc_20_address.unwrap());
@@ -280,6 +285,13 @@ mod vault {
                     balance: erc20_instance.balance_of(self.vault_contract_address),
                 })
             }
+            let value = self.env().balance() as u64;
+            v.push(TokenInfo{
+                erc20: AccountId::from([0xee; 32]),
+                symbol: String::from("gov"),
+                name: String::from("subDAO"),
+                balance: value,
+            });
             v
         }
 
@@ -287,6 +299,9 @@ mod vault {
         #[ink(message)]
         pub fn deposit(&mut self, erc_20_address:AccountId, from_address:AccountId,value:u64) -> bool {
 
+            if erc_20_address == AccountId::from([0xee; 32]) {
+                return self.deposit_native_token();
+            }
             let to_address = self.vault_contract_address;
 
             if self.tokens.contains_key(&erc_20_address) {
@@ -334,11 +349,43 @@ mod vault {
             }
         }
 
+        pub fn deposit_native_token(&mut self) -> bool {
+            let from_address = self.env().caller();
+            let value = self.env().transferred_balance();
+            assert!(value > 0, "value is 0");
+            let to_address = self.vault_contract_address;
+
+            let transfer_id:u64 = (self.transfer_history.len()+1).into();
+            let transfer_time: u64 = self.env().block_timestamp();
+
+            let value2 = value as u64;
+            self.transfer_history.insert(transfer_id,
+                                         Transfer{
+                                             transfer_direction:2,// 1: out 2: in
+                                             token_name:String::from("subDAO"),
+                                             transfer_id:transfer_id,
+                                             from_address:from_address,
+                                             to_address:to_address,
+                                             value: value2,
+                                             transfer_time});
+
+
+            self.env().emit_event(DepositTokenEvent{
+                token_name: String::from("subDAO"),
+                from_address: from_address,
+                value: value2
+            });
+            true
+        }
+
 
 
         #[ink(message)]
         pub fn withdraw(&mut self,erc_20_address:AccountId,to_address:AccountId,value:u64) -> bool {
 
+            if erc_20_address == AccountId::from([0xee; 32]) {
+                return self.withdraw_native_token(to_address, value.into());
+            }
             let from_address = self.vault_contract_address;
 
             if self.visible_tokens.contains_key(&erc_20_address) {
@@ -400,6 +447,54 @@ mod vault {
             } else{
                 false
             }
+        }
+
+        pub fn withdraw_native_token(&mut self, to_address:AccountId, value:u128) -> bool {
+
+            let from_address = self.vault_contract_address;
+            let balance = self.env().balance();
+            assert!(balance >= value, "balance is not enough");
+
+            let _caller = self.env().caller();
+
+            let _auth = self.get_auth_by_address(self.auth_contract_address);
+
+            // let is_permission = auth.has_permission(caller,String::from("vault"),String::from("withdraw"));
+            let is_permission = true;
+
+            if is_permission == false {
+                return false;
+            }
+
+            match self.env().transfer(to_address, value.into()) {
+                Err(_) => panic!("transfer failed!"),
+                Ok(_) => {}
+            }
+
+            let value2 = value as u64;
+            let transfer_id:u64 = (self.transfer_history.len()+1).into();
+
+            let transfer_time: u64 = self.env().block_timestamp();
+
+            self.transfer_history.insert(transfer_id,
+                                         Transfer{
+                                             transfer_direction:1,// 1: out 2: in
+                                             token_name:String::from("subDAO"),
+                                             transfer_id:transfer_id,
+                                             from_address:from_address,
+                                             to_address:to_address,
+                                             value:value2,
+                                             transfer_time:transfer_time});
+
+
+
+
+            self.env().emit_event(WithdrawTokenEvent{
+                token_name:String::from("subDAO"),
+                to_address:to_address,
+                value:value2,});
+
+            true
         }
 
 
