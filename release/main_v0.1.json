@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x146de3d114cde5741aee036e3352c0196b4681549612639507143c6cda1ea2ac",
+    "hash": "0x4d8950fee177c2eb36fe57722a55ec5cba020cf97aa7b83b00aca9f3b3ca5db8",
     "language": "ink! 3.0.0-rc4",
     "compiler": "rustc 1.57.0-nightly"
   },
@@ -317,6 +317,32 @@
           "type": 10
         },
         "selector": "0x72766226"
+      },
+      {
+        "args": [
+          {
+            "name": "owner",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [],
+        "mutates": true,
+        "name": [
+          "list_last_dao_instances_by_owner"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "DAOInstance"
+          ],
+          "type": 10
+        },
+        "selector": "0xe4c92f45"
       },
       {
         "args": [
