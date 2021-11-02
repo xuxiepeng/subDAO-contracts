@@ -636,6 +636,7 @@ dependencies = [
  "ink_storage",
  "parity-scale-codec",
  "scale-info",
+ "user_manager",
 ]
 
 [[package]]
@@ -1104,6 +1105,20 @@ name = "unicode-xid"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8ccb82d61f80a663efe1f787a51b16b5a51e3314d6ac365b08639f52387b33f3"
+
+[[package]]
+name = "user_manager"
+version = "0.1.0"
+dependencies = [
+ "ink_env",
+ "ink_lang",
+ "ink_metadata",
+ "ink_prelude",
+ "ink_primitives",
+ "ink_storage",
+ "parity-scale-codec",
+ "scale-info",
+]
 
 [[package]]
 name = "version_check"

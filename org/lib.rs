@@ -16,6 +16,7 @@ mod org {
 
 
     use auth::Auth;
+    use user_manager::UserManager;
     #[ink(storage)]
     pub struct OrgManager {
 
@@ -29,6 +30,7 @@ mod org {
         is_moderator:bool,
         is_owner:bool,
         auth_contract_address:AccountId,
+        user_manager_contract_address:AccountId,
     }
 
 
@@ -99,7 +101,7 @@ mod org {
     impl OrgManager {
 
         #[ink(constructor)]
-        pub fn new(_owner: AccountId,org_id:u64,auth_contract_address: AccountId) -> Self {
+        pub fn new(_owner: AccountId,org_id:u64,auth_contract_address: AccountId, user_manager_contract_address: AccountId) -> Self {
             Self {
                 org_id:org_id,
                 owner:_owner,
@@ -107,6 +109,7 @@ mod org {
                 members: StorageHashMap::default(),
                 applying_members: StorageHashMap::default(),
                 auth_contract_address:auth_contract_address,
+                user_manager_contract_address:user_manager_contract_address,
                 can_free_add_member: false,
                 is_member: false,
                 is_moderator:false,
@@ -137,6 +140,10 @@ mod org {
 
         }
 
+        pub fn get_user_manager_by_address(&self, address:AccountId) -> UserManager {
+            let  user_manager_instance: UserManager = ink_env::call::FromAccountId::from_account_id(address);
+            user_manager_instance
+        }
 
         #[ink(message)]
         pub fn get_orgid(&self) -> u64 {
@@ -244,10 +251,13 @@ mod org {
             auth_instance.grant_permission(moderator, String::from("vote"), String::from("new"));
             auth_instance.grant_permission(moderator, String::from("vote"), String::from("vote"));
 
-
             match self.moderators.insert(moderator,name) {
                 Some(_) => { false},
                 None => {
+                    
+                    let mut user_manager_instance = self.get_user_manager_by_address(self.user_manager_contract_address);
+                    user_manager_instance.update(moderator, self.org_id);
+
                     let org_id = self.org_id;
                     self.env().emit_event(AddDAOModeratorEvent{
                         moderator,
@@ -267,9 +277,16 @@ mod org {
                 return false;
             }
 
+            let mut user_manager_instance = self.get_user_manager_by_address(self.user_manager_contract_address);
+            user_manager_instance.update(moderator, self.org_id);
+
             match self.moderators.insert(moderator,name) {
                 Some(_) => { false},
                 None => {
+
+                    let mut user_manager_instance = self.get_user_manager_by_address(self.user_manager_contract_address);
+                    user_manager_instance.update(moderator, self.org_id);
+
                     let org_id = self.org_id;
                     self.env().emit_event(AddDAOModeratorEvent{
                         moderator,
@@ -299,6 +316,10 @@ mod org {
             match self.members.insert(member,name) {
                 Some(_) => { false},
                 None => {
+
+                    let mut user_manager_instance = self.get_user_manager_by_address(self.user_manager_contract_address);
+                    user_manager_instance.update(member, self.org_id);
+
                     let org_id = self.org_id;
                     self.env().emit_event(AddDAOMemberEvent{
                         member,
@@ -322,6 +343,10 @@ mod org {
             match self.members.insert(member,name) {
                 Some(_) => { false},
                 None => {
+
+                    let mut user_manager_instance = self.get_user_manager_by_address(self.user_manager_contract_address);
+                    user_manager_instance.update(member, self.org_id);
+
                     let org_id = self.org_id;
                     self.env().emit_event(AddDAOMemberEvent{
                         member,
@@ -357,6 +382,10 @@ mod org {
             match self.moderators.take(&member) {
                 None => { false}
                 Some(_) => {
+
+                    let mut user_manager_instance = self.get_user_manager_by_address(self.user_manager_contract_address);
+                    user_manager_instance.remove(member, self.org_id);
+
                     let org_id = self.org_id;
                     self.env().emit_event(RemoveDAOModeratorEvent{
                         moderator:member,
@@ -377,6 +406,10 @@ mod org {
             match self.members.take(&member) {
                 None => { false}
                 Some(_) => {
+
+                    let mut user_manager_instance = self.get_user_manager_by_address(self.user_manager_contract_address);
+                    user_manager_instance.remove(member, self.org_id);
+
                     let org_id = self.org_id;
                     self.env().emit_event(RemoveDAOMemberEvent{
                         member:member,
@@ -411,6 +444,10 @@ mod org {
 
             if self.members.contains_key(&member) {
                 self.members.take(&member);
+
+                let mut user_manager_instance = self.get_user_manager_by_address(self.user_manager_contract_address);
+                user_manager_instance.remove(member, self.org_id);
+
                 return true;
             };
 
@@ -423,6 +460,10 @@ mod org {
 
             if self.moderators.contains_key(&moderator) {
                 self.moderators.take(&moderator);
+
+                let mut user_manager_instance = self.get_user_manager_by_address(self.user_manager_contract_address);
+                user_manager_instance.remove(moderator, self.org_id);
+
                 return true;
             };
             return false;

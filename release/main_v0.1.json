@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x4d8950fee177c2eb36fe57722a55ec5cba020cf97aa7b83b00aca9f3b3ca5db8",
+    "hash": "0x27d95cda8c63987dc127ff0eee1a01328693d9c3e2d836b8208052cc52f63f2c",
     "language": "ink! 3.0.0-rc4",
     "compiler": "rustc 1.57.0-nightly"
   },
@@ -80,6 +80,15 @@
         "args": [
           {
             "name": "template_code_hash",
+            "type": {
+              "displayName": [
+                "Hash"
+              ],
+              "type": 16
+            }
+          },
+          {
+            "name": "user_manager_code_hash",
             "type": {
               "displayName": [
                 "Hash"
@@ -675,6 +684,67 @@
             }
           },
           "name": "instance_map_by_owner"
+        },
+        {
+          "layout": {
+            "enum": {
+              "dispatchKey": "0x0800000002000000000000000000000000000000000000000000000000000000",
+              "variants": {
+                "0": {
+                  "fields": [
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0900000002000000000000000000000000000000000000000000000000000000",
+                          "ty": 1
+                        }
+                      },
+                      "name": null
+                    }
+                  ]
+                },
+                "1": {
+                  "fields": []
+                }
+              }
+            }
+          },
+          "name": "user_manager_addr"
+        },
+        {
+          "layout": {
+            "enum": {
+              "dispatchKey": "0x0900000002000000000000000000000000000000000000000000000000000000",
+              "variants": {
+                "0": {
+                  "fields": [
+                    {
+                      "layout": {
+                        "struct": {
+                          "fields": [
+                            {
+                              "layout": {
+                                "cell": {
+                                  "key": "0x0a00000002000000000000000000000000000000000000000000000000000000",
+                                  "ty": 1
+                                }
+                              },
+                              "name": "account_id"
+                            }
+                          ]
+                        }
+                      },
+                      "name": null
+                    }
+                  ]
+                },
+                "1": {
+                  "fields": []
+                }
+              }
+            }
+          },
+          "name": "user_manager"
         }
       ]
     }

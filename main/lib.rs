@@ -3,6 +3,7 @@
 extern crate alloc;
 use ink_lang as ink;
 
+
 #[ink::contract]
 mod main {
     #[cfg(not(feature = "ink-as-dependency"))]
@@ -22,9 +23,11 @@ mod main {
     use base::Base;
     use template_manager::TemplateManager;
     use template_manager::DAOTemplate;
+    use user_manager::UserManager;
     // const ONE_UNIT: u128 = 1_000_000_000_000;
     const TEMPLATE_INIT_BALANCE: u128 = 100 * 1000 * 1_000_000_000_000;
     const DAO_INIT_BALANCE: u128 = 1000 * 1000 * 1_000_000_000_000;
+    const USER_MANAGER_INIT_BALANCE: u128 = 100 * 1000 * 1_000_000_000_000;
 
     /// Indicates whether a transaction is already confirmed or needs further confirmations.
     #[derive(scale::Encode, scale::Decode, Clone, SpreadLayout, PackedLayout)]
@@ -54,6 +57,8 @@ mod main {
         instance_index: u64,
         instance_map: StorageHashMap<u64, DAOInstance>,
         instance_map_by_owner: StorageHashMap<AccountId, Vec<u64>>,
+        user_manager_addr: Option<AccountId>,
+        user_manager: Option<UserManager>,
     }
 
     #[ink(event)]
@@ -91,11 +96,13 @@ mod main {
                 instance_index: 0,
                 instance_map: StorageHashMap::new(),
                 instance_map_by_owner: StorageHashMap::new(),
+                user_manager_addr: None,
+                user_manager: None,
             };
             instance
         }
         #[ink(message)]
-        pub fn  init (&mut self, template_code_hash: Hash, salt: Vec<u8>) -> bool
+        pub fn  init (&mut self, template_code_hash: Hash, user_manager_code_hash: Hash, salt: Vec<u8>) -> bool
         {
             // let total_balance = Self::env().balance();
             // instance template_manager
@@ -111,8 +118,22 @@ mod main {
 
             self.template = Some(contract_instance);
             self.template_addr = Some(contract_addr);
+
+            let user_manager_instance_params = UserManager::new()
+                .endowment(USER_MANAGER_INIT_BALANCE)
+                .code_hash(user_manager_code_hash)
+                .salt_bytes(&salt)
+                .params();
+            let user_manager_init_result = ink_env::instantiate_contract(&user_manager_instance_params);
+            let user_manager_contract_addr = user_manager_init_result.expect("failed at instantiating the `UserManager` contract");
+            let user_manager_contract_instance = ink_env::call::FromAccountId::from_account_id(user_manager_contract_addr);
+
+            self.user_manager = Some(user_manager_contract_instance);
+            self.user_manager_addr = Some(user_manager_contract_addr);
+
             true
         }
+
 
         #[ink(message)]
         pub fn add_template(&mut self, name: String, dao_manager_code_hash: Hash, components: BTreeMap<String, Hash>) -> bool {
@@ -158,7 +179,7 @@ mod main {
             let template = self.query_template_by_index(index);
             let dao_manager_code_hash = template.dao_manager_code_hash;
             // let salt = version.to_le_bytes();
-            let dao_instance_params = DAOManager::new(controller, self.instance_index)
+            let dao_instance_params = DAOManager::new(controller, self.instance_index, self.user_manager_addr.unwrap())
                 .endowment(DAO_INIT_BALANCE)
                 .code_hash(dao_manager_code_hash)
                 .salt_bytes(salt)
@@ -185,6 +206,7 @@ mod main {
                 dao_manager: dao_instance,
                 dao_manager_addr: dao_addr,
             });
+            self.user_manager.as_mut().unwrap().update(controller, self.instance_index);
             self.instance_index += 1;
             true
         }
@@ -313,44 +335,44 @@ mod main {
         #[ink(message)]
         pub fn list_dao_instances_by_account(&mut self, user: AccountId, page:u64, size:u64) -> PageResult<DAOInstance> {
 
-            let mut total_keys_vec = Vec::new();
-            for elem in self.instance_map.keys() {
-                if let Some(dao) = self.instance_map.get(elem) {
-
-                    let org_addr_op = dao.dao_manager.query_component_addrs().org_addr;
-                    if org_addr_op.is_none() {
-                        continue;
-                    }
-                    let org_addr: AccountId = org_addr_op.unwrap();
-                    let org_instance: OrgManager = ink_env::call::FromAccountId::from_account_id(org_addr);
-                    let (is_member, is_moderator, is_owner) = org_instance.check_role_by_account(user);
-                    if is_member || is_moderator || is_owner {
-                        total_keys_vec.push(elem);
-                    }
-                }    
-            }
-
-            let total = total_keys_vec.len() as u64;
-            let (start, end, pages) = self.cal_pages(page, size, total);
+            let id_list = self.user_manager.as_mut().unwrap().get(user);
+            
 
             let mut dao_vec = Vec::new();
-            for i in start..end {
-                let key = total_keys_vec.get(i as usize);
-                if let Some(s) = key {
-                    let dao: DAOInstance = Main::fill_dao_details(self.instance_map.get(s).unwrap().clone());
-                    dao_vec.push(dao);
-                }
-            }
 
-            return PageResult{
-                success: true,
-                err: String::from("success"),
-                total,
-                pages,
-                page: page,
-                size: size,
-                data: dao_vec,
-            }
+            if id_list.len() > 0 {
+
+                let total = id_list.len() as u64;
+                let (start, end, pages) = self.cal_pages(page, size, total);
+
+                for i in start..end {
+                    let key = id_list.get(i as usize);
+                    if let Some(s) = key {
+                        let dao: DAOInstance = Main::fill_dao_details(self.instance_map.get(s).unwrap().clone());
+                        dao_vec.push(dao);
+                    }
+                }
+
+                return PageResult{
+                    success: true,
+                    err: String::from("success"),
+                    total,
+                    pages,
+                    page: page,
+                    size: size,
+                    data: dao_vec,
+                }
+            }else{
+                return PageResult{
+                    success: true,
+                    err: String::from("success"),
+                    total: 0,
+                    pages: 0,
+                    page: page,
+                    size: size,
+                    data: dao_vec,
+                }
+            }    
         }
     }
 }

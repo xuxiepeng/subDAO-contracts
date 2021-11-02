@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x016d18a202e4662d0a4aeecead3696a6550ddab38a57ca153d9bf4c08bd72c89",
+    "hash": "0x014b2442750675cc0bc9be7c1db2f0c8a6fa29cdf3cd377bea1804c506a83536",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.55.0-nightly"
+    "compiler": "rustc 1.57.0-nightly"
   },
   "contract": {
     "name": "org",
@@ -36,6 +36,15 @@
           },
           {
             "name": "auth_contract_address",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "user_manager_contract_address",
             "type": {
               "displayName": [
                 "AccountId"
@@ -1090,6 +1099,15 @@
             }
           },
           "name": "auth_contract_address"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0d00000003000000000000000000000000000000000000000000000000000000",
+              "ty": 4
+            }
+          },
+          "name": "user_manager_contract_address"
         }
       ]
     }

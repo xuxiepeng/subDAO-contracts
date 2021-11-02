@@ -107,6 +107,7 @@ mod dao_manager {
     pub struct OrgParam {
         owner: AccountId,
         moderators: BTreeMap<String, AccountId>,
+        user_manager_contract_address: AccountId,
     }
 
     #[derive(
@@ -144,6 +145,7 @@ mod dao_manager {
         pub owner: AccountId,
         pub org_id: u64,
         pub template: Option<DAOTemplate>,
+        pub user_manager_contract_address: AccountId,
         pub components: DAOComponents,
         pub component_addrs: DAOComponentAddrs,
     }
@@ -151,12 +153,13 @@ mod dao_manager {
     impl DAOManager {
         /// Constructor that initializes the `bool` value to the given `init_value`.
         #[ink(constructor)]
-        pub fn new(owner: AccountId, org_id: u64) -> Self {
+        pub fn new(owner: AccountId, org_id: u64, user_manager_contract_address: AccountId) -> Self {
             Self {
                 init: false,
                 owner,
                 org_id,
                 template: None,
+                user_manager_contract_address: user_manager_contract_address,
                 components: DAOComponents {
                     base: None,
                     erc20: None,
@@ -320,7 +323,9 @@ mod dao_manager {
             // let salt = version.to_le_bytes();
             let auth_addr = self.component_addrs.auth_addr.unwrap();
 
-            let org_instance_params = OrgManager::new(Self::env().account_id(), self.org_id, auth_addr)
+            let user_manager_contract_address = self.user_manager_contract_address;
+
+            let org_instance_params = OrgManager::new(Self::env().account_id(), self.org_id, auth_addr, user_manager_contract_address)
                 .endowment(CONTRACT_INIT_BALANCE)
                 .code_hash(org_code_hash)
                 .salt_bytes(salt)
