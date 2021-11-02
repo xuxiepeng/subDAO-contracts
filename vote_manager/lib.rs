@@ -1,8 +1,8 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 extern crate alloc;
-use ink_lang as ink;
 pub use self::vote_manager::VoteManager;
+use ink_lang as ink;
 
 #[ink::contract]
 mod vote_manager {
@@ -11,20 +11,14 @@ mod vote_manager {
 
     use alloc::format;
     // use alloc::vec;
-    use alloc::vec::Vec;
     use alloc::string::String;
-    use vault::VaultManager;
+    use alloc::vec::Vec;
     use auth::Auth;
+    use vault::VaultManager;
 
     use ink_storage::{
-        collections::{
-            HashMap as StorageHashMap,
-            Vec as StorageVec,
-        },
-        traits::{
-            PackedLayout,
-            SpreadLayout,
-        }
+        collections::{HashMap as StorageHashMap, Vec as StorageVec},
+        traits::{PackedLayout, SpreadLayout},
     };
 
     type VoteId = u64;
@@ -102,14 +96,13 @@ mod vote_manager {
         support_num: u64,
         choices: String,
         erc20_address: AccountId,
-        erc20_symbol:String,
+        erc20_symbol: String,
         erc20_name: String,
         erc20_balance: u64,
         to_address: AccountId,
         transfer_value: u64,
-        status: u32,  //0 : open status, 1 : success , 2 : Failure support_num < min_req, 3 : Failure transfer token failure.
+        status: u32, //0 : open status, 1 : success , 2 : Failure support_num < min_req, 3 : Failure transfer token failure.
     }
-
 
     #[ink(storage)]
     pub struct VoteManager {
@@ -149,12 +142,11 @@ mod vote_manager {
     }
 
     impl VoteManager {
-
         #[ink(constructor)]
         pub fn new(vault_address: AccountId, auth_address: AccountId) -> Self {
             let vault_instance = ink_env::call::FromAccountId::from_account_id(vault_address);
             let auth_instance = ink_env::call::FromAccountId::from_account_id(auth_address);
-            Self { 
+            Self {
                 vault: vault_instance,
                 auth: auth_instance,
                 votes_length: 0,
@@ -166,14 +158,24 @@ mod vote_manager {
         }
 
         #[ink(message)]
-        pub fn new_vote(&mut self, title: String, desc: String, vote_time: u64, support_require_num: u64, min_require_num: u64, choices: String) -> u64 {
+        pub fn new_vote(
+            &mut self,
+            title: String,
+            desc: String,
+            vote_time: u64,
+            support_require_num: u64,
+            min_require_num: u64,
+            choices: String,
+        ) -> u64 {
             let caller = self.env().caller();
-            assert!(self.auth.has_permission(caller,String::from("vote"),String::from("new")));
+            assert!(self
+                .auth
+                .has_permission(caller, String::from("vote"), String::from("new")));
             let vote_id = self.votes_length.clone();
             self.votes_length += 1;
             let start_date: u64 = self.env().block_timestamp();
             let vec: Vec<&str> = choices.split("|").collect();
-            let vote = Vote{
+            let vote = Vote {
                 vote_id: vote_id,
                 executed: false,
                 title,
@@ -184,7 +186,7 @@ mod vote_manager {
                 support_require_num,
                 min_require_num,
                 support_num: 0,
-                erc20_address: AccountId::default(), 
+                erc20_address: AccountId::default(),
                 to_address: AccountId::default(),
                 value: 0,
                 choice_index_lo: self.choices_num,
@@ -198,7 +200,7 @@ mod vote_manager {
             self.choices_num += choices_len;
             let mut index = 0;
             for choice_content in vec.iter() {
-                self.choices.push(Choice{
+                self.choices.push(Choice {
                     choice_id: index,
                     content: String::from(*choice_content),
                     yea: 0,
@@ -206,7 +208,7 @@ mod vote_manager {
                 index += 1;
             }
             self.votes.insert(vote_id, vote);
-            self.env().emit_event(StartVote{
+            self.env().emit_event(StartVote {
                 vote_id,
                 creator: self.env().caller(),
             });
@@ -214,14 +216,27 @@ mod vote_manager {
         }
 
         #[ink(message)]
-        pub fn new_vote_with_transfer(&mut self, title: String, desc: String, vote_time: u64, support_require_num: u64, min_require_num: u64, choices: String, erc20_address:AccountId, to_address:AccountId, value:u64) -> u64 {
+        pub fn new_vote_with_transfer(
+            &mut self,
+            title: String,
+            desc: String,
+            vote_time: u64,
+            support_require_num: u64,
+            min_require_num: u64,
+            choices: String,
+            erc20_address: AccountId,
+            to_address: AccountId,
+            value: u64,
+        ) -> u64 {
             let caller = self.env().caller();
-            assert!(self.auth.has_permission(caller,String::from("vote"),String::from("new")));
+            assert!(self
+                .auth
+                .has_permission(caller, String::from("vote"), String::from("new")));
             let vote_id = self.votes_length.clone();
             self.votes_length += 1;
             let start_date: u64 = self.env().block_timestamp();
             let vec: Vec<&str> = choices.split("|").collect();
-            let vote = Vote{
+            let vote = Vote {
                 vote_id: vote_id,
                 executed: false,
                 title,
@@ -246,7 +261,7 @@ mod vote_manager {
             self.choices_num += choices_len;
             let mut index = 0;
             for choice_content in vec.iter() {
-                self.choices.push(Choice{
+                self.choices.push(Choice {
                     choice_id: index,
                     content: String::from(*choice_content),
                     yea: 0,
@@ -254,14 +269,13 @@ mod vote_manager {
                 index += 1;
             }
             self.votes.insert(vote_id, vote);
-            self.env().emit_event(StartVote{
+            self.env().emit_event(StartVote {
                 vote_id,
                 creator: self.env().caller(),
             });
             vote_id
         }
 
-       
         #[ink(message)]
         pub fn execute(&mut self, vote_id: VoteId) -> bool {
             assert!(self.vote_exists(vote_id));
@@ -270,14 +284,15 @@ mod vote_manager {
             let current_time = self.env().block_timestamp();
 
             if let Some(vote) = self.votes.get_mut(&vote_id) {
-
-                if ( current_time < vote.start_date + vote.vote_time || vote.executed) && vote.status != 3 {
+                if (current_time < vote.start_date + vote.vote_time || vote.executed)
+                    && vote.status != 3
+                {
                     return true;
                 }
 
                 vote.executed = true;
-    
-                if vote.support_num < vote.min_require_num  || vote.support_num == 0 {
+
+                if vote.support_num < vote.min_require_num || vote.support_num == 0 {
                     vote.status = 2;
                     return false;
                 }
@@ -289,7 +304,11 @@ mod vote_manager {
                         if choice.yea >= vote.support_require_num {
                             vote.status = 1;
                             if vote.need_trigger {
-                                result = self.vault.withdraw(vote.erc20_address, vote.to_address, vote.value);
+                                result = self.vault.withdraw(
+                                    vote.erc20_address,
+                                    vote.to_address,
+                                    vote.value,
+                                );
                                 if !result {
                                     vote.status = 3;
                                 }
@@ -299,10 +318,8 @@ mod vote_manager {
                     }
                     index += 1;
                 }
-    
-                self.env().emit_event(ExecuteVote{
-                    vote_id,
-                });
+
+                self.env().emit_event(ExecuteVote { vote_id });
             }
 
             result
@@ -314,7 +331,10 @@ mod vote_manager {
                 return false;
             }
             let caller = self.env().caller();
-            if !self.auth.has_permission(caller,String::from("vote"),String::from("vote")) {
+            if !self
+                .auth
+                .has_permission(caller, String::from("vote"), String::from("vote"))
+            {
                 return false;
             }
             if let Some(vote) = self.votes.get_mut(&vote_id) {
@@ -330,17 +350,17 @@ mod vote_manager {
                     //     vote.support_num -= 1;
                     // }
                     return false;
-                } 
+                }
                 let choices = &mut self.choices;
                 let choice_vec_index = vote.choice_index_lo + support_choice;
                 let voter_choice = choices.get_mut(choice_vec_index).unwrap();
                 voter_choice.yea += 1;
                 // record voter choice id
-                self.voters.insert((vote_id, voter), support_choice);    
+                self.voters.insert((vote_id, voter), support_choice);
                 vote.support_num += 1;
-                self.env().emit_event(CastVote{
+                self.env().emit_event(CastVote {
                     vote_id,
-                    voter: self.env().caller(), 
+                    voter: self.env().caller(),
                     support_choice,
                 });
                 true
@@ -358,8 +378,8 @@ mod vote_manager {
         #[ink(message)]
         pub fn query_one_vote(&self, vote_id: VoteId) -> DisplayVote {
             assert!(self.vote_exists(vote_id));
-            let vote = self.votes.get(&vote_id).unwrap(); 
-            let display_vote = self.convert_vote_to_displayvote(&vote); 
+            let vote = self.votes.get(&vote_id).unwrap();
+            let display_vote = self.convert_vote_to_displayvote(&vote);
             display_vote
         }
 
@@ -412,7 +432,7 @@ mod vote_manager {
             v.reverse();
             return v;
         }
- 
+
         fn convert_vote_to_displayvote(&self, vote: &Vote) -> DisplayVote {
             let mut choices = Vec::new();
             let mut index = 0;
@@ -425,19 +445,31 @@ mod vote_manager {
                 index += 1;
             }
 
-
-            let erc20_instance: Erc20 = ink_env::call::FromAccountId::from_account_id(vote.erc20_address);
+            let erc20_instance: Erc20 =
+                ink_env::call::FromAccountId::from_account_id(vote.erc20_address);
 
             let (_erc20_symbol, _erc20_name, _erc20_balance) = if vote.need_trigger {
-                ( erc20_instance.symbol(), 
-                  erc20_instance.name(), 
-                  erc20_instance.balance_of(ink_lang::ToAccountId::to_account_id(&self.vault)))
-            }else{
-                (String::from(""),String::from(""), 0)
+                if vote.erc20_address == AccountId::from([0xee; 32]) {
+                    (
+                        String::from("gov"),
+                        String::from("subDAO"),
+                        erc20_instance
+                            .balance_of(ink_lang::ToAccountId::to_account_id(&self.vault)),
+                    )
+                } else {
+                    (
+                        erc20_instance.symbol(),
+                        erc20_instance.name(),
+                        erc20_instance
+                            .balance_of(ink_lang::ToAccountId::to_account_id(&self.vault)),
+                    )
+                }
+            } else {
+                (String::from(""), String::from(""), 0)
             };
 
-            let choices_content = choices.join("|"); 
-            let display_vote = DisplayVote{
+            let choices_content = choices.join("|");
+            let display_vote = DisplayVote {
                 vote_id: vote.vote_id,
                 executed: vote.executed,
                 title: vote.title.clone(),
@@ -467,7 +499,7 @@ mod vote_manager {
         fn vote_has_been_voted(&self, vote_id: VoteId, voter: AccountId) -> bool {
             let result = match self.voters.get(&(vote_id, voter)) {
                 None => false,
-                Some(_) => true, 
+                Some(_) => true,
             };
             result
         }
@@ -479,16 +511,15 @@ mod vote_manager {
         fn is_vote_wait(&self, vote: &Vote) -> bool {
             let mut result = false;
             if self.env().block_timestamp() > vote.start_date + vote.vote_time {
-
-                if !vote.executed{
+                if !vote.executed {
                     result = true;
-                }else{
-                    if vote.need_trigger{
+                } else {
+                    if vote.need_trigger {
                         if vote.status == 3 {
                             result = true;
-                        }    
+                        }
                     }
-                }   
+                }
             }
             return result;
             // return self.env().block_timestamp() > vote.start_date + vote.vote_time && vote.need_trigger && (!vote.executed || (vote.executed && vote.status == 3));
@@ -512,19 +543,15 @@ mod vote_manager {
         use ink_lang as ink;
 
         use super::*;
-        use ink_env::{
-            call,
-            test,
-        };
+        use ink_env::{call, test};
 
         #[ink::test]
         fn test_split() {
-
             let choices = "A,B,C".to_string();
             let split = choices.split(",");
-            ink_env::debug_println!("{}","hello");
+            ink_env::debug_println!("{}", "hello");
             for s in split {
-                ink_env::debug_println!("{}",&s);
+                ink_env::debug_println!("{}", &s);
             }
         }
 
@@ -532,11 +559,11 @@ mod vote_manager {
         fn test_split_with_vec() {
             let choices = "A,B,C".to_string();
             let vec: Vec<&str> = choices.split(",").collect();
-            let i:u32 = 1;
+            let i: u32 = 1;
             let length = i + vec.len() as u32;
             assert!(length == 4);
-            for s in vec{
-                ink_env::debug_println!("{}",&s);
+            for s in vec {
+                ink_env::debug_println!("{}", &s);
             }
         }
 
@@ -544,15 +571,14 @@ mod vote_manager {
         fn test_calculate() {
             let choice: u64 = 3;
             let support: u64 = 5;
-            let t : u64 = choice * 1000 / support; 
-            ink_env::debug_println!("{}",t.to_string().as_str());
+            let t: u64 = choice * 1000 / support;
+            ink_env::debug_println!("{}", t.to_string().as_str());
         }
 
         #[ink::test]
         fn new_vote_manager() {
-            let accounts =
-                ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
-                    .expect("Cannot get accounts");
+            let accounts = ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
+                .expect("Cannot get accounts");
             // after update votemanager need an vault_address to be initialized.
             // use alice address to replace here.
             let vote_manager = VoteManager::new(accounts.alice, accounts.alice);
@@ -562,16 +588,24 @@ mod vote_manager {
 
         #[ink::test]
         fn full_test() {
-            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+            let accounts = ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
+                .expect("Cannot get accounts");
             let mut vote_manager = VoteManager::new(accounts.alice, accounts.alice);
-            
-            let r = vote_manager.new_vote("hello".to_string(), "hello world".to_string(), 100, 1, 0, "A|B|C".to_string());
+
+            let r = vote_manager.new_vote(
+                "hello".to_string(),
+                "hello world".to_string(),
+                100,
+                1,
+                0,
+                "A|B|C".to_string(),
+            );
             assert_eq!(r, 0);
 
             let vec1 = vote_manager.query_all_vote();
             for elem in vec1.iter() {
                 let debug_info = format!("choice id: {}", &elem.choices);
-                ink_env::debug_println!("{}", &debug_info );
+                ink_env::debug_println!("{}", &debug_info);
             }
 
             vote_manager.vote(0, 2, accounts.alice);
@@ -579,25 +613,32 @@ mod vote_manager {
             let vec2 = vote_manager.query_all_vote();
             for elem in vec2.iter() {
                 let debug_info = format!("choice id: {}", &elem.choices);
-                ink_env::debug_println!("{}", &debug_info );
+                ink_env::debug_println!("{}", &debug_info);
             }
-
 
             vote_manager.vote(0, 1, accounts.alice);
 
             let vec3 = vote_manager.query_all_vote();
             for elem in vec3.iter() {
                 let debug_info = format!("choice id: {}", &elem.choices);
-                ink_env::debug_println!("{}", &debug_info );
+                ink_env::debug_println!("{}", &debug_info);
             }
         }
 
         #[ink::test]
         fn vote_has_voted_test() {
-            let accounts =ink_env::test::default_accounts::<ink_env::DefaultEnvironment>().expect("Cannot get accounts");
+            let accounts = ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
+                .expect("Cannot get accounts");
             let mut vote_manager = VoteManager::new(accounts.alice, accounts.alice);
-            
-            let r = vote_manager.new_vote("hello".to_string(), "hello world".to_string(), 100, 1, 0, "A|B|C".to_string());
+
+            let r = vote_manager.new_vote(
+                "hello".to_string(),
+                "hello world".to_string(),
+                100,
+                1,
+                0,
+                "A|B|C".to_string(),
+            );
             assert_eq!(r, 0);
 
             let has_voted = vote_manager.query_voter_vote_one(0, accounts.alice);
@@ -607,7 +648,6 @@ mod vote_manager {
 
             let has_voted = vote_manager.query_voter_vote_one(0, accounts.alice);
             assert_eq!(has_voted, true);
-
-        } 
+        }
     }
 }
