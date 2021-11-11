@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x349cbe5d35f2c22a18071e95a65b769e49451bc2c37f9ec1cb4dd04c337ebdb1",
+    "hash": "0xb08ca944469fdc1ce0a86ec6337647840258ba0e9d673c225c8399aded4c08a9",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.58.0-nightly"
+    "compiler": "rustc 1.55.0-nightly"
   },
   "contract": {
     "name": "org",
