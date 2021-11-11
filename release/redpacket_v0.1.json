@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x9b769e17fa60cc376bfe522921e9c5ef1094a16ab2084b95c22cee11aefc1823",
+    "hash": "0x7b77a2c9642d70777da5419575d13db5e494ec09c24947cc7654577c76deb331",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.55.0-nightly"
+    "compiler": "rustc 1.58.0-nightly"
   },
   "contract": {
     "name": "redpacket",
