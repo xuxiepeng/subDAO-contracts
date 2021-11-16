@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x633148d3cedbd2e1f21a79412ff7dec5d0c9ff06da2a11ccbeaa46aa2e5bddd9",
+    "hash": "0xf86425a82c1885b05413a757a90fb97fc47a90d61e593d4f384a34c6d3cdad51",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.55.0-nightly"
+    "compiler": "rustc 1.58.0-nightly"
   },
   "contract": {
     "name": "vault",
