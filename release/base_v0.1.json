@@ -1,9 +1,9 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x925a3ced116233478913b9eae2dcc424db9f71e0faa40c4e81da77751e13bb53",
+    "hash": "0xed4fa649547225f7f96be05d0b1dfda8f1436ec1dc4c8f21fee44195a22f44ee",
     "language": "ink! 3.0.0-rc4",
-    "compiler": "rustc 1.58.0-nightly"
+    "compiler": "rustc 1.57.0-nightly"
   },
   "contract": {
     "name": "base",
