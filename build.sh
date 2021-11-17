@@ -19,7 +19,7 @@ function build_module() {
     m_dir=${WORK_DIR}/${m_name}
     echo "build module ${m_dir}"
     cd ${m_dir}
-    cargo +nightly-2021-10-14  contract build
+    cargo +nightly-2021-09-01  contract build
     if [ $? -ne 0 ];then
       echo "build module failed"
       exit 1
