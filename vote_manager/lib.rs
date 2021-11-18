@@ -453,8 +453,9 @@ mod vote_manager {
                     (
                         String::from("gov"),
                         String::from("subDAO"),
-                        erc20_instance
-                            .balance_of(ink_lang::ToAccountId::to_account_id(&self.vault)),
+                        self.vault.get_balance_of(vote.erc20_address),
+                        // erc20_instance
+                        //     .balance_of(ink_lang::ToAccountId::to_account_id(&self.vault)),
                     )
                 } else {
                     (
