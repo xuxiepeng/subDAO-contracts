@@ -141,7 +141,33 @@ mod vote_manager {
         vote_id: VoteId,
     }
 
+    #[derive(Debug, scale::Encode, scale::Decode, Clone)]
+    #[cfg_attr(feature = "std", derive(scale_info::TypeInfo,))]
+    pub struct PageResult<T> {
+        pub success: bool,
+        pub err: String,
+        pub total: u64,
+        pub pages: u64,
+        pub page: u64,
+        pub size: u64,
+        pub data: Vec<T>,
+    }
+
     impl VoteManager {
+        fn cal_pages(&self, page: u64, size: u64, total: u64) -> (u64, u64, u64) {
+            let start = page * size;
+            let mut end = start + size;
+            if end > total {
+                end = total
+            }
+            assert!(size <= 0 || start >= total || start < end, "wrong params");
+            let mut pages = total / size;
+            if total % size > 0 {
+                pages += 1;
+            }
+            (start, end, pages)
+        }
+
         #[ink(constructor)]
         pub fn new(vault_address: AccountId, auth_address: AccountId) -> Self {
             let vault_instance = ink_env::call::FromAccountId::from_account_id(vault_address);
@@ -384,53 +410,136 @@ mod vote_manager {
         }
 
         #[ink(message)]
-        pub fn query_all_vote(&self) -> alloc::vec::Vec<DisplayVote> {
-            let mut v: alloc::vec::Vec<DisplayVote> = alloc::vec::Vec::new();
-            for (_, vote) in &self.votes {
-                let vote = self.convert_vote_to_displayvote(&vote);
-                v.push(vote);
+        pub fn query_all_vote(&self, page: u64, size: u64) -> PageResult<DisplayVote> {
+            let total = self.votes.len() as u64;
+
+            let (start, end, pages) = self.cal_pages(page, size, total);
+
+            let mut data_vec: alloc::vec::Vec<DisplayVote> = alloc::vec::Vec::new();
+
+            for i in start..end {
+                let key = self.votes.keys().rev().nth(i as usize);
+                if let Some(s) = key {
+                    let value = self.votes.get(s).unwrap();
+                    let vote = self.convert_vote_to_displayvote(&value);
+                    data_vec.push(vote);
+                }
             }
-            v.reverse();
-            return v;
+
+            return PageResult {
+                success: true,
+                err: String::from("success"),
+                total,
+                pages,
+                page: page,
+                size: size,
+                data: data_vec,
+            };
         }
 
         #[ink(message)]
-        pub fn query_history_vote(&self) -> alloc::vec::Vec<DisplayVote> {
-            let mut v: alloc::vec::Vec<DisplayVote> = alloc::vec::Vec::new();
-            for (_, val) in &self.votes {
+        pub fn query_history_vote(&self, page: u64, size: u64) -> PageResult<DisplayVote> {
+            // get history vote keys.
+            let mut vote_keys: alloc::vec::Vec<u64> = alloc::vec::Vec::new();
+            for (key, val) in &self.votes {
                 if !self.is_vote_open(&val) && self.is_vote_executed(&val) && val.status != 3 {
-                    let vote = self.convert_vote_to_displayvote(&val);
-                    v.push(vote);
+                    vote_keys.push(*key);
                 }
             }
-            v.reverse();
-            return v;
+            vote_keys.reverse();
+
+            let total = vote_keys.len() as u64;
+
+            let (start, end, pages) = self.cal_pages(page, size, total);
+
+            let mut data_vec: alloc::vec::Vec<DisplayVote> = alloc::vec::Vec::new();
+
+            for i in start..end {
+                let key = vote_keys.get(i as usize).unwrap();
+                let value = self.votes.get(key).unwrap();
+                let vote = self.convert_vote_to_displayvote(&value);
+                data_vec.push(vote);
+            }
+
+            return PageResult {
+                success: true,
+                err: String::from("success"),
+                total,
+                pages,
+                page: page,
+                size: size,
+                data: data_vec,
+            };
         }
 
         #[ink(message)]
-        pub fn query_active_vote(&self) -> alloc::vec::Vec<DisplayVote> {
-            let mut v: alloc::vec::Vec<DisplayVote> = alloc::vec::Vec::new();
-            for (_, val) in &self.votes {
+        pub fn query_active_vote(&self, page: u64, size: u64) -> PageResult<DisplayVote> {
+            // get active vote keys.
+            let mut vote_keys: alloc::vec::Vec<u64> = alloc::vec::Vec::new();
+            for (key, val) in &self.votes {
                 if self.is_vote_open(&val) {
-                    let vote = self.convert_vote_to_displayvote(&val);
-                    v.push(vote);
+                    vote_keys.push(*key);
                 }
             }
-            v.reverse();
-            return v;
+            vote_keys.reverse();
+
+            let total = vote_keys.len() as u64;
+
+            let (start, end, pages) = self.cal_pages(page, size, total);
+
+            let mut data_vec: alloc::vec::Vec<DisplayVote> = alloc::vec::Vec::new();
+
+            for i in start..end {
+                let key = vote_keys.get(i as usize).unwrap();
+                let value = self.votes.get(key).unwrap();
+                let vote = self.convert_vote_to_displayvote(&value);
+                data_vec.push(vote);
+            }
+
+            return PageResult {
+                success: true,
+                err: String::from("success"),
+                total,
+                pages,
+                page: page,
+                size: size,
+                data: data_vec,
+            };
         }
 
         #[ink(message)]
-        pub fn query_pending_vote(&self) -> alloc::vec::Vec<DisplayVote> {
-            let mut v: alloc::vec::Vec<DisplayVote> = alloc::vec::Vec::new();
-            for (_, val) in &self.votes {
+        pub fn query_pending_vote(&self, page: u64, size: u64) -> PageResult<DisplayVote> {
+            // get pending vote keys.
+            let mut vote_keys: alloc::vec::Vec<u64> = alloc::vec::Vec::new();
+            for (key, val) in &self.votes {
                 if self.is_vote_wait(&val) {
-                    let vote = self.convert_vote_to_displayvote(&val);
-                    v.push(vote);
+                    vote_keys.push(*key);
                 }
             }
-            v.reverse();
-            return v;
+            vote_keys.reverse();
+
+            let total = vote_keys.len() as u64;
+
+            let (start, end, pages) = self.cal_pages(page, size, total);
+
+            let mut data_vec: alloc::vec::Vec<DisplayVote> = alloc::vec::Vec::new();
+
+            for i in start..end {
+                let key = vote_keys.get(i as usize).unwrap();
+                let value = self.votes.get(key).unwrap();
+                let vote = self.convert_vote_to_displayvote(&value);
+                data_vec.push(vote);
+            }
+
+            return PageResult {
+                success: true,
+                err: String::from("success"),
+                total,
+                pages,
+                page: page,
+                size: size,
+                data: data_vec,
+            };
         }
 
         fn convert_vote_to_displayvote(&self, vote: &Vote) -> DisplayVote {
