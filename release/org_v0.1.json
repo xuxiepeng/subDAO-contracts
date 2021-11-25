@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xeb34639fba6b1f4bf83c54ba9b5b68d4bb5c6b41d8949f510c34d314a1a7fa2b",
+    "hash": "0xd2afd2158cbb29310862aed699ea935cab925576a0f21d807eb6f3ece37f79ac",
     "language": "ink! 3.0.0-rc4",
     "compiler": "rustc 1.56.0-nightly"
   },
@@ -325,7 +325,26 @@
         "selector": "0x55083c6e"
       },
       {
-        "args": [],
+        "args": [
+          {
+            "name": "page",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          },
+          {
+            "name": "size",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          }
+        ],
         "docs": [],
         "mutates": false,
         "name": [
@@ -334,16 +353,33 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
+            "PageResult"
           ],
           "type": 12
         },
         "selector": "0x04f66148"
       },
       {
-        "args": [],
+        "args": [
+          {
+            "name": "page",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          },
+          {
+            "name": "size",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          }
+        ],
         "docs": [],
         "mutates": false,
         "name": [
@@ -352,16 +388,33 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
+            "PageResult"
           ],
           "type": 12
         },
         "selector": "0x667ee137"
       },
       {
-        "args": [],
+        "args": [
+          {
+            "name": "page",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          },
+          {
+            "name": "size",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          }
+        ],
         "docs": [],
         "mutates": false,
         "name": [
@@ -370,16 +423,33 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
+            "PageResult"
           ],
-          "type": 13
+          "type": 14
         },
         "selector": "0x6f1e4d23"
       },
       {
-        "args": [],
+        "args": [
+          {
+            "name": "page",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          },
+          {
+            "name": "size",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          }
+        ],
         "docs": [],
         "mutates": false,
         "name": [
@@ -388,16 +458,33 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
+            "PageResult"
           ],
-          "type": 13
+          "type": 14
         },
         "selector": "0xcf27bdd7"
       },
       {
-        "args": [],
+        "args": [
+          {
+            "name": "page",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          },
+          {
+            "name": "size",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          }
+        ],
         "docs": [],
         "mutates": false,
         "name": [
@@ -406,11 +493,9 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
+            "PageResult"
           ],
-          "type": 13
+          "type": 14
         },
         "selector": "0x2dafbbdc"
       },
@@ -527,7 +612,7 @@
               "displayName": [
                 "BTreeMap"
               ],
-              "type": 15
+              "type": 17
             }
           }
         ],
@@ -659,7 +744,7 @@
         "payable": false,
         "returnType": {
           "displayName": [],
-          "type": 18
+          "type": 20
         },
         "selector": "0x8fb9cb05"
       },
@@ -683,7 +768,7 @@
         "payable": false,
         "returnType": {
           "displayName": [],
-          "type": 18
+          "type": 20
         },
         "selector": "0xaa050e71"
       },
@@ -1262,6 +1347,57 @@
     },
     {
       "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "success",
+              "type": 11,
+              "typeName": "bool"
+            },
+            {
+              "name": "err",
+              "type": 9,
+              "typeName": "String"
+            },
+            {
+              "name": "total",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "pages",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "page",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "size",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "data",
+              "type": 13,
+              "typeName": "Vec<T>"
+            }
+          ]
+        }
+      },
+      "params": [
+        4
+      ],
+      "path": [
+        "org",
+        "org",
+        "PageResult"
+      ]
+    },
+    {
+      "def": {
         "sequence": {
           "type": 4
         }
@@ -1269,10 +1405,54 @@
     },
     {
       "def": {
-        "sequence": {
-          "type": 14
+        "composite": {
+          "fields": [
+            {
+              "name": "success",
+              "type": 11,
+              "typeName": "bool"
+            },
+            {
+              "name": "err",
+              "type": 9,
+              "typeName": "String"
+            },
+            {
+              "name": "total",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "pages",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "page",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "size",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "data",
+              "type": 16,
+              "typeName": "Vec<T>"
+            }
+          ]
         }
-      }
+      },
+      "params": [
+        15
+      ],
+      "path": [
+        "org",
+        "org",
+        "PageResult"
+      ]
     },
     {
       "def": {
@@ -1284,17 +1464,24 @@
     },
     {
       "def": {
+        "sequence": {
+          "type": 15
+        }
+      }
+    },
+    {
+      "def": {
         "composite": {
           "fields": [
             {
-              "type": 17,
+              "type": 19,
               "typeName": "[(K, V)]"
             }
           ]
         }
       },
       "params": [
-        16
+        18
       ],
       "path": [
         "BTreeMap"
@@ -1311,7 +1498,7 @@
     {
       "def": {
         "sequence": {
-          "type": 16
+          "type": 18
         }
       }
     },

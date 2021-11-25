@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xdee854194ac0cc0a6cbb2f165d0b72360f2409c303b4594bff53992fc4e4559b",
+    "hash": "0xdef92a90295d0c8144968efb9b6f7d310f621df179419e99d2825c7e4bcb36e4",
     "language": "ink! 3.0.0-rc4",
     "compiler": "rustc 1.56.0-nightly"
   },
@@ -239,7 +239,26 @@
         "selector": "0x3a3ac188"
       },
       {
-        "args": [],
+        "args": [
+          {
+            "name": "page",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          },
+          {
+            "name": "size",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          }
+        ],
         "docs": [],
         "mutates": false,
         "name": [
@@ -248,9 +267,7 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "ink_prelude",
-            "vec",
-            "Vec"
+            "PageResult"
           ],
           "type": 15
         },
@@ -283,7 +300,26 @@
         "selector": "0x1c18fd00"
       },
       {
-        "args": [],
+        "args": [
+          {
+            "name": "page",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          },
+          {
+            "name": "size",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          }
+        ],
         "docs": [],
         "mutates": false,
         "name": [
@@ -292,11 +328,9 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "ink_prelude",
-            "vec",
-            "Vec"
+            "PageResult"
           ],
-          "type": 16
+          "type": 17
         },
         "selector": "0xea817e65"
       },
@@ -389,7 +423,26 @@
         "selector": "0x410fcc9d"
       },
       {
-        "args": [],
+        "args": [
+          {
+            "name": "page",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          },
+          {
+            "name": "size",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 10
+            }
+          }
+        ],
         "docs": [],
         "mutates": false,
         "name": [
@@ -398,11 +451,9 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "ink_prelude",
-            "vec",
-            "Vec"
+            "PageResult"
           ],
-          "type": 18
+          "type": 20
         },
         "selector": "0x7c9f68dd"
       }
@@ -959,6 +1010,57 @@
     },
     {
       "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "success",
+              "type": 14,
+              "typeName": "bool"
+            },
+            {
+              "name": "err",
+              "type": 13,
+              "typeName": "String"
+            },
+            {
+              "name": "total",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "pages",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "page",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "size",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "data",
+              "type": 16,
+              "typeName": "ink_prelude::vec::Vec<T>"
+            }
+          ]
+        }
+      },
+      "params": [
+        4
+      ],
+      "path": [
+        "vault",
+        "vault",
+        "PageResult"
+      ]
+    },
+    {
+      "def": {
         "sequence": {
           "type": 4
         }
@@ -966,10 +1068,54 @@
     },
     {
       "def": {
-        "sequence": {
-          "type": 17
+        "composite": {
+          "fields": [
+            {
+              "name": "success",
+              "type": 14,
+              "typeName": "bool"
+            },
+            {
+              "name": "err",
+              "type": 13,
+              "typeName": "String"
+            },
+            {
+              "name": "total",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "pages",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "page",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "size",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "data",
+              "type": 19,
+              "typeName": "ink_prelude::vec::Vec<T>"
+            }
+          ]
         }
-      }
+      },
+      "params": [
+        18
+      ],
+      "path": [
+        "vault",
+        "vault",
+        "PageResult"
+      ]
     },
     {
       "def": {
@@ -1002,6 +1148,64 @@
         "vault",
         "vault",
         "TokenInfo"
+      ]
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 18
+        }
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "success",
+              "type": 14,
+              "typeName": "bool"
+            },
+            {
+              "name": "err",
+              "type": 13,
+              "typeName": "String"
+            },
+            {
+              "name": "total",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "pages",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "page",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "size",
+              "type": 10,
+              "typeName": "u64"
+            },
+            {
+              "name": "data",
+              "type": 21,
+              "typeName": "ink_prelude::vec::Vec<T>"
+            }
+          ]
+        }
+      },
+      "params": [
+        12
+      ],
+      "path": [
+        "vault",
+        "vault",
+        "PageResult"
       ]
     },
     {

@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x91b82665967136dc5ad782b981b7d25cdbe3f0f29a203bc74903ffa6fa1f40c3",
+    "hash": "0x659ae234cf67b776fb15cec04271f941ed0a2f1a8c377fc13d80657782d4cbfa",
     "language": "ink! 3.0.0-rc4",
     "compiler": "rustc 1.56.0-nightly"
   },
@@ -431,7 +431,26 @@
         "selector": "0xcfa25eb2"
       },
       {
-        "args": [],
+        "args": [
+          {
+            "name": "page",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "size",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          }
+        ],
         "docs": [],
         "mutates": false,
         "name": [
@@ -440,16 +459,33 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
+            "PageResult"
           ],
           "type": 18
         },
         "selector": "0x478edcb1"
       },
       {
-        "args": [],
+        "args": [
+          {
+            "name": "page",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "size",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          }
+        ],
         "docs": [],
         "mutates": false,
         "name": [
@@ -458,16 +494,33 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
+            "PageResult"
           ],
           "type": 18
         },
         "selector": "0xf3de25f4"
       },
       {
-        "args": [],
+        "args": [
+          {
+            "name": "page",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "size",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          }
+        ],
         "docs": [],
         "mutates": false,
         "name": [
@@ -476,16 +529,33 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
+            "PageResult"
           ],
           "type": 18
         },
         "selector": "0xd1111104"
       },
       {
-        "args": [],
+        "args": [
+          {
+            "name": "page",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "size",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          }
+        ],
         "docs": [],
         "mutates": false,
         "name": [
@@ -494,9 +564,7 @@
         "payable": false,
         "returnType": {
           "displayName": [
-            "alloc",
-            "vec",
-            "Vec"
+            "PageResult"
           ],
           "type": 18
         },
@@ -1216,6 +1284,57 @@
         "vote_manager",
         "vote_manager",
         "DisplayVote"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "success",
+              "type": 11,
+              "typeName": "bool"
+            },
+            {
+              "name": "err",
+              "type": 12,
+              "typeName": "String"
+            },
+            {
+              "name": "total",
+              "type": 4,
+              "typeName": "u64"
+            },
+            {
+              "name": "pages",
+              "type": 4,
+              "typeName": "u64"
+            },
+            {
+              "name": "page",
+              "type": 4,
+              "typeName": "u64"
+            },
+            {
+              "name": "size",
+              "type": 4,
+              "typeName": "u64"
+            },
+            {
+              "name": "data",
+              "type": 19,
+              "typeName": "Vec<T>"
+            }
+          ]
+        }
+      },
+      "params": [
+        17
+      ],
+      "path": [
+        "vote_manager",
+        "vote_manager",
+        "PageResult"
       ]
     },
     {
