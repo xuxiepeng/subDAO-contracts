@@ -306,8 +306,8 @@ mod vault {
                     let value = self.env().balance() as u64;
                     data_vec.push(TokenInfo {
                         erc20: AccountId::from([0xee; 32]),
-                        symbol: String::from("gov"),
-                        name: String::from("subDAO"),
+                        symbol: String::from("GOV"),
+                        name: String::from("SubDAO"),
                         balance: value,
                     });
                 } else {
@@ -402,7 +402,7 @@ mod vault {
                 transfer_id,
                 Transfer {
                     transfer_direction: 2, // 1: out 2: in
-                    token_name: String::from("subDAO"),
+                    token_name: String::from("SubDAO"),
                     transfer_id: transfer_id,
                     from_address: from_address,
                     to_address: to_address,
@@ -412,7 +412,7 @@ mod vault {
             );
 
             self.env().emit_event(DepositTokenEvent {
-                token_name: String::from("subDAO"),
+                token_name: String::from("SubDAO"),
                 from_address: from_address,
                 value: value2,
             });
@@ -517,7 +517,7 @@ mod vault {
                 transfer_id,
                 Transfer {
                     transfer_direction: 1, // 1: out 2: in
-                    token_name: String::from("subDAO"),
+                    token_name: String::from("SubDAO"),
                     transfer_id: transfer_id,
                     from_address: from_address,
                     to_address: to_address,
@@ -527,7 +527,7 @@ mod vault {
             );
 
             self.env().emit_event(WithdrawTokenEvent {
-                token_name: String::from("subDAO"),
+                token_name: String::from("SubDAO"),
                 to_address: to_address,
                 value: value2,
             });
