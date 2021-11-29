@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xd2afd2158cbb29310862aed699ea935cab925576a0f21d807eb6f3ece37f79ac",
+    "hash": "0x16e103045cc43054fe6e4bd36fa183ec4bd9c35e279b121e047d2322af727972",
     "language": "ink! 3.0.0-rc4",
     "compiler": "rustc 1.56.0-nightly"
   },
@@ -36,6 +36,15 @@
           },
           {
             "name": "auth_contract_address",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "name": "user_manager_contract_address",
             "type": {
               "displayName": [
                 "AccountId"
@@ -1175,6 +1184,15 @@
             }
           },
           "name": "auth_contract_address"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0d00000003000000000000000000000000000000000000000000000000000000",
+              "ty": 4
+            }
+          },
+          "name": "user_manager_contract_address"
         }
       ]
     }

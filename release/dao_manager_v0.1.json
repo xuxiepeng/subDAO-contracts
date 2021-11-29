@@ -1,7 +1,7 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0x890468fd4f3c443a37e4e48b8d72d3b9a965c242650fd6c06c688af3be1a6f47",
+    "hash": "0xed4aa93eaccf4efd6fab53363869dfcdef2f8ab63b3ccbb28c49ffda0c4a2d26",
     "language": "ink! 3.0.0-rc4",
     "compiler": "rustc 1.56.0-nightly"
   },
@@ -32,6 +32,15 @@
                 "u64"
               ],
               "type": 5
+            }
+          },
+          {
+            "name": "user_manager_contract_address",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 2
             }
           }
         ],
@@ -261,43 +270,17 @@
         },
         {
           "layout": {
+            "cell": {
+              "key": "0x0400000000000000000000000000000000000000000000000000000000000000",
+              "ty": 2
+            }
+          },
+          "name": "user_manager_contract_address"
+        },
+        {
+          "layout": {
             "struct": {
               "fields": [
-                {
-                  "layout": {
-                    "enum": {
-                      "dispatchKey": "0x0400000000000000000000000000000000000000000000000000000000000000",
-                      "variants": {
-                        "0": {
-                          "fields": [
-                            {
-                              "layout": {
-                                "struct": {
-                                  "fields": [
-                                    {
-                                      "layout": {
-                                        "cell": {
-                                          "key": "0x0500000000000000000000000000000000000000000000000000000000000000",
-                                          "ty": 2
-                                        }
-                                      },
-                                      "name": "account_id"
-                                    }
-                                  ]
-                                }
-                              },
-                              "name": null
-                            }
-                          ]
-                        },
-                        "1": {
-                          "fields": []
-                        }
-                      }
-                    }
-                  },
-                  "name": "base"
-                },
                 {
                   "layout": {
                     "enum": {
@@ -331,7 +314,7 @@
                       }
                     }
                   },
-                  "name": "erc20"
+                  "name": "base"
                 },
                 {
                   "layout": {
@@ -366,7 +349,7 @@
                       }
                     }
                   },
-                  "name": "org"
+                  "name": "erc20"
                 },
                 {
                   "layout": {
@@ -401,7 +384,7 @@
                       }
                     }
                   },
-                  "name": "vault"
+                  "name": "org"
                 },
                 {
                   "layout": {
@@ -436,7 +419,7 @@
                       }
                     }
                   },
-                  "name": "vote"
+                  "name": "vault"
                 },
                 {
                   "layout": {
@@ -471,17 +454,8 @@
                       }
                     }
                   },
-                  "name": "auth"
-                }
-              ]
-            }
-          },
-          "name": "components"
-        },
-        {
-          "layout": {
-            "struct": {
-              "fields": [
+                  "name": "vote"
+                },
                 {
                   "layout": {
                     "enum": {
@@ -491,9 +465,18 @@
                           "fields": [
                             {
                               "layout": {
-                                "cell": {
-                                  "key": "0x0b00000000000000000000000000000000000000000000000000000000000000",
-                                  "ty": 2
+                                "struct": {
+                                  "fields": [
+                                    {
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0b00000000000000000000000000000000000000000000000000000000000000",
+                                          "ty": 2
+                                        }
+                                      },
+                                      "name": "account_id"
+                                    }
+                                  ]
                                 }
                               },
                               "name": null
@@ -506,8 +489,17 @@
                       }
                     }
                   },
-                  "name": "base_addr"
-                },
+                  "name": "auth"
+                }
+              ]
+            }
+          },
+          "name": "components"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
                 {
                   "layout": {
                     "enum": {
@@ -532,7 +524,7 @@
                       }
                     }
                   },
-                  "name": "erc20_addr"
+                  "name": "base_addr"
                 },
                 {
                   "layout": {
@@ -558,7 +550,7 @@
                       }
                     }
                   },
-                  "name": "org_addr"
+                  "name": "erc20_addr"
                 },
                 {
                   "layout": {
@@ -584,7 +576,7 @@
                       }
                     }
                   },
-                  "name": "vault_addr"
+                  "name": "org_addr"
                 },
                 {
                   "layout": {
@@ -610,7 +602,7 @@
                       }
                     }
                   },
-                  "name": "vote_addr"
+                  "name": "vault_addr"
                 },
                 {
                   "layout": {
@@ -623,6 +615,32 @@
                               "layout": {
                                 "cell": {
                                   "key": "0x1000000000000000000000000000000000000000000000000000000000000000",
+                                  "ty": 2
+                                }
+                              },
+                              "name": null
+                            }
+                          ]
+                        },
+                        "1": {
+                          "fields": []
+                        }
+                      }
+                    }
+                  },
+                  "name": "vote_addr"
+                },
+                {
+                  "layout": {
+                    "enum": {
+                      "dispatchKey": "0x1000000000000000000000000000000000000000000000000000000000000000",
+                      "variants": {
+                        "0": {
+                          "fields": [
+                            {
+                              "layout": {
+                                "cell": {
+                                  "key": "0x1100000000000000000000000000000000000000000000000000000000000000",
                                   "ty": 2
                                 }
                               },
@@ -902,6 +920,11 @@
               "name": "moderators",
               "type": 17,
               "typeName": "BTreeMap<String, AccountId>"
+            },
+            {
+              "name": "user_manager_contract_address",
+              "type": 2,
+              "typeName": "AccountId"
             }
           ]
         }
