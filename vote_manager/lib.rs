@@ -112,6 +112,8 @@ mod vote_manager {
         votes: StorageHashMap<VoteId, Vote>,
         voters: StorageHashMap<(VoteId, AccountId), ChoiceId>,
         choices: StorageVec<Choice>,
+        history_votes: StorageVec<VoteId>,
+        open_wait_votes: StorageVec<VoteId>,
         choices_num: u32,
     }
 
@@ -179,6 +181,8 @@ mod vote_manager {
                 votes: StorageHashMap::default(),
                 voters: StorageHashMap::default(),
                 choices: StorageVec::default(),
+                history_votes: StorageVec::default(),
+                open_wait_votes: StorageVec::default(),
                 choices_num: 0,
             }
         }
@@ -234,6 +238,7 @@ mod vote_manager {
                 index += 1;
             }
             self.votes.insert(vote_id, vote);
+            self.open_wait_votes.push(vote_id);
             self.env().emit_event(StartVote {
                 vote_id,
                 creator: self.env().caller(),
@@ -295,6 +300,7 @@ mod vote_manager {
                 index += 1;
             }
             self.votes.insert(vote_id, vote);
+            self.open_wait_votes.push(vote_id);
             self.env().emit_event(StartVote {
                 vote_id,
                 creator: self.env().caller(),
@@ -343,6 +349,16 @@ mod vote_manager {
                         }
                     }
                     index += 1;
+                }
+
+                if vote.status != 3 {
+                    self.history_votes.push(vote_id);
+                    let index = self
+                        .open_wait_votes
+                        .iter()
+                        .position(|x| *x == vote_id)
+                        .unwrap();
+                    self.open_wait_votes.swap_remove_drop(index as u32);
                 }
 
                 self.env().emit_event(ExecuteVote { vote_id });
@@ -440,23 +456,23 @@ mod vote_manager {
         #[ink(message)]
         pub fn query_history_vote(&self, page: u64, size: u64) -> PageResult<DisplayVote> {
             // get history vote keys.
-            let mut vote_keys: alloc::vec::Vec<u64> = alloc::vec::Vec::new();
-            for (key, val) in &self.votes {
-                if !self.is_vote_open(&val) && self.is_vote_executed(&val) && val.status != 3 {
-                    vote_keys.push(*key);
-                }
-            }
-            vote_keys.reverse();
+            // let mut vote_keys: alloc::vec::Vec<u64> = alloc::vec::Vec::new();
+            // for (key, val) in &self.votes {
+            //     if !self.is_vote_open(&val) && self.is_vote_executed(&val) && val.status != 3 {
+            //         vote_keys.push(*key);
+            //     }
+            // }
+            // vote_keys.reverse();
 
-            let total = vote_keys.len() as u64;
+            let total = self.history_votes.len() as u64;
 
             let (start, end, pages) = self.cal_pages(page, size, total);
 
             let mut data_vec: alloc::vec::Vec<DisplayVote> = alloc::vec::Vec::new();
 
             for i in start..end {
-                let key = vote_keys.get(i as usize).unwrap();
-                let value = self.votes.get(key).unwrap();
+                let key = self.history_votes.iter().rev().nth(i as usize).unwrap();
+                let value = self.votes.get(&key).unwrap();
                 let vote = self.convert_vote_to_displayvote(&value);
                 data_vec.push(vote);
             }
@@ -474,13 +490,16 @@ mod vote_manager {
 
         #[ink(message)]
         pub fn query_active_vote(&self, page: u64, size: u64) -> PageResult<DisplayVote> {
-            // get active vote keys.
+            // get active vote keys from open wait votes.
             let mut vote_keys: alloc::vec::Vec<u64> = alloc::vec::Vec::new();
-            for (key, val) in &self.votes {
-                if self.is_vote_open(&val) {
+
+            for key in self.open_wait_votes.iter() {
+                let vote = self.votes.get(key).unwrap();
+                if self.is_vote_open(vote) {
                     vote_keys.push(*key);
                 }
             }
+
             vote_keys.reverse();
 
             let total = vote_keys.len() as u64;
@@ -509,13 +528,16 @@ mod vote_manager {
 
         #[ink(message)]
         pub fn query_pending_vote(&self, page: u64, size: u64) -> PageResult<DisplayVote> {
-            // get pending vote keys.
+            // get pending vote keys from open wait votes.
             let mut vote_keys: alloc::vec::Vec<u64> = alloc::vec::Vec::new();
-            for (key, val) in &self.votes {
-                if self.is_vote_wait(&val) {
+
+            for key in self.open_wait_votes.iter() {
+                let vote = self.votes.get(key).unwrap();
+                if self.is_vote_wait(vote) {
                     vote_keys.push(*key);
                 }
             }
+
             vote_keys.reverse();
 
             let total = vote_keys.len() as u64;
